@@ -20,5 +20,6 @@ def run_tests(model: Model):
 
 
 if __name__ == '__main__':
-    m = bnet_parser("D:\\sysbio\\SYBILA\\5. MC combined with PBN\\bnet example files\\029a.bnet")
+    path_to_bnet = ""
+    m = bnet_parser(path_to_bnet)
     run_tests(m)
