@@ -4,8 +4,8 @@ from termcolor import colored
 from typing import List
 
 # change this depending on environment
-# from dd.cudd import BDD, Function
 from dd.autoref import BDD, Function
+# from dd.cudd import BDD, Function
 
 # ============================================================================================= #
 # ======================================= MODEL PART ========================================== #
@@ -315,7 +315,8 @@ def optimized_hybrid_EX(model: Model, phi: Function, var: str, operation: str) -
 
 # parses a file with a boolean network, creates model from it - BUT STATE VARIABLES ARE ADDED MANUALLY atm
 # only testing version, can break quickly...
-# TODO: remake this, implicitly add vars from formula, better handle the renaming of variables
+# TODO: remake this, implicitly add vars from formula
+# TODO: better handle the renaming of variables (now vars cant be 'number', 's', 'x'...)
 """
 version of bnet files that is used:
     all lines except first one are in the form: "variable_name, update_fn"
