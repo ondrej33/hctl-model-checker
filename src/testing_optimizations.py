@@ -203,35 +203,8 @@ def test_run_1_set(model: Model, seq_num: int, func, message: str):
         message_cont = "set1= EF x & s1"
         set1 = EF(model, create_comparator(model, 'x')) & labeled_by('s__1', model)
     """
-
-    # version2:
-    """
-    # first lets determine what the testing set will be based on the seq num
-    if seq_num == 0:
-        message_cont = "set1= EX(s1 & s2 & x3)"
-        set1 = EX(model, labeled_by('s__1', model) & labeled_by('s__2', model) & labeled_by('x__3', model))
-    elif seq_num == 1:
-        message_cont = "set1= EX((s1 => s2) & x6 & x7)"
-        set1 = EX(model, labeled_by('s__1', model).implies(labeled_by('s__2', model)) &
-                  labeled_by('x__6', model) & labeled_by('x__7', model))
-    elif seq_num == 2:
-        message_cont = "set1= EX((s1 => s2) & (x8 | x9 | x10)"
-        set1 = EX(model, labeled_by('s__1', model).implies(labeled_by('s__2', model)) &
-                  (labeled_by('x__8', model) | labeled_by('x__9', model) | labeled_by('x__10', model)))
-    elif seq_num == 3:
-        message_cont = "set1= EX((s1 <=> s2) & x6 & x7)"
-        set1 = EX(model, labeled_by('s__1', model).equiv(labeled_by('s__2', model)) &
-                  labeled_by('x__6', model) & labeled_by('x__7', model))
-    elif seq_num == 4:
-        message_cont = "set1= EX((s1 <=> s2) & (x8 | x9 | x10)"
-        set1 = EX(model, labeled_by('s__1', model).equiv(labeled_by('s__2', model)) &
-                  (labeled_by('x__8', model) | labeled_by('x__9', model) | labeled_by('x__10', model)))
-    elif seq_num == 5:
-        message_cont = "set1= EX(EX(x))"
-        set1 = EX(model, EX(model, create_comparator(model, 'x')))
-    """
-
-    # version 3:
+    
+    # version 2:
     # first lets determine what the testing set will be based on the seq num
     x_content = X_COMBINATIONS[model.num_props]
     if seq_num == 0:
@@ -434,85 +407,20 @@ def new_test2(file_name: str):
     # res2 = fn2()
     # print(res1 == res2)
 
-
-def new_test3(file):
-    model = bnet_parser(file)
-
-    def test(mm: Model, seq_num: int, message: str):
-        message_cont = ""
-        set1 = model.bdd.add_expr("True")
-        set2 = model.bdd.add_expr("True")
-
-        # first lets determine what the testing sets will be based on the seq num
-        if seq_num == 0:
-            message_cont = "set1= s1, set2= s2"
-            set1 = labeled_by('s__1', model)
-            set2 = labeled_by('s__1', model)
-        elif seq_num == 1:
-            message_cont = "set1= s2, set2= s3"
-            set1 = labeled_by('s__2', model)
-            set2 = labeled_by('s__3', model)
-        elif seq_num == 2:
-            message_cont = "set1= (s1 & s2), set2= (s3 & s4)"
-            set1 = labeled_by('s__1', model) & labeled_by('s__2', model)
-            set2 = labeled_by('s__3', model) & labeled_by('s__4', model)
-        elif seq_num == 3:
-            message_cont = "set1= (s1 | s2), set2= (s3 | s4)"
-            set1 = labeled_by('s__1', model) | labeled_by('s__2', model)
-            set2 = labeled_by('s__3', model) | labeled_by('s__4', model)
-        elif seq_num == 4:
-            message_cont = "set1= SINKS, set2= EX SINKS"
-            set1 = model_check_fixed2_v3(model)
-            set2 = EX(model, model_check_fixed2_v3(model))
-        elif seq_num == 5:
-            message_cont = "set1= x, set2= EX x"
-            set1 = create_comparator(model, 'x')
-            set2 = EX(model, create_comparator(model, 'x'))
-        elif seq_num == 6:
-            message_cont = "set1= AX x, set2= x"
-            set1 = AX(model, create_comparator(model, 'x'))
-            set2 = create_comparator(model, 'x')
-        elif seq_num == 7:
-            message_cont = "set1= x, set2= s1"
-            set1 = create_comparator(model, 'x')
-            set2 = labeled_by('s__1', model)
-        elif seq_num == 8:
-            message_cont = "set1= s2, set2= x"
-            set1 = labeled_by('s__2', model)
-            set2 = create_comparator(model, 'x')
-
-        res = model_check_test2c(model, set1, set2)
-        res2 = model_check_test2a(model, set1, set2)
-        print(res == res2)
-        assert res == res2
-
-    for i in range(9):
-        test(model, i, model.name)
-
-
+    
 # we use 4 command line args (not counting script name): name of file + type of test + number of test + version of test
 if __name__ == '__main__':
-    if len(sys.argv) != 5:
+    if len(sys.argv) == 5:
+        run_test_sets(sys.argv[1], sys.argv[2], int(sys.argv[3]), sys.argv[4])
+    else:
         # incorrect num of arguments provided, lets print error message + do PREDEF model
         print("INCORRECT NUM OF ARGS")
 
-        """
-        # lets go with predefined model
+        # lets go with predefined model and formula
         model_name = "011a.bnet"
+        path_to_bnet = ""
         print("==================================")
         print("Model name: " + model_name)
         print("==================================\n")
-        main("D:\\sysbio\\SYBILA\\5. MC combined with PBN\\bnet example files\\" + model_name, "exist", 0, "o")
+        main(path_to_bnet + model_name, "binder", 0, "o")
         print()
-        """
-
-        models_1="007 109 088 031 106 110 133 023 084 144"
-        models_2="100 058 057 015 091 089 026 074 090 099 107 140 055 139 003a 086"
-        models_3="024a 022a 069a 068a 103 045a 101 061 008a 105 142"
-        models_4="087 043 013 079 075 092 085"
-        models_7="135a 065a 073a 129a 032a 020a 081a 060a 017a 076a 046a 070a 025a"
-
-        for m in models_1.split(" "):
-            new_test3("D:\\sysbio\\SYBILA\\5. MC combined with PBN\\bnet example files\\" + m + ".bnet")
-    else:
-        run_test_sets(sys.argv[1], sys.argv[2], int(sys.argv[3]), sys.argv[4])
