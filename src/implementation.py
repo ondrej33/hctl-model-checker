@@ -313,6 +313,8 @@ def optimized_hybrid_EX(model: Model, phi: Function, var: str, operation: str) -
 
 
 # parses a file with a boolean network, creates model from it - BUT STATE VARIABLES ARE ADDED MANUALLY atm
+# only testing version, can break quickly...
+# TODO: remake this, implicitly add vars from formula, better handle the renaming of variables
 """
 version of bnet files that is used:
     all lines except first one are in the form: "variable_name, update_fn"
