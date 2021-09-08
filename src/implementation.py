@@ -507,16 +507,3 @@ def print_results(result: Function, model: Model, message: str = "", show_all: b
             print(text, end=" ")
         print()
     print()
-
-
-# test "↓x (EX set1 | EX set2)"
-def simple_main(file_name: str):
-    model = bnet_parser(file_name)
-    results = model_check_fixed9(model)
-    print_results(results, model, "", True)
-
-
-# we have 4 command line args: name of file + type of test + number of test + version of test
-if __name__ == '__main__':
-    simple_main("D:\\sysbio\\SYBILA\\5. MC combined with PBN\\bnet example files\\029a.bnet")
-    # simple_main("D:\\sysbio\\SYBILA\\5. MC combined with PBN\\bnet example files\\095a.bnet")
