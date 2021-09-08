@@ -77,8 +77,7 @@ def existential(model: Model, var: str, phi: Function) -> Function:
 # applying the update function of the given `var`
 def pre_E_one_var(model: Model, var: str, initial: Function) -> Function:
     """
-    NEGATIVE_PREDECESSOR = !X & Exists(SET & X, 'X') & B_X   - prvky v množine set také že platí X=1 a pokiaľ
-                            zmením na x=0, bude mať f_X hodnotu 1 (teda bude možný prechod do X=1)
+    NEGATIVE_PREDECESSOR = !X & Exists(SET & X, 'X') & B_X  
     POSITIVE_PREDECESSOR = X & Exists(SET & !X, 'X') & !B_X
     PREDECESSORS_IN_X = NEGATIVE_PREDECESSOR | POSITIVE_PREDECESSOR
     """
@@ -313,21 +312,25 @@ def optimized_hybrid_EX(model: Model, phi: Function, var: str, operation: str) -
 # ============================================================================================= #
 
 
-# parses a file with a boolean network, creates model from it
-# all lines except first one are in the form: "variable_name, update_fn"
-# BUT to handle params, we will add lines in form: "param_name," (no update fn) - those will be params
+# parses a file with a boolean network, creates model from it - BUT STATE VARIABLES ARE ADDED MANUALLY atm
+"""
+version of bnet files that is used:
+    all lines except first one are in the form: "variable_name, update_fn"
+    BUT to handle params, we will add lines in form: "param_name," (there is no update fn) - those will be params
+"""
 def bnet_parser(file_name: str):
     # first preprocess the file content
     file = open(file_name, "r")
     content = file.read()
-    # todo: maybe clean the content (no need if examples are clean)
+    # TODO: maybe clean the content (no need atm, because test examples are clean)
+    
     lines = content.split("\n")[1:]  # first line does not contain data
     if not lines[-1]:
         lines.pop()  # last item might be just empty string after last newline
     lines_ordered = sorted(lines, key=lambda x: x.split(",")[0])
 
     # collect all the variable names and their update functions and reorder them
-    # order will be alphabetical, upper case first, lowercase later (like ASCII)
+    # order will be alphabetical, uppercase first, lowercase later (like ASCII)
     update_dict = OrderedDict()
     prop_names = []
     param_names = []
@@ -352,7 +355,7 @@ def bnet_parser(file_name: str):
         for p in sorted((prop_names+param_names), key=lambda x: len(x), reverse=True):
             update_dict[prop] = update_dict[prop].replace(p, name_dict[p])
 
-    # define a BDD vars will be named s0,s1... and we will store full names elsewhere
+    # define a BDD vars will be named s0,s1... and we will store full names elsewhere, also add 2 HCTL vars
     bdd = BDD()
     vrs = [f"s__{i}" for i in range(num_props)]       # state describing vars
     vrs.extend(f"p__{i}" for i in range(num_params))  # params
@@ -363,28 +366,16 @@ def bnet_parser(file_name: str):
     # reordering to some desired order (now it is s0,x0,y0,s1...,p0,p1...)
     # TODO: try different orders
     my_order = dict()
-
     for i in range(num_props):
         my_order[f"s__{i}"] = i * 3
         my_order[f"x__{i}"] = i * 3 + 1
         my_order[f"y__{i}"] = i * 3 + 2
     for i in range(num_params):
         my_order[f"p__{i}"] = i + 3 * num_props
-
-    """
-    my_order2 = dict()
-    for i in range(num_props):
-        my_order2[f"s__{i}"] = i
-        my_order2[f"x__{i}"] = i + num_props
-        my_order2[f"y__{i}"] = i + 2 * num_props
-    for i in range(num_params):
-        my_order2[f"p__{i}"] = i + 3 * num_props
-    """
-
     bdd.reorder(my_order)
-    # bdd.configure(reordering=False)  # auto reorder disabled (probably)? - it is slower
+    # bdd.configure(reordering=False)  # auto reorder disabled (probably)? - it is slower when disabled
 
-    # go through update function strings one by one and create dict of BDDs (functions) from them
+    # go through update function strings one by one and create dict of BDDs (update functions) from them
     list_update_fns = [bdd.add_expr(update_dict[prop]) for prop in update_dict]
     real_update_dict = OrderedDict()
     for i in range(num_props):
@@ -424,6 +415,7 @@ def eval_color(assignment, num_cols) -> float:
     return result_val
 
 
+# for testing purposes
 def bdd_dumper(file_name: str):
     model = bnet_parser(file_name)
     result = AX(model, create_comparator(model, 'x'))
@@ -476,23 +468,15 @@ def print_results(result: Function, model: Model, message: str = "", show_all: b
     print()
 
     # -----------------------------------------------------------------------------------
-    """
-    # printing pairs (var_name, value), params first, then propositions
-    for assignment in assignments_sorted:
-        # we will print only 0/1 instead True/False
-        transformed = [(model.name_dict[item[0]], int(item[1])) for item in assignment]
-        print(transformed)
-    print()
-    """
-    # -----------------------------------------------------------------------------------
-    # printing all variables in alphabetical order
+
+    # printing all variables in alphabetical order, colored, like in AEON
+    
     assignments = model.bdd.pick_iter(result, care_vars=vars_to_show)  # assigning a generator again, was depleted
     # sorting vars in individual outputs (dict has random order, even though bdd has the right one)
     sorted_inside = [sorted(assignment.items(), key=lambda x: (model.name_dict[x[0]])) for assignment in assignments]
     # now sorting the outputs by its binary values (using s0,s1...) as main part + by its color as second part
     assignments_sorted = sorted(sorted_inside, key=lambda x: (eval_assignment(x, model.num_props + model.num_params)))
 
-    # printing all pairs alphabetically (var_name, value)
     assignments = model.bdd.pick_iter(result, care_vars=vars_to_show)
     print(f"{len(list(assignments))} RESULTS FOUND IN TOTAL")
     for assignment in assignments_sorted:
