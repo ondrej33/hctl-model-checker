@@ -199,7 +199,8 @@ def parse_and_eval(formula, model: Model) -> Function:
 
 
 if __name__ == '__main__':
-    m = bnet_parser("D:\\sysbio\\SYBILA\\5. MC combined with PBN\\bnet example files\\029a.bnet")
+    bnet_path = ""
+    m = bnet_parser(bnet_path)
     f = "!{x}: (AG EF {x})"
     res = parse_and_eval(f, m)
     print_results(res, m, f"model: {m.name}, formula: {f}", True)
