@@ -3,8 +3,8 @@ from termcolor import colored
 
 from typing import List
 
-from dd.autoref import BDD, Function
-
+from dd.cudd import BDD, Function
+# from dd.autoref import BDD, Function
 
 # ============================================================================================= #
 # ======================================= MODEL PART ========================================== #
