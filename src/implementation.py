@@ -3,8 +3,9 @@ from termcolor import colored
 
 from typing import List
 
-from dd.cudd import BDD, Function
-# from dd.autoref import BDD, Function
+# change this depending on environment
+# from dd.cudd import BDD, Function
+from dd.autoref import BDD, Function
 
 # ============================================================================================= #
 # ======================================= MODEL PART ========================================== #
