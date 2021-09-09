@@ -130,7 +130,7 @@ def model_check_fixed8(model: Model) -> Function:
 def model_check_fixed9(model: Model) -> Function:
     x = create_comparator(model, 'x')
     ef_x = EF_v2(model, x)
-    ag = AG_v3(model, ef_x)
+    ag = AG_v2(model, ef_x)
     return bind(model, 'x', ag)
 
 
@@ -218,7 +218,7 @@ def model_check_fixed14(model: Model) -> Function:
     exists_y = existential(model, 'y', intersection_outer)
     return bind(model, 'x', exists_y)
 
-  
+
 # TODO: Something with binder + jump (or existential+jump)
 
 
@@ -231,5 +231,6 @@ def simple_main(file_name: str):
 
 # we have 4 command line args: name of file + type of test + number of test + version of test
 if __name__ == '__main__':
+    # TODO add path
     path_to_bnet = ""
     simple_main(path_to_bnet)

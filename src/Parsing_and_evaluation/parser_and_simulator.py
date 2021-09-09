@@ -199,6 +199,7 @@ def parse_and_eval(formula, model: Model) -> Function:
 
 
 if __name__ == '__main__':
+    # TODO: add path
     bnet_path = ""
     m = bnet_parser(bnet_path)
     f = "!{x}: (AG EF {x})"

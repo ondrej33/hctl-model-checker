@@ -203,7 +203,7 @@ def test_run_1_set(model: Model, seq_num: int, func, message: str):
         message_cont = "set1= EF x & s1"
         set1 = EF(model, create_comparator(model, 'x')) & labeled_by('s__1', model)
     """
-    
+
     # version 2:
     # first lets determine what the testing set will be based on the seq num
     x_content = X_COMBINATIONS[model.num_props]
@@ -407,7 +407,7 @@ def new_test2(file_name: str):
     # res2 = fn2()
     # print(res1 == res2)
 
-    
+
 # we use 4 command line args (not counting script name): name of file + type of test + number of test + version of test
 if __name__ == '__main__':
     if len(sys.argv) == 5:
@@ -418,9 +418,10 @@ if __name__ == '__main__':
 
         # lets go with predefined model and formula
         model_name = "011a.bnet"
+        # TODO add path
         path_to_bnet = ""
         print("==================================")
         print("Model name: " + model_name)
         print("==================================\n")
-        main(path_to_bnet + model_name, "binder", 0, "o")
+        run_test_sets(path_to_bnet + model_name, "binder", 0, "o")
         print()
