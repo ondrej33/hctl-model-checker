@@ -11,40 +11,35 @@ from heapq import heappush, heappop
 # To create update_fnParser and other files from grammar:
 #    $ java -jar "/usr/local/lib/antlr-4.9.2-complete.jar" -Dlanguage=Python3 -visitor update_fn.g4
 # or $ antlr4 -Dlanguage=Python3 -visitor update_fn.g4
-# then change HCTLVisitor to this: (and add import of structures)
+# then change update_fnVisitor to this: (and add import of structures)
 
 """
-# code changed in HCTLVisitor follows (this is backup, it might disappear when creating new parser):
+# code changed in update_fnVisitor follows (this is backup, it might disappear when creating new parser):
 
-class HCTLVisitor(ParseTreeVisitor):
+class update_fnVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by HCTLParser#root.
-    def visitRoot(self, ctx: HCTLParser.RootContext):
+    def visitRoot(self, ctx: update_fnParser.RootContext):
         return self.visit(ctx.formula())
 
     # Visit a parse tree produced by HCTLParser#fullStop.
     # We should never arrive here!!
-    def visitFullStop(self, ctx: HCTLParser.FullStopContext):
+    def visitFullStop(self, ctx: update_fnParser.FullStopContext):
         return self.visitChildren(ctx)
 
     # This is a node of "parentheses", we just dive one more level
-    def visitSkipNode(self, ctx: HCTLParser.SkipNodeContext):
+    def visitSkipNode(self, ctx: update_fnParser.SkipNodeContext):
         return self.visit(ctx.child)
 
-    def visitTerminalNode(self, ctx: HCTLParser.TerminalNodeContext):
+    def visitTerminalNode(self, ctx: update_fnParser.TerminalNodeContext):
         return TerminalNode(value=ctx.value.text)
 
-    def visitUnary(self, ctx: HCTLParser.UnaryContext):
+    def visitUnary(self, ctx: update_fnParser.UnaryContext):
         return UnaryNode(value=ctx.value.text, child=self.visit(ctx.child))
 
-    def visitBinary(self, ctx: HCTLParser.BinaryContext):
+    def visitBinary(self, ctx: update_fnParser.BinaryContext):
         return BinaryNode(value=ctx.value.text, left=self.visit(ctx.left), right=self.visit(ctx.right))
-
-    def visitHybrid(self, ctx: HCTLParser.HybridContext):
-        return HybridNode(value=ctx.value.text, var=ctx.var.text, child=self.visit(ctx.child))
 """
-
-NUM_PROPS_AT_LEAST_TO_OPTIMIZE = 20
 
 
 class EvaluateExpressionVisitor:
@@ -71,15 +66,13 @@ class EvaluateExpressionVisitor:
         return result
 
 
-def parse(formula, model: Model) -> Function:
+def parse(formula, bdd: BDD) -> Function:
     lexer = update_fnLexer(InputStream(formula))
     stream = CommonTokenStream(lexer)
     parser = update_fnParser(stream)
     tree = parser.root()
 
     ast = update_fnVisitor().visitRoot(tree)
-    bdd = BDD()
-    # TODO make a BDD at this point
     result = EvaluateExpressionVisitor().visit(ast, bdd)
     return result
 

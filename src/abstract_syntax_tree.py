@@ -3,6 +3,8 @@
 class Node:
     def __init__(self, value):
         self.value = value
+        self.height = None
+        self.subform_string = None
 
     # just define something so that heapq can be used on nodes
     def __lt__(self, other):

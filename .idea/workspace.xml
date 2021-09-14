@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="501566b4-125e-4202-a3dd-1c19b5d18aa3" name="Changes" comment="changed structure: paths, names, folders, includes">
-      <change afterPath="$PROJECT_DIR$/src/Parsing_update_fns/parser_update_fn.py" afterDir="false" />
+    <list default="true" id="501566b4-125e-4202-a3dd-1c19b5d18aa3" name="Changes" comment="added update fn parsing, changed some comments">
+      <change afterPath="$PROJECT_DIR$/src/Parsing_and_evaluation/parser_hctl.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/model.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/parse_all.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Parsing_and_evaluation/HCTLVisitor.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Parsing_and_evaluation/HCTLVisitor.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Parsing_and_evaluation/abstract_syntax_tree.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/abstract_syntax_tree.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Parsing_and_evaluation/parser_and_simulator.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Parsing_and_evaluation/parser_and_simulator.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Parsing_update_fns/update_fn.g4" beforeDir="false" afterPath="$PROJECT_DIR$/src/Parsing_update_fns/update_fn.g4" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Parsing_and_evaluation/parser_and_simulator.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Parsing_and_evaluation/evaluator_hctl.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Parsing_and_evaluation/testing_parser.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Parsing_and_evaluation/testing_parser.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Parsing_update_fns/parser_update_fn.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Parsing_update_fns/parser_update_fn.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/abstract_syntax_tree.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/abstract_syntax_tree.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/implementation.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/implementation.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,7 +51,29 @@
       <recent name="C:\Users\Ondra\PycharmProjects\HCTL_stuff\src" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.testing_optimizations">
+  <component name="RunManager" selected="Python.testing_parser">
+    <configuration name="evaluator_hctl" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="HCTL_stuff" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="C:\Users\Ondra\PycharmProjects\HCTL_stuff\src\Parsing_and_evaluation\evaluator_hctl.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="fixed_formulas_eval" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="HCTL_stuff" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -63,28 +88,6 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/fixed_formulas_eval.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="parser_and_simulator" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="HCTL_stuff" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/Parsing_and_evaluation/parser_and_simulator.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -139,16 +142,16 @@
     </configuration>
     <list>
       <item itemvalue="Python.testing_parser" />
-      <item itemvalue="Python.parser_and_simulator" />
       <item itemvalue="Python.fixed_formulas_eval" />
       <item itemvalue="Python.testing_optimizations" />
+      <item itemvalue="Python.evaluator_hctl" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.testing_parser" />
         <item itemvalue="Python.testing_optimizations" />
         <item itemvalue="Python.fixed_formulas_eval" />
-        <item itemvalue="Python.parser_and_simulator" />
-        <item itemvalue="Python.testing_parser" />
+        <item itemvalue="Python.evaluator_hctl" />
       </list>
     </recent_temporary>
   </component>
@@ -161,7 +164,7 @@
       <option name="presentableId" value="Default" />
       <updated>1631651406919</updated>
       <workItem from="1631651408931" duration="142000" />
-      <workItem from="1631651590237" duration="3020000" />
+      <workItem from="1631651590237" duration="4385000" />
     </task>
     <task id="LOCAL-00001" summary="changed structure: paths, names, folders, includes">
       <created>1631652715774</created>
@@ -170,7 +173,14 @@
       <option name="project" value="LOCAL" />
       <updated>1631652715774</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="added update fn parsing, changed some comments">
+      <created>1631654678361</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1631654678361</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -189,10 +199,11 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="changed structure: paths, names, folders, includes" />
-    <option name="LAST_COMMIT_MESSAGE" value="changed structure: paths, names, folders, includes" />
+    <MESSAGE value="added update fn parsing, changed some comments" />
+    <option name="LAST_COMMIT_MESSAGE" value="added update fn parsing, changed some comments" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/HCTL_stuff$testing_parser.coverage" NAME="testing_parser Coverage Results" MODIFIED="1631652182669" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/" />
+    <SUITE FILE_PATH="coverage/HCTL_stuff$testing_parser.coverage" NAME="testing_parser Coverage Results" MODIFIED="1631655716520" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/" />
     <SUITE FILE_PATH="coverage/HCTL_stuff$parser_and_simulator.coverage" NAME="parser_and_simulator Coverage Results" MODIFIED="1631652386521" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/" />
     <SUITE FILE_PATH="coverage/HCTL_stuff$testing_optimizations.coverage" NAME="testing_optimizations Coverage Results" MODIFIED="1631652519936" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/" />
     <SUITE FILE_PATH="coverage/HCTL_stuff$fixed_formulas_eval.coverage" NAME="fixed_formulas_eval Coverage Results" MODIFIED="1631652403286" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/" />
