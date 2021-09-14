@@ -1,4 +1,4 @@
-from fixed_formulas_eval import *
+from src.fixed_formulas_eval import *
 from parser_and_simulator import parse_and_eval
 
 
@@ -20,7 +20,7 @@ def run_tests(model: Model):
 
 
 if __name__ == '__main__':
-    # TODO add path
-    path_to_bnet = ""
+    # TODO change path
+    path_to_bnet = "bnet_examples/023.bnet"
     m = bnet_parser(path_to_bnet)
     run_tests(m)

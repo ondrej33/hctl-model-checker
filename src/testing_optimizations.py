@@ -1,4 +1,5 @@
-from implementation import *
+from src.implementation import *
+from src.fixed_formulas_eval import model_check_fixed2_v3
 import sys
 import time
 from random import randint
@@ -417,11 +418,10 @@ if __name__ == '__main__':
         print("INCORRECT NUM OF ARGS")
 
         # lets go with predefined model and formula
-        model_name = "011a.bnet"
-        # TODO add path
-        path_to_bnet = ""
+        # TODO change path
+        path_to_bnet = "bnet_examples/023.bnet"
         print("==================================")
-        print("Model name: " + model_name)
+        print("Model name: " + path_to_bnet.split('/')[-1])
         print("==================================\n")
-        run_test_sets(path_to_bnet + model_name, "binder", 0, "o")
+        run_test_sets(path_to_bnet, "binder", 0, "o")
         print()

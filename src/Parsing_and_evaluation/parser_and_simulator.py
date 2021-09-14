@@ -4,7 +4,7 @@ from HCTLVisitor import HCTLVisitor
 
 from antlr4 import *
 from abstract_syntax_tree import *
-from implementation import *
+from src.implementation import *
 
 from heapq import heappush, heappop
 
@@ -199,8 +199,8 @@ def parse_and_eval(formula, model: Model) -> Function:
 
 
 if __name__ == '__main__':
-    # TODO: add path
-    bnet_path = ""
+    # TODO: change path
+    bnet_path = "bnet_examples/023.bnet"
     m = bnet_parser(bnet_path)
     f = "!{x}: (AG EF {x})"
     res = parse_and_eval(f, m)

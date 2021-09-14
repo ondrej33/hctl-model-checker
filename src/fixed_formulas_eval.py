@@ -1,4 +1,4 @@
-from implementation import *
+from src.implementation import *
 
 
 # ============================================================================================= #
@@ -231,6 +231,6 @@ def simple_main(file_name: str):
 
 # we have 4 command line args: name of file + type of test + number of test + version of test
 if __name__ == '__main__':
-    # TODO add path
-    path_to_bnet = ""
+    # TODO change path
+    path_to_bnet = "bnet_examples/023.bnet"
     simple_main(path_to_bnet)
