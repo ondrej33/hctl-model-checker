@@ -1,16 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="501566b4-125e-4202-a3dd-1c19b5d18aa3" name="Changes" comment="added update fn parsing, changed some comments">
-      <change afterPath="$PROJECT_DIR$/src/Parsing_and_evaluation/parser_hctl.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/model.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/parse_all.py" afterDir="false" />
+    <list default="true" id="501566b4-125e-4202-a3dd-1c19b5d18aa3" name="Changes" comment="divided parser and evaluator">
+      <change afterPath="$PROJECT_DIR$/src/Parsing_update_fns/evaluator_update_fn.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Parsing_and_evaluation/parser_and_simulator.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Parsing_and_evaluation/evaluator_hctl.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Parsing_and_evaluation/testing_parser.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Parsing_and_evaluation/testing_parser.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Parsing_and_evaluation/HCTL.g4" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Parsing_and_evaluation/HCTL.interp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Parsing_and_evaluation/HCTL.tokens" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Parsing_and_evaluation/HCTLLexer.interp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Parsing_and_evaluation/HCTLLexer.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Parsing_and_evaluation/HCTLLexer.tokens" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Parsing_and_evaluation/HCTLListener.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Parsing_and_evaluation/HCTLParser.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Parsing_and_evaluation/HCTLVisitor.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Parsing_and_evaluation/evaluator_hctl.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Parsing_and_evaluation/parser_hctl.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Parsing_and_evaluation/testing_parser.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Parsing_update_fns/parser_update_fn.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Parsing_update_fns/parser_update_fn.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/abstract_syntax_tree.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/abstract_syntax_tree.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/implementation.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/implementation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/parse_all.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/parse_all.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -164,7 +171,7 @@
       <option name="presentableId" value="Default" />
       <updated>1631651406919</updated>
       <workItem from="1631651408931" duration="142000" />
-      <workItem from="1631651590237" duration="4385000" />
+      <workItem from="1631651590237" duration="7438000" />
     </task>
     <task id="LOCAL-00001" summary="changed structure: paths, names, folders, includes">
       <created>1631652715774</created>
@@ -180,7 +187,14 @@
       <option name="project" value="LOCAL" />
       <updated>1631654678361</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="divided parser and evaluator">
+      <created>1631656034361</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1631656034361</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -200,10 +214,11 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="changed structure: paths, names, folders, includes" />
     <MESSAGE value="added update fn parsing, changed some comments" />
-    <option name="LAST_COMMIT_MESSAGE" value="added update fn parsing, changed some comments" />
+    <MESSAGE value="divided parser and evaluator" />
+    <option name="LAST_COMMIT_MESSAGE" value="divided parser and evaluator" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/HCTL_stuff$testing_parser.coverage" NAME="testing_parser Coverage Results" MODIFIED="1631655716520" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/" />
+    <SUITE FILE_PATH="coverage/HCTL_stuff$testing_parser.coverage" NAME="testing_parser Coverage Results" MODIFIED="1631656434685" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/" />
     <SUITE FILE_PATH="coverage/HCTL_stuff$parser_and_simulator.coverage" NAME="parser_and_simulator Coverage Results" MODIFIED="1631652386521" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/" />
     <SUITE FILE_PATH="coverage/HCTL_stuff$testing_optimizations.coverage" NAME="testing_optimizations Coverage Results" MODIFIED="1631652519936" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/" />
     <SUITE FILE_PATH="coverage/HCTL_stuff$fixed_formulas_eval.coverage" NAME="fixed_formulas_eval Coverage Results" MODIFIED="1631652403286" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/" />

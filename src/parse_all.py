@@ -1,8 +1,26 @@
-from collections import OrderedDict
 from model import *
+from src.Parsing_HCTL_formula import parser_hctl
+from src.Parsing_update_fns import parser_update_fn
+from abstract_syntax_tree import *
 
 
-def bnet_parser(file_name: str, formula: str):
+def get_names_from_hctl_ast(node, variables, props):
+    if type(node) == TerminalNode:
+        # DO not add any of true/false nodes, only proposition nodes
+        if node.value in {"True", "true", "False", "false", "ff", "tt"}:
+            return
+        elif '{' in node.value:
+            variables.add(node.value[1:-1])
+        else:
+            props.add(node.value)
+    elif type(node) == UnaryNode or type(node) == HybridNode:
+        get_names_from_hctl_ast(node.child, variables, props)
+    elif type(node) == BinaryNode:
+        get_names_from_hctl_ast(node.left, variables, props)
+        get_names_from_hctl_ast(node.right, variables, props)
+
+
+def parse_all(file_name: str, formula: str):
     # first preprocess the file content
     file = open(file_name, "r")
     content = file.read()
@@ -13,21 +31,44 @@ def bnet_parser(file_name: str, formula: str):
         lines.pop()  # last item might be just empty string after last newline
     lines_ordered = sorted(lines, key=lambda x: x.split(",")[0])
 
-    # collect all the variable names and their update functions and reorder them
-    # order will be alphabetical, uppercase first, lowercase later (like ASCII)
-    update_dict = OrderedDict()
-    prop_names = []
-    param_names = []
-    for line in lines_ordered:
-        var_func_pair = line.split(",")
-        if var_func_pair[1]:  # if this is not empty, we have var and its update fn
-            prop_names.append(var_func_pair[0])
-            update_dict[var_func_pair[0]] = var_func_pair[1]
-        else:  # otherwise we have parameter with no update fn
-            param_names.append(var_func_pair[0])
+    # collect all the variable names and their update functions from bnet file
+    prop_names = [line.split(",")[0] for line in lines_ordered]
+    update_fn_strings = [line.split(",")[1] for line in lines_ordered]
     num_props = len(prop_names)
-    num_params = len(param_names)
 
+    # collect VARIABLE names (from free vars) + prop names from parse tree of a HCTL formula
+    # TODO: check that binders and free variables correspond to each other
+    as_tree_hctl = parser_hctl.parse_to_tree(formula)
+    var_names_set = set()
+    props_in_hctl = set()
+    get_names_from_hctl_ast(as_tree_hctl, var_names_set, props_in_hctl)
+    var_names = sorted(var_names_set)
+    # TODO: check that props_in_hctl correspond with prop_names (nothing wrong in formula)
+
+    # create as_trees for update functions and collect their terminals (props or params)
+    update_fn_trees = [parser_update_fn.parse_to_tree(update_str) for update_str in update_fn_strings]
+    for as_tree in update_fn_trees:
+        # TODO: collect all terminals
+        pass
+    # TODO: choose those terminals that are not props -> params
+
+    # TODO: create rename dictionaries
+
+    # TODO: rename props/params in update trees, rename props/vars in formula tree
+
+    # TODO: create a BDD
+
+    # TODO: create bdd functions from update trees via evaluator_update_fn.eval_tree
+
+    # TODO: create a model and return it
+
+    # TODO: use evaluator_hctl.eval_tree in some OTHER FILE
+
+
+
+
+
+    """
     # rename props/params in update functions, as we will be using only the short versions (s0,s1... or p0...)
     # we will start renaming the longest ones, so that we dont overwrite them with some substring
     name_dict = dict()
@@ -75,3 +116,4 @@ def bnet_parser(file_name: str, formula: str):
     model = Model(model_name, bdd, num_props, prop_names, num_params, param_names, real_update_dict,
                   update_dict_renamed, name_dict_reversed)
     return model
+    """
