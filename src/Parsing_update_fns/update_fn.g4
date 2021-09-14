@@ -1,4 +1,4 @@
-grammar HCTL;
+grammar update_fn;
 
 /** Main format structure **/
 
@@ -7,23 +7,14 @@ root : (NEWLINE+)? formula fullStop;
 fullStop : NEWLINE+ | EOF ;
 
 formula : value=PROP_NAME                                                      #terminalNode
-        | value=VAR_NAME                                                       #terminalNode
         | value=(TRUE | FALSE)                                                 #terminalNode
         | value='(' child=formula ')'                                          #skipNode
         | value=NEG child=formula                                              #unary
-        | value=TEMPORAL_UNARY child=formula                                   #unary
         // we list operators explicitly, becuase writing them as a subrule broke operator priority
         | left=formula value=CON right=formula                                 #binary
         | left=formula value=DIS right=formula                                 #binary
         | <assoc=right> left=formula value=IMPL right=formula                  #binary
         | left=formula value=EQIV right=formula                                #binary
-        | left=formula value=E_U right=formula                                 #binary
-        | left=formula value=A_U right=formula                                 #binary
-        | <assoc=right> left=formula value=E_W right=formula                   #binary
-        | <assoc=right> left=formula value=A_W right=formula                   #binary
-        | value=BIND var=VAR_NAME ':' child=formula                            #hybrid
-        | value=JUMP var=VAR_NAME ':' child=formula                            #hybrid
-        | value=EXISTS var=VAR_NAME ':' child=formula                          #hybrid
         ;
 
 
@@ -42,37 +33,7 @@ IMPL : '->';
 EQIV : '<->';
 
 
-/** Path quantifiers **/
-
-A : 'A';
-E : 'E';
-
-PATH : (A|E);
-
-
-/** Temporal operators **/
-
-X : 'X';
-Y : 'Y';
-F : 'F';
-G : 'G';
-
-TEMPORAL_UNARY : PATH (Y|X|G|F);
-
-E_U : 'EU';
-A_U : 'AU';
-E_W : 'EW';
-A_W : 'AW';
-
-
-/** Hybrid operators **/
-BIND : '!';
-JUMP : '@';
-EXISTS: 'Q';
-
-
-/** Propositions and variables **/
-VAR_NAME: '{'[_a-zA-Z0-9]+'}';
+/** Propositions **/
 PROP_NAME : [_a-zA-Z0-9]+;
 
 

@@ -1,191 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="501566b4-125e-4202-a3dd-1c19b5d18aa3" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/HCTL_stuff.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/HCTL_stuff.iml" afterDir="false" />
+    <list default="true" id="501566b4-125e-4202-a3dd-1c19b5d18aa3" name="Changes" comment="changed structure: paths, names, folders, includes">
+      <change afterPath="$PROJECT_DIR$/src/Parsing_update_fns/parser_update_fn.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/001.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/002.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/003.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/003a.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/004.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/005.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/006.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/007.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/008.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/008a.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/009.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/010.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/011.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/011a.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/012.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/013.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/014.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/015.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/016.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/017.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/017a.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/018.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/019.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/020.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/020a.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/021.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/022.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/022a.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/023.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/024.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/024a.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/025.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/025_false.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/025a.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/026.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/027.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/028.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/029.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/029a.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/030.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/031.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/032.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/032a.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/033.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/034.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/035.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/036.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/037.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/038.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/039.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/040.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/041.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/042.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/043.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/044.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/045.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/045a.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/046.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/046a.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/047.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/048.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/049.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/050.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/051.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/052.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/053.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/053a.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/054.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/055.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/056.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/057.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/058.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/059.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/060.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/060a.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/061.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/062.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/063.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/064.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/065.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/065a.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/066.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/067.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/068.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/068a.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/069.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/069a.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/070.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/070a.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/071.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/072.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/073.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/073a.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/074.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/075.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/076.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/076a.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/077.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/078.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/079.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/080.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/081.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/081a.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/082.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/083.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/084.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/085.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/086.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/087.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/088.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/089.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/090.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/091.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/092.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/093.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/094.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/095.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/095a.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/096.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/097.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/098.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/099.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/100.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/101.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/102.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/103.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/104.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/105.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/106.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/107.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/108.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/109.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/110.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/111.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/112.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/113.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/114.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/115.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/116.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/117.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/118.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/119.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/120.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/121.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/122.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/123.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/124.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/125.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/126.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/127.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/128.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/129.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/129a.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/130.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/131.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/132.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/133.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/134.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/135.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/135a.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/136.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/137.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/138.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/139.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/140.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/141.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/141a.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/142.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/143.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/144.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/145.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/model.bnet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bnet example files/vlastni.bnet" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Parsing_and_evaluation/HCTLVisitor.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Parsing_and_evaluation/HCTLVisitor.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Parsing_and_evaluation/abstract_syntax_tree.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/abstract_syntax_tree.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Parsing_and_evaluation/parser_and_simulator.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Parsing_and_evaluation/parser_and_simulator.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Parsing_and_evaluation/testing_parser.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Parsing_and_evaluation/testing_parser.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/fixed_formulas_eval.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/fixed_formulas_eval.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/testing_optimizations.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/testing_optimizations.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Parsing_update_fns/update_fn.g4" beforeDir="false" afterPath="$PROJECT_DIR$/src/Parsing_update_fns/update_fn.g4" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -203,7 +37,16 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/Parsing_update_fns" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Ondra\PycharmProjects\HCTL_stuff\src\Parsing_update_fns" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Ondra\PycharmProjects\HCTL_stuff\src" />
+    </key>
   </component>
   <component name="RunManager" selected="Python.testing_optimizations">
     <configuration name="fixed_formulas_eval" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
@@ -318,17 +161,40 @@
       <option name="presentableId" value="Default" />
       <updated>1631651406919</updated>
       <workItem from="1631651408931" duration="142000" />
-      <workItem from="1631651590237" duration="920000" />
+      <workItem from="1631651590237" duration="3020000" />
     </task>
+    <task id="LOCAL-00001" summary="changed structure: paths, names, folders, includes">
+      <created>1631652715774</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1631652715774</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="changed structure: paths, names, folders, includes" />
+    <option name="LAST_COMMIT_MESSAGE" value="changed structure: paths, names, folders, includes" />
+  </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/HCTL_stuff$testing_parser.coverage" NAME="testing_parser Coverage Results" MODIFIED="1631652182669" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/" />
     <SUITE FILE_PATH="coverage/HCTL_stuff$parser_and_simulator.coverage" NAME="parser_and_simulator Coverage Results" MODIFIED="1631652386521" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/" />
-    <SUITE FILE_PATH="coverage/HCTL_stuff$testing_optimizations.coverage" NAME="testing_optimizations Coverage Results" MODIFIED="1631652506191" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
+    <SUITE FILE_PATH="coverage/HCTL_stuff$testing_optimizations.coverage" NAME="testing_optimizations Coverage Results" MODIFIED="1631652519936" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/" />
     <SUITE FILE_PATH="coverage/HCTL_stuff$fixed_formulas_eval.coverage" NAME="fixed_formulas_eval Coverage Results" MODIFIED="1631652403286" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/" />
   </component>
 </project>

@@ -3,13 +3,14 @@ from HCTLParser import HCTLParser
 from HCTLVisitor import HCTLVisitor
 
 from antlr4 import *
-from abstract_syntax_tree import *
+from src.abstract_syntax_tree import *
 from src.implementation import *
 
 from heapq import heappush, heappop
 
-# to create HCTLParser and all from grammar:
-# java -jar "C:\Program Files\Java\antlr-4.9.2-complete.jar" -Dlanguage=Python3 -visitor HCTL.g4
+# To create HCTLParser and other files from grammar:
+#    $ java -jar "/usr/local/lib/antlr-4.9.2-complete.jar" -Dlanguage=Python3 -visitor HCTL.g4
+# or $ antlr4 -Dlanguage=Python3 -visitor HCTL.g4
 # then change HCTLVisitor to this: (and add import of structures)
 
 """
