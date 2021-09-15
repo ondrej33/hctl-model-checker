@@ -1,7 +1,6 @@
 from antlr4 import *
 from src.abstract_syntax_tree import *
-from src.implementation import *
-from parser_update_fn import parse_to_tree
+from src.Parsing_update_fns.parser_update_fn import parse_to_tree
 
 
 class EvaluateExpressionVisitor:
@@ -28,12 +27,12 @@ class EvaluateExpressionVisitor:
         return result
 
 
-def eval_tree(as_tree: Node, bdd: BDD) -> Function:
+def eval_tree(as_tree: Node, bdd):  # -> Function:
     result = EvaluateExpressionVisitor().visit(as_tree, bdd)
     return result
 
 
-def parse_and_eval(formula: str, bdd: BDD) -> Function:
+def parse_and_eval(formula: str, bdd):  # -> Function:
     as_tree = parse_to_tree(formula)
     return eval_tree(as_tree, bdd)
 

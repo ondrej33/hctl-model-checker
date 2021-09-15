@@ -1,7 +1,8 @@
 from antlr4 import *
 from src.abstract_syntax_tree import *
 from src.implementation import *
-from parser_hctl import parse_to_tree
+from src.Parsing_HCTL_formula.parser_hctl import parse_to_tree
+from src.parse_all import parse_all
 
 from heapq import heappush, heappop
 
@@ -162,8 +163,9 @@ def parse_and_eval(formula: str, model: Model) -> Function:
 
 if __name__ == '__main__':
     # TODO: change path
-    bnet_path = "bnet_examples/023.bnet"
-    m = bnet_parser(bnet_path)
+    bnet_path = "bnet_examples/029.bnet"
     f = "!{x}: (AG EF {x})"
+
+    m = parse_all(bnet_path, f)
     res = parse_and_eval(f, m)
     print_results(res, m, f"model: {m.name}, formula: {f}", True)

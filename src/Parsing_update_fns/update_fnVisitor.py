@@ -1,10 +1,10 @@
-# Generated from update_fn.g4 by ANTLR 4.7.2
+# Generated from update_fn.g4 by ANTLR 4.9.2
 from antlr4 import *
-from src.abstract_syntax_tree import *
 if __name__ is not None and "." in __name__:
     from .update_fnParser import update_fnParser
 else:
     from update_fnParser import update_fnParser
+from src.abstract_syntax_tree import *
 
 
 # This class defines a complete generic visitor for a parse tree produced by update_fnParser.
@@ -32,6 +32,7 @@ class update_fnVisitor(ParseTreeVisitor):
 
     def visitBinary(self, ctx: update_fnParser.BinaryContext):
         return BinaryNode(value=ctx.value.text, left=self.visit(ctx.left), right=self.visit(ctx.right))
+
 
 
 del update_fnParser

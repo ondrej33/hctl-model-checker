@@ -26,9 +26,9 @@ FALSE : ([fF]'alse' | 'ff');
 
 /** Logical operators **/
 
-NEG : '~';
-CON : '&&';
-DIS : '||';
+NEG : ('~' | '!');
+CON : ('&&' | '&');
+DIS : ('||' | '|');
 IMPL : '->';
 EQIV : '<->';
 

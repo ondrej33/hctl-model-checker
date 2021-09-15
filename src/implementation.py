@@ -300,6 +300,8 @@ version of bnet files that is used:
     all lines except first one are in the form: "variable_name, update_fn"
     BUT to handle params, we will add lines in form: "param_name," (there is no update fn) - those will be params
 """
+
+
 def bnet_parser(file_name: str):
     # first preprocess the file content
     file = open(file_name, "r")

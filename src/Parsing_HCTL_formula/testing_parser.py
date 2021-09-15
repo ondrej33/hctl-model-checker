@@ -1,5 +1,5 @@
 from src.fixed_formulas_eval import *
-from evaluator_hctl import parse_and_eval
+from src.Parsing_HCTL_formula.evaluator_hctl import parse_and_eval
 
 
 def run_tests(model: Model):
