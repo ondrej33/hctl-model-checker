@@ -22,7 +22,7 @@ class UnaryNode(Node):
     def __init__(self, child, value):
         super().__init__(value)
         self.child = child
-        self.subform_string = value + child.subform_string
+        self.subform_string = "(" + value + child.subform_string + ")"
         self.height = child.height + 1
 
 
@@ -31,7 +31,7 @@ class BinaryNode(Node):
         super().__init__(value)
         self.left = left
         self.right = right
-        self.subform_string = left.subform_string + value + right.subform_string
+        self.subform_string = "(" + left.subform_string + value + right.subform_string + ")"
         self.height = left.height + 1 if left.height > right.height else right.height + 1
 
 
@@ -40,5 +40,5 @@ class HybridNode(Node):
         super().__init__(value)
         self.var = var
         self.child = child
-        self.subform_string = value + var + ":" + child.subform_string
+        self.subform_string = "(" + value + var + ":" + child.subform_string + ")"
         self.height = child.height + 1

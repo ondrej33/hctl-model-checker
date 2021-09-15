@@ -47,11 +47,14 @@ def rename_terminals_update_fn_ast(node, rename_dict):
             return
         else:
             node.value = rename_dict[node.value]
+            node.subform_string = node.value
     elif type(node) == UnaryNode:
         rename_terminals_update_fn_ast(node.child, rename_dict)
+        node.subform_string = "(" + node.value + node.child.subform_string + ")"
     elif type(node) == BinaryNode:
         rename_terminals_update_fn_ast(node.left, rename_dict)
         rename_terminals_update_fn_ast(node.right, rename_dict)
+        node.subform_string = "(" + node.left.subform_string + node.value + node.right.subform_string + ")"
 
 
 # this renames all terminal nodes in HCTL formula
@@ -62,14 +65,20 @@ def rename_terminals_hctl_ast(node, rename_dict):
             return
         elif '{' in node.value:
             node.value = '{' + rename_dict[node.value[1:-1]] + '}'
+            node.subform_string = node.value
         else:
             node.value = rename_dict[node.value]
-    elif type(node) == UnaryNode or type(node) == HybridNode:
+            node.subform_string = node.value
+    elif type(node) == UnaryNode:
         rename_terminals_hctl_ast(node.child, rename_dict)
+        node.subform_string = "(" + node.value + node.child.subform_string + ")"
     elif type(node) == BinaryNode:
         rename_terminals_hctl_ast(node.left, rename_dict)
         rename_terminals_hctl_ast(node.right, rename_dict)
-
+        node.subform_string = "(" + node.left.subform_string + node.value + node.right.subform_string + ")"
+    elif type(node) == HybridNode:
+        rename_terminals_hctl_ast(node.child, rename_dict)
+        node.subform_string = "(" + node.value + node.var + ":" + node.child.subform_string + ")"
 
 def parse_all(file_name: str, formula: str):
     # first preprocess the file content

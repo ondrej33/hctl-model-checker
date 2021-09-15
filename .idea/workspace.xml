@@ -1,25 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="501566b4-125e-4202-a3dd-1c19b5d18aa3" name="Changes" comment="framework for parse_all, part of it is done">
-      <change afterPath="$PROJECT_DIR$/bnet_examples/029_free.bnet" afterDir="false" />
+    <list default="true" id="501566b4-125e-4202-a3dd-1c19b5d18aa3" name="Changes" comment="make parse_all work, updated most of imports, changed update_fn grammar">
+      <change afterPath="$PROJECT_DIR$/bnet_examples/095_free.bnet" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Parsing_HCTL_formula/evaluator_hctl.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Parsing_HCTL_formula/evaluator_hctl.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Parsing_HCTL_formula/parser_hctl.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Parsing_HCTL_formula/parser_hctl.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Parsing_HCTL_formula/testing_parser.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Parsing_HCTL_formula/testing_parser.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Parsing_update_fns/evaluator_update_fn.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Parsing_update_fns/evaluator_update_fn.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Parsing_update_fns/parser_update_fn.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Parsing_update_fns/parser_update_fn.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Parsing_update_fns/update_fn.g4" beforeDir="false" afterPath="$PROJECT_DIR$/src/Parsing_update_fns/update_fn.g4" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Parsing_update_fns/update_fn.interp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Parsing_update_fns/update_fn.interp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Parsing_update_fns/update_fn.tokens" beforeDir="false" afterPath="$PROJECT_DIR$/src/Parsing_update_fns/update_fn.tokens" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Parsing_update_fns/update_fnLexer.interp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Parsing_update_fns/update_fnLexer.interp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Parsing_update_fns/update_fnLexer.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Parsing_update_fns/update_fnLexer.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Parsing_update_fns/update_fnLexer.tokens" beforeDir="false" afterPath="$PROJECT_DIR$/src/Parsing_update_fns/update_fnLexer.tokens" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Parsing_update_fns/update_fnListener.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Parsing_update_fns/update_fnListener.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Parsing_update_fns/update_fnParser.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Parsing_update_fns/update_fnParser.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Parsing_update_fns/update_fnVisitor.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Parsing_update_fns/update_fnVisitor.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/implementation.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/implementation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/model.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/abstract_syntax_tree.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/abstract_syntax_tree.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/parse_all.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/parse_all.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -198,7 +184,7 @@
       <updated>1631651406919</updated>
       <workItem from="1631651408931" duration="142000" />
       <workItem from="1631651590237" duration="7517000" />
-      <workItem from="1631710964894" duration="5498000" />
+      <workItem from="1631710964894" duration="8193000" />
     </task>
     <task id="LOCAL-00001" summary="changed structure: paths, names, folders, includes">
       <created>1631652715774</created>
@@ -228,7 +214,14 @@
       <option name="project" value="LOCAL" />
       <updated>1631659159533</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="make parse_all work, updated most of imports, changed update_fn grammar">
+      <created>1631716870064</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1631716870064</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -251,13 +244,25 @@
     <MESSAGE value="added update fn parsing, changed some comments" />
     <MESSAGE value="divided parser and evaluator" />
     <MESSAGE value="framework for parse_all, part of it is done" />
-    <option name="LAST_COMMIT_MESSAGE" value="framework for parse_all, part of it is done" />
+    <MESSAGE value="make parse_all work, updated most of imports, changed update_fn grammar" />
+    <option name="LAST_COMMIT_MESSAGE" value="make parse_all work, updated most of imports, changed update_fn grammar" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/src/parse_all.py</url>
+          <line>130</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/HCTL_stuff$testing_parser.coverage" NAME="testing_parser Coverage Results" MODIFIED="1631656434685" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/" />
     <SUITE FILE_PATH="coverage/HCTL_stuff$parser_and_simulator.coverage" NAME="parser_and_simulator Coverage Results" MODIFIED="1631652386521" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/" />
     <SUITE FILE_PATH="coverage/HCTL_stuff$testing_optimizations.coverage" NAME="testing_optimizations Coverage Results" MODIFIED="1631652519936" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/" />
     <SUITE FILE_PATH="coverage/HCTL_stuff$fixed_formulas_eval.coverage" NAME="fixed_formulas_eval Coverage Results" MODIFIED="1631652403286" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/" />
-    <SUITE FILE_PATH="coverage/HCTL_stuff$evaluator_hctl__1_.coverage" NAME="evaluator_hctl Coverage Results" MODIFIED="1631716504046" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/HCTL_stuff$evaluator_hctl__1_.coverage" NAME="evaluator_hctl Coverage Results" MODIFIED="1631719349528" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

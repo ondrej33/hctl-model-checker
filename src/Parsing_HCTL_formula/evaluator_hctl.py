@@ -19,14 +19,11 @@ class EvaluateExpressionVisitor:
     # TODO: !bring ALL optimizations in!, (add NESTED through union, now we have just the three basic)
     # TODO: JUMP might not need x in the subformula
 
-    # TODO: adding state-variables to the model DIRECTLY FROM FORMULA
-
-    # TODO: translating variables in formula to s__1...
-
     # Visits node and depending on its type and operation, evaluates the subformula which it represents
     # Uses results from children, combines them until whole thing is done
     # if optimize=True, then parent was some hybrid operation and we can push it inside for example EX...
     def visit(self, node, model: Model, dupl, cache, optim=False, optim_op=None, optim_var=None):
+        # TODO : subform_string problem
         # first check for if this node does not belong in the duplicates
         save_to_cache = False
         if node.subform_string in dupl:
@@ -47,7 +44,6 @@ class EvaluateExpressionVisitor:
             # if we have a state-variable, node.value has form of {var_name}
             if '{' in node.value:
                 result = create_comparator(model, node.value[1:-1])
-            # TODO: instead of propositions/params return their translated name (anything -> s__n ...)
             else:
                 result = model.bdd.add_expr(node.value)
         elif type(node) == UnaryNode:
@@ -127,6 +123,7 @@ def mark_duplicates(root_node):
         if last_height == node.height:
             for n in same_height_nodes:
                 if node.subform_string == n.subform_string:
+                    # TODO : subform_string string problem?
                     duplicates[n.subform_string] = duplicates.get(n.subform_string, 0) + 1
                     skip = True
                     break
@@ -163,7 +160,7 @@ def parse_and_eval(formula: str, model: Model) -> Function:
 
 if __name__ == '__main__':
     # TODO: change path
-    bnet_path = "bnet_examples/029.bnet"
+    bnet_path = "bnet_examples/095_free.bnet"
     f = "!{x}: (AG EF {x})"
 
     m = parse_all(bnet_path, f)
