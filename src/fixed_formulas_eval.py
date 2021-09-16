@@ -226,7 +226,7 @@ def model_check_fixed14(model: Model) -> Function:
 # test "↓x (EX set1 | EX set2)"
 def simple_main(file_name: str):
     # formula here is just a placeholder to save var names
-    model = parse_all(file_name, "!{x}: (AX {x})")
+    model, _ = parse_all(file_name, "!{x}: (AX {x})")
     results = model_check_fixed9(model)
     print_results(results, model, "", True)
 

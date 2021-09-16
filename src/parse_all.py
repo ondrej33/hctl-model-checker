@@ -160,4 +160,4 @@ def parse_all(file_name: str, formula: str):
     name_dict_reversed = {y: x for x, y in name_dict.items()}
     model_name = file_name.split("/")[-1]
     model = Model(model_name, bdd, prop_names, param_names, var_names, update_dict, name_dict_reversed)
-    return model
+    return model, as_tree_hctl

@@ -403,7 +403,7 @@ def eval_color(assignment, num_cols) -> float:
 # for testing purposes
 def bdd_dumper(file_name: str):
     # formula here is just a placeholder to save var names
-    model = parse_all(file_name, "!{x}: (AX {x})")
+    model, _ = parse_all(file_name, "!{x}: (AX {x})")
 
     result = AX(model, create_comparator(model, 'x'))
 
