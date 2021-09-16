@@ -1,6 +1,5 @@
 import sys
-sys.path.insert(1, '~/HCTL_stuff/src')
-
+sys.path.insert(1, '~/HCTL_stuff/')
 
 from src.parse_all import parse_all
 from src.Parsing_HCTL_formula.evaluator_hctl import parse_and_eval
