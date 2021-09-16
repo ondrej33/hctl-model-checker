@@ -1,4 +1,3 @@
-import sys
 from src.implementation import *
 from src.fixed_formulas_eval import model_check_fixed2_v3
 import time
