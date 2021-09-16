@@ -1,13 +1,27 @@
+"""
 import os
 # Change the current working directory
-os.chdir('/mnt/c/Users/Ondra/PycharmProjects/HCTL_stuff/')
+os.chdir('~/HCTL_stuff')
 
 import sys
-sys.path.insert(1, '~/HCTL_stuff/src')
+sys.path.append('~/HCTL_stuff/src')
+sys.path.append('~/HCTL_stuff/src/Parsing_HCTL_formula')
+sys.path.append('~/HCTL_stuff/src/Parsing_update_fns')
+"""
 
-from src.parse_all import parse_all
-from src.Parsing_HCTL_formula.evaluator_hctl import parse_and_eval
-from src.implementation import print_results
+import os
+# Change the current working directory
+os.chdir('/mnt/c/Users/Ondra/PycharmProjects/HCTL_stuff')
+
+import sys
+sys.path.append('/mnt/c/Users/Ondra/PycharmProjects/HCTL_stuff/src')
+sys.path.append('/mnt/c/Users/Ondra/PycharmProjects/HCTL_stuff/src/Parsing_HCTL_formula')
+sys.path.append('/mnt/c/Users/Ondra/PycharmProjects/HCTL_stuff/src/Parsing_update_fns')
+
+
+from parse_all import parse_all
+from Parsing_HCTL_formula.evaluator_hctl import parse_and_eval
+from implementation import print_results
 import time
 
 
