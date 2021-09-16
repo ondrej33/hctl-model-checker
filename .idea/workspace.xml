@@ -1,16 +1,326 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="501566b4-125e-4202-a3dd-1c19b5d18aa3" name="Changes" comment="fixed updating of subform_str during renaming terminals">
-      <change afterPath="$PROJECT_DIR$/bnet_examples/064_free.bnet" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/bnet_examples/064a.bnet" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/testing_full_eval.py" afterDir="false" />
+    <list default="true" id="501566b4-125e-4202-a3dd-1c19b5d18aa3" name="Changes" comment="parse_all fixed, added some testing">
+      <change afterPath="$PROJECT_DIR$/dd-0.5.6.tar.gz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/build-aux/ar-lib" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/build-aux/compile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/build-aux/config.guess" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/build-aux/config.sub" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/build-aux/depcomp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/build-aux/install-sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/build-aux/ltmain.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/build-aux/missing" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/build-aux/tap-driver.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cplusplus/.dirstamp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cplusplus/Included.am" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cplusplus/cplusplus_libobj_la-cuddObj.lo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cplusplus/cplusplus_libobj_la-cuddObj.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cplusplus/cuddObj.cc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cplusplus/cuddObj.hh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cplusplus/libobj.la" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cplusplus/multi.out" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cplusplus/test.out" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cplusplus/test_obj.test.in" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cplusplus/testmulti.cc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cplusplus/testobj.cc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/.deps/.dirstamp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/.deps/cudd_libcudd_la-cuddAPI.Plo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/.deps/cudd_libcudd_la-cuddAddAbs.Plo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/.deps/cudd_libcudd_la-cuddAddApply.Plo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/.deps/cudd_libcudd_la-cuddAddFind.Plo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/.deps/cudd_libcudd_la-cuddAddInv.Plo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/.deps/cudd_libcudd_la-cuddAddIte.Plo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/.deps/cudd_libcudd_la-cuddAddNeg.Plo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/.deps/cudd_libcudd_la-cuddAddWalsh.Plo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/.deps/cudd_libcudd_la-cuddAndAbs.Plo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/.deps/cudd_libcudd_la-cuddAnneal.Plo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/.deps/cudd_libcudd_la-cuddApa.Plo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/.deps/cudd_libcudd_la-cuddApprox.Plo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/.deps/cudd_libcudd_la-cuddBddAbs.Plo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/.deps/cudd_libcudd_la-cuddBddCorr.Plo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/.deps/cudd_libcudd_la-cuddBddIte.Plo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/.deps/cudd_libcudd_la-cuddBridge.Plo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/.deps/cudd_libcudd_la-cuddCache.Plo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/.deps/cudd_libcudd_la-cuddCheck.Plo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/.deps/cudd_libcudd_la-cuddClip.Plo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/.deps/cudd_libcudd_la-cuddCof.Plo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/.deps/cudd_libcudd_la-cuddCompose.Plo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/.deps/cudd_libcudd_la-cuddDecomp.Plo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/.deps/cudd_libcudd_la-cuddEssent.Plo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/.deps/cudd_libcudd_la-cuddExact.Plo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/.deps/cudd_libcudd_la-cuddExport.Plo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/.deps/cudd_libcudd_la-cuddGenCof.Plo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/.deps/cudd_libcudd_la-cuddGenetic.Plo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/.deps/cudd_libcudd_la-cuddGroup.Plo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/.deps/cudd_libcudd_la-cuddHarwell.Plo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/.deps/cudd_libcudd_la-cuddInit.Plo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/.deps/cudd_libcudd_la-cuddInteract.Plo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/.deps/cudd_libcudd_la-cuddLCache.Plo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/.deps/cudd_libcudd_la-cuddLevelQ.Plo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/.deps/cudd_libcudd_la-cuddLinear.Plo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/.deps/cudd_libcudd_la-cuddLiteral.Plo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/.deps/cudd_libcudd_la-cuddMatMult.Plo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/.deps/cudd_libcudd_la-cuddPriority.Plo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/.deps/cudd_libcudd_la-cuddRead.Plo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/.deps/cudd_libcudd_la-cuddRef.Plo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/.deps/cudd_libcudd_la-cuddReorder.Plo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/.deps/cudd_libcudd_la-cuddSat.Plo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/.deps/cudd_libcudd_la-cuddSign.Plo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/.deps/cudd_libcudd_la-cuddSolve.Plo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/.deps/cudd_libcudd_la-cuddSplit.Plo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/.deps/cudd_libcudd_la-cuddSubsetHB.Plo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/.deps/cudd_libcudd_la-cuddSubsetSP.Plo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/.deps/cudd_libcudd_la-cuddSymmetry.Plo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/.deps/cudd_libcudd_la-cuddTable.Plo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/.deps/cudd_libcudd_la-cuddUtil.Plo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/.deps/cudd_libcudd_la-cuddWindow.Plo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/.deps/cudd_libcudd_la-cuddZddCount.Plo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/.deps/cudd_libcudd_la-cuddZddFuncs.Plo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/.deps/cudd_libcudd_la-cuddZddGroup.Plo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/.deps/cudd_libcudd_la-cuddZddIsop.Plo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/.deps/cudd_libcudd_la-cuddZddLin.Plo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/.deps/cudd_libcudd_la-cuddZddMisc.Plo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/.deps/cudd_libcudd_la-cuddZddPort.Plo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/.deps/cudd_libcudd_la-cuddZddReord.Plo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/.deps/cudd_libcudd_la-cuddZddSetop.Plo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/.deps/cudd_libcudd_la-cuddZddSymm.Plo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/.deps/cudd_libcudd_la-cuddZddUtil.Plo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/.deps/cudd_testcudd-testcudd.Po" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/.deps/cudd_testextra-testextra.Po" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/.libs/libcudd.a" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/.libs/libcudd.lai" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/Included.am" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/cudd_libcudd_la-cuddGenCof.lo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/cudd_libcudd_la-cuddGenCof.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/cudd_libcudd_la-cuddGenetic.lo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/cudd_libcudd_la-cuddGenetic.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/cudd_libcudd_la-cuddGroup.lo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/cudd_libcudd_la-cuddGroup.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/cudd_libcudd_la-cuddHarwell.lo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/cudd_libcudd_la-cuddHarwell.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/cudd_libcudd_la-cuddInit.lo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/cudd_libcudd_la-cuddInit.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/cudd_libcudd_la-cuddInteract.lo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/cudd_libcudd_la-cuddInteract.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/cudd_libcudd_la-cuddLCache.lo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/cudd_libcudd_la-cuddLCache.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/cudd_libcudd_la-cuddLevelQ.lo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/cudd_libcudd_la-cuddLevelQ.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/cudd_libcudd_la-cuddLinear.lo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/cudd_libcudd_la-cuddLinear.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/cudd_libcudd_la-cuddLiteral.lo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/cudd_libcudd_la-cuddLiteral.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/cudd_libcudd_la-cuddMatMult.lo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/cudd_libcudd_la-cuddMatMult.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/cudd_libcudd_la-cuddPriority.lo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/cudd_libcudd_la-cuddPriority.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/cudd_libcudd_la-cuddRead.lo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/cudd_libcudd_la-cuddRead.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/cudd_libcudd_la-cuddRef.lo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/cudd_libcudd_la-cuddRef.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/cudd_libcudd_la-cuddReorder.lo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/cudd_libcudd_la-cuddReorder.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/cudd_libcudd_la-cuddSat.lo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/cudd_libcudd_la-cuddSat.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/cudd_libcudd_la-cuddSign.lo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/cudd_libcudd_la-cuddSign.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/cudd_libcudd_la-cuddSolve.lo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/cudd_libcudd_la-cuddSolve.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/cudd_libcudd_la-cuddSplit.lo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/cudd_libcudd_la-cuddSplit.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/cudd_libcudd_la-cuddSubsetHB.lo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/cudd_libcudd_la-cuddSubsetHB.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/cudd_libcudd_la-cuddSubsetSP.lo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/cudd_libcudd_la-cuddSubsetSP.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/cudd_libcudd_la-cuddSymmetry.lo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/cudd_libcudd_la-cuddSymmetry.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/cudd_libcudd_la-cuddTable.lo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/cudd_libcudd_la-cuddTable.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/cudd_libcudd_la-cuddUtil.lo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/cudd_libcudd_la-cuddUtil.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/cudd_libcudd_la-cuddWindow.lo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/cudd_libcudd_la-cuddWindow.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/cudd_libcudd_la-cuddZddCount.lo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/cudd_libcudd_la-cuddZddCount.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/cudd_libcudd_la-cuddZddFuncs.lo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/cudd_libcudd_la-cuddZddFuncs.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/cudd_libcudd_la-cuddZddGroup.lo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/cudd_libcudd_la-cuddZddGroup.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/cudd_libcudd_la-cuddZddIsop.lo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/cudd_libcudd_la-cuddZddIsop.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/cudd_libcudd_la-cuddZddLin.lo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/cudd_libcudd_la-cuddZddLin.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/cudd_libcudd_la-cuddZddMisc.lo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/cudd_libcudd_la-cuddZddMisc.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/cudd_libcudd_la-cuddZddPort.lo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/cudd_libcudd_la-cuddZddPort.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/cudd_libcudd_la-cuddZddReord.lo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/cudd_libcudd_la-cuddZddReord.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/cudd_libcudd_la-cuddZddSetop.lo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/cudd_libcudd_la-cuddZddSetop.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/cudd_libcudd_la-cuddZddSymm.lo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/cudd_libcudd_la-cuddZddSymm.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/cudd_libcudd_la-cuddZddUtil.lo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/cudd_libcudd_la-cuddZddUtil.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/extra.out" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/libcudd.la" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/r7x8.1.mat" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/r7x8.1.out" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/test_cudd.test.in" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/testcudd.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/cudd/testextra.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/dddmp/.dirstamp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/dddmp/Included.am" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/dddmp/README.dddmp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/dddmp/README.testdddmp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/dddmp/RELEASE_NOTES" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/dddmp/dddmp.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/dddmp/dddmpBinary.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/dddmp/dddmpConvert.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/dddmp/dddmpDbg.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/dddmp/dddmpInt.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/dddmp/dddmpLoad.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/dddmp/dddmpLoadCnf.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/dddmp/dddmpNodeAdd.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/dddmp/dddmpNodeBdd.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/dddmp/dddmpNodeCnf.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/dddmp/dddmpStoreAdd.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/dddmp/dddmpStoreBdd.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/dddmp/dddmpStoreCnf.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/dddmp/dddmpStoreMisc.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/dddmp/dddmpUtil.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/dddmp/dddmp_libdddmp_la-dddmpBinary.lo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/dddmp/dddmp_libdddmp_la-dddmpBinary.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/dddmp/dddmp_libdddmp_la-dddmpConvert.lo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/dddmp/dddmp_libdddmp_la-dddmpConvert.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/dddmp/dddmp_libdddmp_la-dddmpDbg.lo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/dddmp/dddmp_libdddmp_la-dddmpDbg.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/dddmp/dddmp_libdddmp_la-dddmpLoad.lo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/dddmp/dddmp_libdddmp_la-dddmpLoad.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/dddmp/dddmp_libdddmp_la-dddmpLoadCnf.lo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/dddmp/dddmp_libdddmp_la-dddmpLoadCnf.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/dddmp/dddmp_libdddmp_la-dddmpNodeAdd.lo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/dddmp/dddmp_libdddmp_la-dddmpNodeAdd.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/dddmp/dddmp_libdddmp_la-dddmpNodeBdd.lo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/dddmp/dddmp_libdddmp_la-dddmpNodeBdd.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/dddmp/dddmp_libdddmp_la-dddmpNodeCnf.lo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/dddmp/dddmp_libdddmp_la-dddmpNodeCnf.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/dddmp/dddmp_libdddmp_la-dddmpStoreAdd.lo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/dddmp/dddmp_libdddmp_la-dddmpStoreAdd.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/dddmp/dddmp_libdddmp_la-dddmpStoreBdd.lo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/dddmp/dddmp_libdddmp_la-dddmpStoreBdd.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/dddmp/dddmp_libdddmp_la-dddmpStoreCnf.lo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/dddmp/dddmp_libdddmp_la-dddmpStoreCnf.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/dddmp/dddmp_libdddmp_la-dddmpStoreMisc.lo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/dddmp/dddmp_libdddmp_la-dddmpStoreMisc.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/dddmp/dddmp_libdddmp_la-dddmpUtil.lo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/dddmp/dddmp_libdddmp_la-dddmpUtil.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/dddmp/libdddmp.la" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/dddmp/test_dddmp.test.in" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/dddmp/testdddmp.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/epd/.deps/.dirstamp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/epd/.deps/cudd_libcudd_la-epd.Plo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/mtr/.deps/.dirstamp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/mtr/.deps/cudd_libcudd_la-mtrBasic.Plo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/mtr/.deps/cudd_libcudd_la-mtrGroup.Plo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/mtr/.deps/mtr_testmtr-testmtr.Po" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/nanotrav/C17.blif" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/nanotrav/C17.out" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/nanotrav/C880.blif" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/nanotrav/C880.out" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/nanotrav/Included.am" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/nanotrav/README" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/nanotrav/adj49.blif" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/nanotrav/adj49.out" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/nanotrav/bnet.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/nanotrav/bnet.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/nanotrav/chkMterm.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/nanotrav/closest.blif" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/nanotrav/closest.out" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/nanotrav/ham01.blif" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/nanotrav/ham01.out" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/nanotrav/main.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/nanotrav/miniFirst.blif" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/nanotrav/miniFirst.out" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/nanotrav/miniSecond.blif" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/nanotrav/mult32a.blif" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/nanotrav/mult32a.out" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/nanotrav/nanotrav.1" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/nanotrav/ntr.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/nanotrav/ntr.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/nanotrav/ntrBddTest.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/nanotrav/ntrHeap.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/nanotrav/ntrMflow.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/nanotrav/ntrShort.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/nanotrav/ntrZddTest.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/nanotrav/rcn25.blif" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/nanotrav/rcn25.out" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/nanotrav/s27.blif" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/nanotrav/s27.out" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/nanotrav/s27b.blif" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/nanotrav/s27b.out" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/nanotrav/s27c.blif" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/nanotrav/s27c.out" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/nanotrav/s382.blif" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/nanotrav/s382.out" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/nanotrav/s641.blif" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/nanotrav/s641.out" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/nanotrav/test_ntrv.test.in" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/st/.deps/.dirstamp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/st/.deps/cudd_libcudd_la-st.Plo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/st/.deps/st_testst-testst.Po" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/util/.deps/.dirstamp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/util/.deps/cudd_libcudd_la-cpu_stats.Plo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/util/.deps/cudd_libcudd_la-cpu_time.Plo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/util/.deps/cudd_libcudd_la-cstringstream.Plo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/util/.deps/cudd_libcudd_la-datalimit.Plo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/util/.deps/cudd_libcudd_la-pathsearch.Plo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/util/.deps/cudd_libcudd_la-pipefork.Plo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/util/.deps/cudd_libcudd_la-prtime.Plo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/util/.deps/cudd_libcudd_la-safe_mem.Plo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/util/.deps/cudd_libcudd_la-strsav.Plo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/util/.deps/cudd_libcudd_la-texpand.Plo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/util/.dirstamp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/util/Included.am" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/util/cpu_stats.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/util/cpu_time.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/util/cstringstream.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/util/cstringstream.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/util/cudd_libcudd_la-cpu_stats.lo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/util/cudd_libcudd_la-cpu_stats.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/util/cudd_libcudd_la-cpu_time.lo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/util/cudd_libcudd_la-cpu_time.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/util/cudd_libcudd_la-cstringstream.lo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/util/cudd_libcudd_la-cstringstream.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/util/cudd_libcudd_la-datalimit.lo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/util/cudd_libcudd_la-datalimit.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/util/cudd_libcudd_la-pathsearch.lo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/util/cudd_libcudd_la-pathsearch.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/util/cudd_libcudd_la-pipefork.lo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/util/cudd_libcudd_la-pipefork.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/util/cudd_libcudd_la-prtime.lo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/util/cudd_libcudd_la-prtime.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/util/cudd_libcudd_la-safe_mem.lo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/util/cudd_libcudd_la-safe_mem.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/util/cudd_libcudd_la-strsav.lo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/util/cudd_libcudd_la-strsav.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/util/cudd_libcudd_la-texpand.lo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/util/cudd_libcudd_la-texpand.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/util/cudd_libcudd_la-ucbqsort.lo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/util/cudd_libcudd_la-ucbqsort.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/util/datalimit.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/util/pathsearch.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/util/pipefork.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/util/prtime.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/util/safe_mem.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/util/strsav.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/util/texpand.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/util/ucbqsort.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dd_dir/cudd-3.0.0/util/util.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/__init__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Parsing_HCTL_formula/evaluator_hctl.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Parsing_HCTL_formula/evaluator_hctl.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Parsing_update_fns/evaluator_update_fn.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Parsing_update_fns/evaluator_update_fn.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/fixed_formulas_eval.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/fixed_formulas_eval.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/implementation.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/implementation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/parse_all.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/parse_all.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/testing_optimizations.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/testing_optimizations.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -236,7 +546,8 @@
       <workItem from="1631651590237" duration="7517000" />
       <workItem from="1631710964894" duration="8250000" />
       <workItem from="1631719583280" duration="105000" />
-      <workItem from="1631777831510" duration="5572000" />
+      <workItem from="1631777831510" duration="5984000" />
+      <workItem from="1631785818414" duration="2264000" />
     </task>
     <task id="LOCAL-00001" summary="changed structure: paths, names, folders, includes">
       <created>1631652715774</created>
@@ -280,7 +591,14 @@
       <option name="project" value="LOCAL" />
       <updated>1631719484279</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="parse_all fixed, added some testing">
+      <created>1631785446395</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1631785446395</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -305,7 +623,8 @@
     <MESSAGE value="framework for parse_all, part of it is done" />
     <MESSAGE value="make parse_all work, updated most of imports, changed update_fn grammar" />
     <MESSAGE value="fixed updating of subform_str during renaming terminals" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed updating of subform_str during renaming terminals" />
+    <MESSAGE value="parse_all fixed, added some testing" />
+    <option name="LAST_COMMIT_MESSAGE" value="parse_all fixed, added some testing" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/HCTL_stuff$testing_parser.coverage" NAME="testing_parser Coverage Results" MODIFIED="1631779668025" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/" />
@@ -314,7 +633,7 @@
     <SUITE FILE_PATH="coverage/HCTL_stuff$evaluator_hctl.coverage" NAME="evaluator_hctl Coverage Results" MODIFIED="1631779478349" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/HCTL_stuff$fixed_formulas_eval.coverage" NAME="fixed_formulas_eval Coverage Results" MODIFIED="1631780170725" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/" />
     <SUITE FILE_PATH="coverage/HCTL_stuff$testing_parser__1_.coverage" NAME="testing_parser Coverage Results" MODIFIED="1631779721189" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/" />
-    <SUITE FILE_PATH="coverage/HCTL_stuff$testing_full_eval.coverage" NAME="testing_full_eval Coverage Results" MODIFIED="1631785060397" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
+    <SUITE FILE_PATH="coverage/HCTL_stuff$testing_full_eval.coverage" NAME="testing_full_eval Coverage Results" MODIFIED="1631788522269" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/HCTL_stuff$evaluator_hctl__1_.coverage" NAME="evaluator_hctl Coverage Results" MODIFIED="1631719349528" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
