@@ -1,12 +1,12 @@
 """
 import os
 # Change the current working directory
-os.chdir('~/HCTL_stuff')
+os.chdir('/home/xhuvar/HCTL_stuff')
 
 import sys
-sys.path.append('~/HCTL_stuff/src')
-sys.path.append('~/HCTL_stuff/src/Parsing_HCTL_formula')
-sys.path.append('~/HCTL_stuff/src/Parsing_update_fns')
+sys.path.append('/home/xhuvar/HCTL_stuff/src')
+sys.path.append('/home/xhuvar/HCTL_stuff/src/Parsing_HCTL_formula')
+sys.path.append('/home/xhuvar/HCTL_stuff/src/Parsing_update_fns')
 """
 
 import os
