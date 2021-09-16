@@ -1,4 +1,6 @@
 from typing import List
+import sys
+sys.path.insert(1, '~/HCTL_stuff/src')
 
 # change this depending on environment
 from dd.autoref import BDD, Function
