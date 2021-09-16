@@ -1,5 +1,6 @@
 from collections import OrderedDict
 from termcolor import colored
+from src.parse_all import parse_all
 
 from src.model import *
 
@@ -372,7 +373,7 @@ def bnet_parser(file_name: str):
     # pack it all into a whole model and return it
     name_dict_reversed = {y: x for x, y in name_dict.items()}
     model_name = file_name.split("\\")[-1]
-    model = Model(model_name, bdd, num_props, prop_names, num_params, param_names, real_update_dict, update_dict_renamed, name_dict_reversed)
+    model = Model(model_name, bdd, prop_names, param_names, ['x', 'y'], real_update_dict, name_dict_reversed)
     return model
 
 
@@ -401,7 +402,9 @@ def eval_color(assignment, num_cols) -> float:
 
 # for testing purposes
 def bdd_dumper(file_name: str):
-    model = bnet_parser(file_name)
+    # formula here is just a placeholder to save var names
+    model = parse_all(file_name, "!{x}: (AX {x})")
+
     result = AX(model, create_comparator(model, 'x'))
 
     var_order = {}

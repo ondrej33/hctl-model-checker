@@ -13,12 +13,12 @@ class EvaluateExpressionVisitor:
             # TODO: differentiate between true/false OR prop/param node
             result = bdd.add_expr(node.value)
         elif type(node) == UnaryNode:
-            # we have only the negation here
+            # we have only the negation here at the moment
             result = ~self.visit(node.child, bdd)
         elif type(node) == BinaryNode:
-            if node.value == '&&':
+            if node.value == '&&' or node.value == '&':
                 result = self.visit(node.left, bdd) & self.visit(node.right, bdd)
-            elif node.value == '||':
+            elif node.value == '||' or node.value == '|':
                 result = self.visit(node.left, bdd) | self.visit(node.right, bdd)
             elif node.value == '->':
                 result = self.visit(node.left, bdd).implies(self.visit(node.right, bdd))

@@ -80,7 +80,10 @@ def rename_terminals_hctl_ast(node, rename_dict):
         rename_terminals_hctl_ast(node.child, rename_dict)
         node.subform_string = "(" + node.value + node.var + ":" + node.child.subform_string + ")"
 
+
 def parse_all(file_name: str, formula: str):
+    # TODO: GO THROUGH THE TREES ONLY ONCE (collect terminal names while building the trees, later just rename them)
+    
     # first preprocess the file content
     file = open(file_name, "r")
     content = file.read()
@@ -127,7 +130,7 @@ def parse_all(file_name: str, formula: str):
     for as_tree in update_fn_trees:
         rename_terminals_update_fn_ast(as_tree, name_dict)
 
-    # TODO: create a BDD
+    # create a BDD
     bdd = BDD()
     vrs = [f"s__{i}" for i in range(len(prop_names))]           # state describing vars
     vrs.extend(f"p__{i}" for i in range(len(param_names)))      # params
@@ -158,5 +161,3 @@ def parse_all(file_name: str, formula: str):
     model_name = file_name.split("/")[-1]
     model = Model(model_name, bdd, prop_names, param_names, var_names, update_dict, name_dict_reversed)
     return model
-
-    # TODO: use evaluator_hctl.eval_tree in some OTHER FILE

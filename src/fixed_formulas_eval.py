@@ -1,4 +1,5 @@
 from src.implementation import *
+from src.parse_all import parse_all
 
 
 # ============================================================================================= #
@@ -224,7 +225,8 @@ def model_check_fixed14(model: Model) -> Function:
 
 # test "↓x (EX set1 | EX set2)"
 def simple_main(file_name: str):
-    model = bnet_parser(file_name)
+    # formula here is just a placeholder to save var names
+    model = parse_all(file_name, "!{x}: (AX {x})")
     results = model_check_fixed9(model)
     print_results(results, model, "", True)
 

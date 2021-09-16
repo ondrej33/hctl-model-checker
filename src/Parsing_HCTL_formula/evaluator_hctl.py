@@ -160,7 +160,7 @@ def parse_and_eval(formula: str, model: Model) -> Function:
 
 if __name__ == '__main__':
     # TODO: change path
-    bnet_path = "bnet_examples/095_free.bnet"
+    bnet_path = "bnet_examples/064_free.bnet"
     f = "!{x}: (AG EF {x})"
 
     m = parse_all(bnet_path, f)
