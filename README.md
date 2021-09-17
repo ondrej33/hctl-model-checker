@@ -14,6 +14,8 @@ Knihovny: https://github.com/tulip-control/dd, https://github.com/antlr/antlr4/b
 DD + CUDD  
 $ pip install dd  
 
+$ pip install cython
+
 $ pip download dd --no-deps  
 $ tar xzf dd-\*.tar.gz  
 $ cd dd-\*/  
