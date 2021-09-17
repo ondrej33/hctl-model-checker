@@ -8,3 +8,28 @@ Parser, gramatika pro HCTL a vše okolo je v Parsing_and_evaluation/. V parser_a
 Zbytek jsou různé testy, helper scripty apod., nic moc důležitého.
 
 Knihovny: https://github.com/tulip-control/dd, https://github.com/antlr/antlr4/blob/master/doc/python-target.md
+
+
+========== SETUP: ==========  
+DD + CUDD  
+$ pip install dd  
+
+$ pip download dd --no-deps  
+$ tar xzf dd-*.tar.gz  
+$ cd dd-*/  
+$ python setup.py install --fetch --cudd  
+
+
+ANTLR  
+$ cd /usr/local/lib  
+$ wget https://www.antlr.org/download/antlr-4.9.2-complete.jar  
+$ export CLASSPATH=".:/usr/local/lib/antlr-4.9.2-complete.jar:$CLASSPATH"  
+$ alias antlr4='java -jar /usr/local/lib/antlr-4.9.2-complete.jar'  
+$ alias grun='java org.antlr.v4.gui.TestRig'  
+
+$ pip install antlr4-python3-runtime  
+pak z gramatiky generuju soubory pomocí: $ antlr4 -Dlanguage=Python3 -visitor update_fn.g4  
+
+
+TERMCOLOR  
+$ pip install termcolor  
