@@ -11,7 +11,7 @@ Knihovny: https://github.com/tulip-control/dd, https://github.com/antlr/antlr4/b
 
 
 ========== SETUP: ==========
-1) dd, cudd
+DD + CUDD
 $ pip install dd
 
 $ pip download dd --no-deps
@@ -20,7 +20,7 @@ $ cd dd-*/
 $ python setup.py install --fetch --cudd
 
 
-2) ANTLR
+ANTLR
 $ cd /usr/local/lib
 $ wget https://www.antlr.org/download/antlr-4.9.2-complete.jar
 $ export CLASSPATH=".:/usr/local/lib/antlr-4.9.2-complete.jar:$CLASSPATH"
@@ -28,8 +28,8 @@ $ alias antlr4='java -jar /usr/local/lib/antlr-4.9.2-complete.jar'
 $ alias grun='java org.antlr.v4.gui.TestRig'
 
 $ pip install antlr4-python3-runtime
-# pak z gramatiky generuju soubory pomocí: $ antlr4 -Dlanguage=Python3 -visitor update_fn.g4
+pak z gramatiky generuju soubory pomocí: $ antlr4 -Dlanguage=Python3 -visitor update_fn.g4
 
 
-3) termcolor 				
+TERMCOLOR
 $ pip install termcolor
