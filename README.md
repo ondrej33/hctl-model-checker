@@ -15,8 +15,8 @@ DD + CUDD
 $ pip install dd  
 
 $ pip download dd --no-deps  
-$ tar xzf dd-*.tar.gz  
-$ cd dd-*/  
+$ tar xzf dd-\*.tar.gz  
+$ cd dd-\*/  
 $ python setup.py install --fetch --cudd  
 
 
