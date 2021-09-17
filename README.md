@@ -20,6 +20,7 @@ $ pip download dd --no-deps
 $ tar xzf dd-\*.tar.gz  
 $ cd dd-\*/  
 $ python setup.py install --fetch --cudd  
+pak asi třeba změnit pythonpath: $ export PYTHONPATH="${PYTHONPATH}:/home/xhuvar/HCTL_stuff/venv/lib/python3.8/site-packages"
 
 
 ANTLR  
