@@ -25,20 +25,20 @@ from implementation import print_results
 import time
 
 
-def run_tests(file_name):
-    times = []
-    for formula in ["!{x}: (AF {x})", "!{x}: (AX {x})", "!{x}: (AG EF {x})", "!{x}: (EG EF {x})"]:
-        model, as_tree_hctl = parse_all(file_name, formula)
-        start = time.time()
-        res = eval_tree(as_tree_hctl, model)
-        end = time.time()
-        times.append(end - start)
-        print_results(res, model, f"model: {model.name}, formula: {formula}", False)
-        print()
-    print("times: ", times, '\n')
+def run_test(file_name, formula):
+    model, as_tree_hctl = parse_all(file_name, formula)
+    start = time.time()
+    res = eval_tree(as_tree_hctl, model)
+    end = time.time()
+    res_time = end - start
+    print_results(res, model, f"model: {model.name}, formula: {formula}", True)
+    print(formula, ": ", res_time)
 
 
 if __name__ == '__main__':
-    # TODO: change path
-    bnet_path = "bnet_examples/064_free.bnet"
-    run_tests(bnet_path)
+    if len(sys.argv) == 3:
+        run_test(sys.argv[1], sys.argv[2])
+    else:
+        path_to_bnet = "bnet_examples/007.bnet"
+        # run_test(path_to_bnet, "!{x}: AX ((AF {x}))")
+        run_test(path_to_bnet, "AF AX {x}")
