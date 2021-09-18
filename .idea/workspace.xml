@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="501566b4-125e-4202-a3dd-1c19b5d18aa3" name="Changes" comment="added sys.path">
+    <list default="true" id="501566b4-125e-4202-a3dd-1c19b5d18aa3" name="Changes" comment="changed result of parse_all">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Parsing_HCTL_formula/evaluator_hctl.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Parsing_HCTL_formula/evaluator_hctl.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bnet_examples/vlastni.bnet" beforeDir="false" afterPath="$PROJECT_DIR$/bnet_examples/vlastni.bnet" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/fixed_formulas_eval.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/fixed_formulas_eval.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/implementation.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/implementation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/parse_all.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/parse_all.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/testing_full_eval.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/testing_full_eval.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -206,11 +205,11 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Python.testing_parser" />
-      <item itemvalue="Python.fixed_formulas_eval" />
-      <item itemvalue="Python.testing_optimizations" />
       <item itemvalue="Python.evaluator_hctl" />
+      <item itemvalue="Python.fixed_formulas_eval" />
       <item itemvalue="Python.testing_full_eval" />
+      <item itemvalue="Python.testing_optimizations" />
+      <item itemvalue="Python.testing_parser" />
     </list>
     <recent_temporary>
       <list>
@@ -235,7 +234,9 @@
       <workItem from="1631710964894" duration="8250000" />
       <workItem from="1631719583280" duration="105000" />
       <workItem from="1631777831510" duration="5984000" />
-      <workItem from="1631785818414" duration="7781000" />
+      <workItem from="1631785818414" duration="9713000" />
+      <workItem from="1631894713480" duration="2242000" />
+      <workItem from="1631946610279" duration="797000" />
     </task>
     <task id="LOCAL-00001" summary="changed structure: paths, names, folders, includes">
       <created>1631652715774</created>
@@ -349,7 +350,21 @@
       <option name="project" value="LOCAL" />
       <updated>1631790578511</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="changed result of parse_all">
+      <created>1631806089616</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1631806089616</updated>
+    </task>
+    <task id="LOCAL-00018" summary="changed result of parse_all">
+      <created>1631806182795</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1631806182795</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -380,7 +395,8 @@
     <MESSAGE value="added sys path" />
     <MESSAGE value="added os chdir" />
     <MESSAGE value="added sys.path" />
-    <option name="LAST_COMMIT_MESSAGE" value="added sys.path" />
+    <MESSAGE value="changed result of parse_all" />
+    <option name="LAST_COMMIT_MESSAGE" value="changed result of parse_all" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/HCTL_stuff$testing_parser.coverage" NAME="testing_parser Coverage Results" MODIFIED="1631779668025" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/" />
