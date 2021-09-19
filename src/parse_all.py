@@ -58,7 +58,7 @@ def rename_terminals_update_fn_ast(node, rename_dict):
 
 
 # this renames all terminal nodes in HCTL formula
-def rename_terminals_hctl_ast(node, rename_dict):
+def rename_terminals_and_hybrid_hctl_ast(node, rename_dict):
     if type(node) == TerminalNode:
         # DO not add any of true/false nodes, only proposition nodes
         if node.value in {"True", "true", "False", "false", "ff", "tt"}:
@@ -70,14 +70,16 @@ def rename_terminals_hctl_ast(node, rename_dict):
             node.value = rename_dict[node.value]
             node.subform_string = node.value
     elif type(node) == UnaryNode:
-        rename_terminals_hctl_ast(node.child, rename_dict)
+        rename_terminals_and_hybrid_hctl_ast(node.child, rename_dict)
         node.subform_string = "(" + node.value + node.child.subform_string + ")"
     elif type(node) == BinaryNode:
-        rename_terminals_hctl_ast(node.left, rename_dict)
-        rename_terminals_hctl_ast(node.right, rename_dict)
+        rename_terminals_and_hybrid_hctl_ast(node.left, rename_dict)
+        rename_terminals_and_hybrid_hctl_ast(node.right, rename_dict)
         node.subform_string = "(" + node.left.subform_string + node.value + node.right.subform_string + ")"
     elif type(node) == HybridNode:
-        rename_terminals_hctl_ast(node.child, rename_dict)
+        # first rename the "var" field of the node, then move to child
+        node.var = '{' + rename_dict[node.var[1:-1]] + '}'
+        rename_terminals_and_hybrid_hctl_ast(node.child, rename_dict)
         node.subform_string = "(" + node.value + node.var + ":" + node.child.subform_string + ")"
 
 
@@ -126,7 +128,7 @@ def parse_all(file_name: str, formula: str):
         name_dict[var_names[i]] = "x" * (i + 1)
 
     # rename props/params in update trees, rename props/vars in formula tree
-    rename_terminals_hctl_ast(as_tree_hctl, name_dict)
+    rename_terminals_and_hybrid_hctl_ast(as_tree_hctl, name_dict)
     for as_tree in update_fn_trees:
         rename_terminals_update_fn_ast(as_tree, name_dict)
 
@@ -135,7 +137,7 @@ def parse_all(file_name: str, formula: str):
     vrs = [f"s__{i}" for i in range(len(prop_names))]           # state describing vars
     vrs.extend(f"p__{i}" for i in range(len(param_names)))      # params
     for var_name in var_names:
-        vrs.extend(f"{var_name}__{i}" for i in range(len(prop_names)))  # HCTL variables
+        vrs.extend(f"{name_dict[var_name]}__{i}" for i in range(len(prop_names)))  # HCTL variables
     bdd.declare(*vrs)
 
     # reordering to some desired order (now it is s0,x0,y0,s1...,p0,p1...)
@@ -144,7 +146,7 @@ def parse_all(file_name: str, formula: str):
         my_order[f"s__{i}"] = i * (len(var_names) + 1)
     for idx, var_name in enumerate(var_names):
         for i in range((len(prop_names))):
-            my_order[f"{var_name}__{i}"] = i * (len(var_names) + 1) + idx + 1
+            my_order[f"{name_dict[var_name]}__{i}"] = i * (len(var_names) + 1) + idx + 1
     for i in range((len(param_names))):
         my_order[f"p__{i}"] = i + (len(var_names) + 1) * len(prop_names)
     bdd.reorder(my_order)

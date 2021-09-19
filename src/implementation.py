@@ -1,8 +1,8 @@
 from collections import OrderedDict
 from termcolor import colored
-from src.parse_all import parse_all
+from parse_all import parse_all
 
-from src.model import *
+from model import *
 
 
 # ============================================================================================= #

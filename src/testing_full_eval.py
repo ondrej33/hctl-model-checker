@@ -4,6 +4,7 @@ import os
 os.chdir('/home/xhuvar/HCTL_stuff')
 
 import sys
+sys.path.append('/home/xhuvar/HCTL_stuff/')
 sys.path.append('/home/xhuvar/HCTL_stuff/src')
 sys.path.append('/home/xhuvar/HCTL_stuff/src/Parsing_HCTL_formula')
 sys.path.append('/home/xhuvar/HCTL_stuff/src/Parsing_update_fns')
@@ -15,6 +16,7 @@ import os
 os.chdir('/mnt/c/Users/Ondra/PycharmProjects/HCTL_stuff')
 
 import sys
+sys.path.append('/mnt/c/Users/Ondra/PycharmProjects/HCTL_stuff/')
 sys.path.append('/mnt/c/Users/Ondra/PycharmProjects/HCTL_stuff/src')
 sys.path.append('/mnt/c/Users/Ondra/PycharmProjects/HCTL_stuff/src/Parsing_HCTL_formula')
 sys.path.append('/mnt/c/Users/Ondra/PycharmProjects/HCTL_stuff/src/Parsing_update_fns')
@@ -32,7 +34,7 @@ def run_test(file_name, formula):
     res = eval_tree(as_tree_hctl, model)
     end = time.time()
     res_time = end - start
-    print_results(res, model, f"model: {model.name}, formula: {formula}", True)
+    print_results(res, model, f"model: {model.name}, formula: {formula}", False)
     print(formula, ": ", res_time, "\n")
 
 
@@ -41,8 +43,10 @@ if __name__ == '__main__':
     if len(sys.argv) == 3:
         run_test(sys.argv[1], sys.argv[2])
     else:
-        path_to_bnet = "bnet_examples/089.bnet"
+        path_to_bnet = "bnet_examples/063_free.bnet"
+        run_test(path_to_bnet, "Q{s}:Q{t}:((@{s}:(~{t}) && AX({s})) && @{t}:(AX({t})))")
         run_test(path_to_bnet, "!{x}:AX{x}")
-        run_test(path_to_bnet, "!{x}:(AX(AF{x}))")
-        run_test(path_to_bnet, "!{x}:(AG(EF{x}))")
-        run_test(path_to_bnet, "!{x}:(EG(EF{x}))")
+
+        # run_test(path_to_bnet, "!{x}:(AX(AF{x}))")
+        # run_test(path_to_bnet, "!{x}:(AG(EF{x}))")
+        # run_test(path_to_bnet, "!{x}:(EG(EF{x}))")
