@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="501566b4-125e-4202-a3dd-1c19b5d18aa3" name="Changes" comment="changed result of parse_all">
+    <list default="true" id="501566b4-125e-4202-a3dd-1c19b5d18aa3" name="Changes" comment="add free bnet for 045">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bnet_examples/045_free.aeon" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/bnet_examples/vlastni.bnet" beforeDir="false" afterPath="$PROJECT_DIR$/bnet_examples/vlastni.bnet" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/fixed_formulas_eval.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/fixed_formulas_eval.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/implementation.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/implementation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/irrelevant_stuff/test.sh" beforeDir="false" afterPath="$PROJECT_DIR$/src/irrelevant_stuff/test.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/model.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/testing_full_eval.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/testing_full_eval.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/testing_optimizations.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/testing_optimizations.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -236,7 +240,10 @@
       <workItem from="1631777831510" duration="5984000" />
       <workItem from="1631785818414" duration="9713000" />
       <workItem from="1631894713480" duration="2242000" />
-      <workItem from="1631946610279" duration="797000" />
+      <workItem from="1631946610279" duration="3288000" />
+      <workItem from="1631950552010" duration="22929000" />
+      <workItem from="1632000632907" duration="1325000" />
+      <workItem from="1632038075189" duration="427000" />
     </task>
     <task id="LOCAL-00001" summary="changed structure: paths, names, folders, includes">
       <created>1631652715774</created>
@@ -364,7 +371,35 @@
       <option name="project" value="LOCAL" />
       <updated>1631806182795</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="add free bnets">
+      <created>1631947980876</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1631947980876</updated>
+    </task>
+    <task id="LOCAL-00020" summary="add free bnets">
+      <created>1631947995306</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1631947995306</updated>
+    </task>
+    <task id="LOCAL-00021" summary="add free bnets">
+      <created>1631953731406</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1631953731406</updated>
+    </task>
+    <task id="LOCAL-00022" summary="add free bnet for 045">
+      <created>1631964887886</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1631964887886</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -396,7 +431,9 @@
     <MESSAGE value="added os chdir" />
     <MESSAGE value="added sys.path" />
     <MESSAGE value="changed result of parse_all" />
-    <option name="LAST_COMMIT_MESSAGE" value="changed result of parse_all" />
+    <MESSAGE value="add free bnets" />
+    <MESSAGE value="add free bnet for 045" />
+    <option name="LAST_COMMIT_MESSAGE" value="add free bnet for 045" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/HCTL_stuff$testing_parser.coverage" NAME="testing_parser Coverage Results" MODIFIED="1631779668025" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/" />
@@ -405,7 +442,7 @@
     <SUITE FILE_PATH="coverage/HCTL_stuff$evaluator_hctl.coverage" NAME="evaluator_hctl Coverage Results" MODIFIED="1631779478349" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/HCTL_stuff$fixed_formulas_eval.coverage" NAME="fixed_formulas_eval Coverage Results" MODIFIED="1631780170725" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/" />
     <SUITE FILE_PATH="coverage/HCTL_stuff$testing_parser__1_.coverage" NAME="testing_parser Coverage Results" MODIFIED="1631779721189" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/" />
-    <SUITE FILE_PATH="coverage/HCTL_stuff$testing_full_eval.coverage" NAME="testing_full_eval Coverage Results" MODIFIED="1631789977647" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/HCTL_stuff$testing_full_eval.coverage" NAME="testing_full_eval Coverage Results" MODIFIED="1632001755657" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/HCTL_stuff$evaluator_hctl__1_.coverage" NAME="evaluator_hctl Coverage Results" MODIFIED="1631719349528" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

@@ -11,7 +11,7 @@ from src.model import *
 
 
 # creates a bdd representing all states labeled by proposition given
-def labeled_by(prop: str, model: Model):
+def labeled_by(prop: str, model: Model) -> Function:
     return model.bdd.add_expr(prop)
 
 
@@ -74,7 +74,10 @@ def pre_E_all_vars(model: Model, initial: Function) -> Function:
     current_set = model.bdd.add_expr("False")
     for i in range(model.num_props):
         current_set = current_set | pre_E_one_var(model, f"s__{i}", initial)
-    return current_set
+
+    # TODO: change back?? - now it artificially creates self-loops for stable states with no successor
+    # return current_set
+    return current_set | (initial & model.stable)
 
 
 # computes the set of states which can make transition ONLY into the initial set and nowhere else
@@ -89,6 +92,8 @@ def pre_A_all_vars(model: Model, initial: Function) -> Function:
     current_set = model.bdd.add_expr("True")
     for i in range(model.num_props):
         current_set = current_set & pre_A_one_var(model, f"s__{i}", initial)
+
+    # TODO: add same thing as for pre_E_all_vars - create self loops
     return current_set
 
 
@@ -112,6 +117,8 @@ def post_E_all_vars(model: Model, given_set: Function) -> Function:
     current_set = model.bdd.add_expr("False")
     for i in range(model.num_props):
         current_set = current_set | post_E_one_var(model, f"s__{i}", given_set)
+
+    # TODO: add same thing as for pre_E_all_vars - create self loops
     return current_set
 
 
@@ -182,12 +189,12 @@ def AF(model: Model, phi1: Function) -> Function:
 
 # fixpoint through AX
 def AF_v2(model: Model, phi: Function) -> Function:
-    # lfpZ. ( phi OR EX Z )
+    # lfpZ. ( phi OR AX Z )
     old = phi
     new = model.bdd.add_expr("False")
     while old != new:
         new = old
-        old = old | AX(model, old)
+        old = model.bdd.apply("or", new, AX(model, old))
     return old
 
 
@@ -243,6 +250,8 @@ def AW(model: Model, phi1: Function, phi2: Function):
 # binder EX:   ↓var. (EX PHI)
 # var should be something like "x"
 def optimized_bind_EX(model: Model, phi: Function, var: str) -> Function:
+    # TODO: add same thing as for pre_E_all_vars - create self loops
+
     current_set = model.bdd.add_expr("False")
     comparator = create_comparator(model, var)
     vars_to_get_rid = [f"{var}__{i}" for i in range(model.num_props)]
@@ -256,6 +265,8 @@ def optimized_bind_EX(model: Model, phi: Function, var: str) -> Function:
 # jump EX:   @x. (EX PHI)
 # var should be something like "x"
 def optimized_jump_EX(model: Model, phi: Function, var: str) -> Function:
+    # TODO: add same thing as for pre_E_all_vars - create self loops
+
     current_set = model.bdd.add_expr("False")
     comparator = create_comparator(model, var)
     vars_to_get_rid = [f"s__{i}" for i in range(model.num_props)]
@@ -268,6 +279,8 @@ def optimized_jump_EX(model: Model, phi: Function, var: str) -> Function:
 
 # existential EX:   ∃x. (EX SET1)
 def optimized_exist_EX(model: Model, phi: Function, var: str) -> Function:
+    # TODO: add same thing as for pre_E_all_vars - create self loops
+
     current_set = model.bdd.add_expr("False")
     vars_to_get_rid = [f"{var}__{i}" for i in range(model.num_props)]
 
@@ -403,7 +416,7 @@ def eval_color(assignment, num_cols) -> float:
 # for testing purposes
 def bdd_dumper(file_name: str):
     # formula here is just a placeholder to save var names
-    model, _ = parse_all(file_name, "!{x}: (AX {x})")
+    model, _ = parse_all(file_name, "AX {x}")
 
     result = AX(model, create_comparator(model, 'x'))
 
@@ -438,7 +451,7 @@ def print_results(result: Function, model: Model, message: str = "", show_all: b
 
     if not show_all:
         return
-
+    """
     assignments = model.bdd.pick_iter(result, care_vars=vars_to_show)  # assigning a generator again, was depleted
     # sorting vars in individual outputs (dict has random order, even though bdd has the right one)
     sorted_inside = [sorted(assignment.items(), key=lambda x: (x[0][0], len(x[0]), x[0])) for assignment in assignments]
@@ -453,6 +466,7 @@ def print_results(result: Function, model: Model, message: str = "", show_all: b
         transformed_props = [int(item[1]) for item in assignment[len(assignment) - model.num_props:]]
         print(transformed_props)
     print()
+    """
 
     # -----------------------------------------------------------------------------------
 
@@ -478,3 +492,26 @@ def print_results(result: Function, model: Model, message: str = "", show_all: b
             print(text, end=" ")
         print()
     print()
+
+    """
+    vars_to_show = [f"s__{i}" for i in range(model.num_props)]+[f"p__{i}" for i in range(model.num_params)]+[f"x__{i}" for i in range(model.num_props)]
+    assignments = model.bdd.pick_iter(result, care_vars=vars_to_show)
+    print(f"{len(list(assignments))} RESULTS FOUND IN TOTAL")
+
+    assignments = model.bdd.pick_iter(result, care_vars=vars_to_show)
+    sorted_inside = [sorted(assignment.items(), key=lambda x: x[0]) for assignment in assignments]
+
+    for assignment in sorted_inside:
+        # we will print only 0/1 instead True/False
+        transformed = [(item[0], int(item[1])) for item in assignment]
+        for var, val in transformed:
+            text = ""
+            if val == 0:
+                text = colored('!' + var, 'red')
+            else:
+                text = colored(var, "green")
+            print(text, end=" ")
+        print()
+    print()
+    """
+

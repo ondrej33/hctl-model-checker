@@ -231,8 +231,25 @@ def simple_main(file_name: str):
     print_results(results, model, "", True)
 
 
+def simple_main2(file_name: str):
+    model = bnet_parser(file_name)
+    x = create_comparator(model, 'x')
+    intersection = x & labeled_by("s__4", model)
+    ax = AX(model, intersection)
+    print_results(ax, model)
+
+    comparator = create_comparator(model, "x")
+    intersection = comparator & ax
+    print_results(intersection, model)
+
+    # now lets use existential quantification to get rid of the bdd vars coding VAR
+    vars_to_get_rid = [f"x__{i}" for i in range(model.num_props)]
+    result = model.bdd.quantify(intersection, vars_to_get_rid)
+    print_results(result, model)
+
+
 # we have 4 command line args: name of file + type of test + number of test + version of test
 if __name__ == '__main__':
     # TODO change path
-    path_to_bnet = "bnet_examples/023.bnet"
-    simple_main(path_to_bnet)
+    path_to_bnet = "bnet_examples/007.bnet"
+    simple_main2(path_to_bnet)

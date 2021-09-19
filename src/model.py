@@ -21,3 +21,11 @@ class Model:
         self.num_props = len(names_props)
         self.num_params = len(names_params)
         self.num_vars = len(names_vars)
+
+        self.stable = self.get_stable()
+
+    def get_stable(self) -> Function:
+        current_set = self.bdd.add_expr("True")
+        for i in range(self.num_props):
+            current_set = current_set & self.bdd.apply("<=>", self.bdd.add_expr(f"s__{i}"), self.update_fns[f"s__{i}"])
+        return current_set

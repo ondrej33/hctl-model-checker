@@ -7,6 +7,7 @@ import sys
 sys.path.append('/home/xhuvar/HCTL_stuff/src')
 sys.path.append('/home/xhuvar/HCTL_stuff/src/Parsing_HCTL_formula')
 sys.path.append('/home/xhuvar/HCTL_stuff/src/Parsing_update_fns')
+sys.path.append('/home/xhuvar/HCTL_stuff/venv/lib/python3.8/site-packages')
 """
 
 import os
@@ -32,13 +33,16 @@ def run_test(file_name, formula):
     end = time.time()
     res_time = end - start
     print_results(res, model, f"model: {model.name}, formula: {formula}", True)
-    print(formula, ": ", res_time)
+    print(formula, ": ", res_time, "\n")
 
 
+# usage: testing_full_eval.py path_to_bnet formula
 if __name__ == '__main__':
     if len(sys.argv) == 3:
         run_test(sys.argv[1], sys.argv[2])
     else:
-        path_to_bnet = "bnet_examples/007.bnet"
-        # run_test(path_to_bnet, "!{x}: AX ((AF {x}))")
-        run_test(path_to_bnet, "AF AX {x}")
+        path_to_bnet = "bnet_examples/089.bnet"
+        run_test(path_to_bnet, "!{x}:AX{x}")
+        run_test(path_to_bnet, "!{x}:(AX(AF{x}))")
+        run_test(path_to_bnet, "!{x}:(AG(EF{x}))")
+        run_test(path_to_bnet, "!{x}:(EG(EF{x}))")
