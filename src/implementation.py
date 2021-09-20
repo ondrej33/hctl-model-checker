@@ -145,7 +145,7 @@ def EF(model: Model, phi: Function) -> Function:
     return EU(model, true_bdd, phi)
 
 
-# true fixpoint version without excess computing
+# fixpoint version without excess computing
 def EF_v2(model: Model, phi: Function) -> Function:
     # lfpZ. ( phi OR EX Z )
     old = phi
@@ -187,31 +187,10 @@ def AF(model: Model, phi1: Function) -> Function:
     return ~EG(model, ~phi1)
 
 
-# fixpoint through AX
-def AF_v2(model: Model, phi: Function) -> Function:
-    # lfpZ. ( phi OR AX Z )
-    old = phi
-    new = model.bdd.add_expr("False")
-    while old != new:
-        new = old
-        old = model.bdd.apply("or", new, AX(model, old))
-    return old
-
-
 # computed through EF
 def AG(model: Model, phi1: Function) -> Function:
     # AG f = ~EF (~f)
     return ~EF(model, ~phi1)
-
-
-# fixpoint
-def AG_v2(model: Model, phi: Function) -> Function:
-    old = phi
-    new = model.bdd.add_expr("False")
-    while old != new:
-        new = old
-        old = old & AX(model, old)
-    return old
 
 
 def AU(model: Model, phi1: Function, phi2: Function) -> Function:
@@ -222,7 +201,7 @@ def AU(model: Model, phi1: Function, phi2: Function) -> Function:
     return not_eu & not_eg
 
 
-# fixpoint
+# fixpoint version for AU, should be faster
 def AU_v2(model: Model, phi1: Function, phi2: Function) -> Function:
     old = phi2
     new = model.bdd.add_expr("False")

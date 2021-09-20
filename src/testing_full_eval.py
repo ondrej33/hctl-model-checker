@@ -34,7 +34,7 @@ def run_test(file_name, formula):
     res = eval_tree(as_tree_hctl, model)
     end = time.time()
     res_time = end - start
-    print_results(res, model, f"model: {model.name}, formula: {formula}", False)
+    print_results(res, model, f"model: {model.name}, formula: {formula}", show_all=True)
     print(formula, ": ", res_time, "\n")
 
 
@@ -43,10 +43,16 @@ if __name__ == '__main__':
     if len(sys.argv) == 3:
         run_test(sys.argv[1], sys.argv[2])
     else:
-        path_to_bnet = "bnet_examples/063_free.bnet"
+        path_to_bnet = "bnet_examples/023.bnet"
+        """
         run_test(path_to_bnet, "Q{s}:Q{t}:((@{s}:(~{t}) && AX({s})) && @{t}:(AX({t})))")
         run_test(path_to_bnet, "!{x}:AX{x}")
+        run_test(path_to_bnet, "!{x}:(AX(AF{x}))")
+        run_test(path_to_bnet, "!{x}:(AG(EF{x}))")
+        run_test(path_to_bnet, "!{x}:(EG(EF{x}))")
+        """
 
-        # run_test(path_to_bnet, "!{x}:(AX(AF{x}))")
-        # run_test(path_to_bnet, "!{x}:(AG(EF{x}))")
-        # run_test(path_to_bnet, "!{x}:(EG(EF{x}))")
+        run_test(path_to_bnet, "!{x}:(EX (~{x} && EX {X})” && (AX(AF{x})))")
+        run_test(path_to_bnet, "(!{x}:(AX {x})) && (!{x}:(AX(AF{x})))")
+
+

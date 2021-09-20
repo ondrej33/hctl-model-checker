@@ -19,6 +19,13 @@ class EvaluateExpressionVisitor:
     # TODO: !bring ALL optimizations in!, (add NESTED through union, now we have just the three basic)
     # TODO: JUMP might not need x in the subformula
 
+    # TODO: add explicit self-loops to optimized functions ?? they dont use pre_E_all_vars
+
+    # TODO: rename HCTL vars to some canonical form: (bind x: EX x) && (bind y: EX y)  --->>  (bind x: EX x) && (bind x: EX x)
+    # TODO: will help with optim and cache
+
+    # TODO: optimize also through the intersection
+
     # Visits node and depending on its type and operation, evaluates the subformula which it represents
     # Uses results from children, combines them until whole thing is done
     # if optimize=True, then parent was some hybrid operation and we can push it inside for example EX...
@@ -161,9 +168,8 @@ def parse_and_eval(formula: str, model: Model) -> Function:
 if __name__ == '__main__':
     # TODO: change path
     bnet_path = "bnet_examples/064_free.bnet"
-    # place holdre formula
     f = "!{x}: (AG EF {x})"
 
-    m, _ = parse_all(bnet_path, f)
-    res = parse_and_eval(f, m)
+    m, tree = parse_all(bnet_path, f)
+    res = eval_tree(tree, m)
     print_results(res, m, f"model: {m.name}, formula: {f}", True)

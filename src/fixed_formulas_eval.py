@@ -131,7 +131,7 @@ def model_check_fixed8(model: Model) -> Function:
 def model_check_fixed9(model: Model) -> Function:
     x = create_comparator(model, 'x')
     ef_x = EF_v2(model, x)
-    ag = AG_v2(model, ef_x)
+    ag = AG(model, ef_x)
     return bind(model, 'x', ag)
 
 
