@@ -21,10 +21,14 @@ class EvaluateExpressionVisitor:
 
     # TODO: add explicit self-loops to optimized functions ?? they dont use pre_E_all_vars
 
-    # TODO: rename HCTL vars to some canonical form: (bind x: EX x) && (bind y: EX y)  --->>  (bind x: EX x) && (bind x: EX x)
+    # TODO: rename HCTL vars to a canonical form: (bind x:EX x) && (bind y:EX y)  -->> (bind x:EX x) && (bind x:EX x)
     # TODO: will help with optim and cache
 
     # TODO: optimize also through the intersection
+
+    # TODO: solve the possible problem with future (self-loops again, but in sources??)
+
+    # TODO: maybe change all operators in the tree to just EX, EU, EG - so that we can use cache??
 
     # Visits node and depending on its type and operation, evaluates the subformula which it represents
     # Uses results from children, combines them until whole thing is done
