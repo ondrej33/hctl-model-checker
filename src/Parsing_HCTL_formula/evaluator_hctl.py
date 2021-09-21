@@ -28,7 +28,7 @@ class EvaluateExpressionVisitor:
 
     # TODO: solve the possible problem with future (self-loops again, but in sources??)
 
-    # TODO: maybe change all operators in the tree to just EX, EU, EG - so that we can use cache??
+    # TODO: maybe change all operators in the tree to just EX, EU, EG - so that we can use cache sometimes??
 
     # Visits node and depending on its type and operation, evaluates the subformula which it represents
     # Uses results from children, combines them until whole thing is done

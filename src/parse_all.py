@@ -58,6 +58,8 @@ def rename_terminals_update_fn_ast(node, rename_dict):
 
 
 # this renames all terminal nodes in HCTL formula
+# TODO: state-variables will be renamed during canonicalization
+# TODO: that means both in terminals and also var field in hybrid node
 def rename_terminals_and_hybrid_hctl_ast(node, rename_dict):
     if type(node) == TerminalNode:
         # DO not add any of true/false nodes, only proposition nodes
@@ -81,6 +83,18 @@ def rename_terminals_and_hybrid_hctl_ast(node, rename_dict):
         node.var = '{' + rename_dict[node.var[1:-1]] + '}'
         rename_terminals_and_hybrid_hctl_ast(node.child, rename_dict)
         node.subform_string = "(" + node.value + node.var + ":" + node.child.subform_string + ")"
+
+
+def make_state_var_names_canonical_ast(node, rename_dict, stack):
+    # if we find hybrid node with bind or exist, we add new var-name to rename_dict and stack (x, xx, xxx...)
+    # we derive the name using the last thing on stack
+    # after we leave this binder/exist, we remove its var from rename_dict and stack
+    # dont forget to rename var field in hybrid node
+
+    # when we find terminal with free variable, we rename it using rename-dict
+
+    # possible problem: we want to rename var to "x", but "x" is already somewhere in subformula -> is it ok?
+    pass
 
 
 def parse_all(file_name: str, formula: str):
