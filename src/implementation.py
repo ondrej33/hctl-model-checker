@@ -86,19 +86,9 @@ def pre_A_one_var(model: Model, var: str, initial: Function) -> Function:
     return ~pre_E_one_var(model, var, ~initial)
 
 
-# computes the set of states which can make transition ONLY into the initial set and nowhere else
-# applying ALL of the update functions
-def pre_A_all_vars(model: Model, initial: Function) -> Function:
-    current_set = model.bdd.add_expr("True")
-    for i in range(model.num_props):
-        current_set = current_set & pre_A_one_var(model, f"s__{i}", initial)
-
-    # TODO: add same thing as for pre_E_all_vars - create self loops
-    return current_set
-
-
 # computes the set of successors for the given set
 # by applying the update function of the given `var`
+# TODO: test if right
 def post_E_one_var(model: Model, var: str, given_set: Function) -> Function:
     """
     GO_DOWN = !X & Exists((SET & X & !B_X), 'X')
@@ -118,7 +108,8 @@ def post_E_all_vars(model: Model, given_set: Function) -> Function:
     for i in range(model.num_props):
         current_set = current_set | post_E_one_var(model, f"s__{i}", given_set)
 
-    # TODO: add same thing as for pre_E_all_vars - create self loops
+    # TODO: add same thing as for pre_E_all_vars - create self loops - this helps for "bind x: EY x"
+    # TODO: problem with self-loops might arrise again, but this time in sources - we have reversed graph
     return current_set
 
 
@@ -171,13 +162,8 @@ def AX(model: Model, phi: Function) -> Function:
     return ~EX(model, ~phi)
 
 
-# computed through small update BDDs during pre_A_all_vars
-def AX_v2(model: Model, phi: Function) -> Function:
-    return pre_A_all_vars(model, phi)
-
-
 # computed through pure EY
-# TODO: check if it is right
+# TODO: check if this is right
 def AY(model: Model, phi: Function) -> Function:
     return ~EY(model, ~phi)
 
