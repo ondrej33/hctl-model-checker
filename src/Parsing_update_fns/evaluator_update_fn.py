@@ -10,7 +10,7 @@ class EvaluateExpressionVisitor:
     def visit(self, node, bdd):
         result = bdd.add_expr("False")
         if type(node) == TerminalNode:
-            # TODO: differentiate between true/false OR prop/param node
+            # we have either prop/param here (bdd var) or True/False, which is also OK
             result = bdd.add_expr(node.value)
         elif type(node) == UnaryNode:
             # we have only the negation here at the moment
