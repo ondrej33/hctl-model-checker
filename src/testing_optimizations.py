@@ -63,7 +63,7 @@ def model_check_test4b(model: Model, set1: Function) -> Function:
 # existential EX:   ∃x. (EX SET1)
 def model_check_test5a(model: Model, set1: Function) -> Function:
     ex = EX(model, set1)
-    return existential(model, 'x', ex)
+    return existential(model, ex, 'x')
 
 
 # existential EX, existential pushed inside:   ∃x. (EX SET1)

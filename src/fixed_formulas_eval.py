@@ -165,7 +165,7 @@ def model_check_fixed12(model: Model) -> Function:
     y = create_comparator(model, 'y')
     ex_y = EX(model, y)
     intersection = x & ex_y
-    exists_y = existential(model, 'y', intersection)
+    exists_y = existential(model, intersection, 'y')
     return bind(model, exists_y, 'x')
 
 
@@ -180,7 +180,7 @@ def model_check_fixed13(model: Model) -> Function:
     x = create_comparator(model, 'x')
     intersection_outer = x & ax_outer
 
-    exists_y = existential(model, 'y', intersection_outer)
+    exists_y = existential(model, intersection_outer, 'y')
     return bind(model, exists_y, 'x')
 
 
@@ -196,7 +196,7 @@ def model_check_fixed14(model: Model) -> Function:
     x = create_comparator(model, 'x')
     intersection_outer = x & ex
 
-    exists_y = existential(model, 'y', intersection_outer)
+    exists_y = existential(model, intersection_outer, 'y')
     return bind(model, exists_y, 'x')
 
 
@@ -210,8 +210,8 @@ def model_check_fixed15(model: Model) -> Function:
     jump_x = jump(model, ~y & AX(model, x), 'x')
 
     and_inner = jump_x & jump_y
-    exist_y = existential(model, 'y', and_inner)
-    return existential(model, 'x', exist_y)
+    exist_y = existential(model, and_inner, 'y')
+    return existential(model, exist_y, 'x')
 
 
 # ↓x. EG EF x
@@ -237,8 +237,8 @@ def model_check_fixed17(model: Model) -> Function:
     jump_x = jump(model, ag_not_y & ag_ef_x, 'x')
 
     and_inner = jump_x & jump_y
-    exist_y = existential(model, 'y', and_inner)
-    return existential(model, 'x', exist_y)
+    exist_y = existential(model, and_inner, 'y')
+    return existential(model, exist_y, 'x')
 
 
 # ∃x. ∃y. (@x. ~y & AXx) & (@y. AXy) & EFx & EFy
@@ -252,8 +252,8 @@ def model_check_fixed18(model: Model) -> Function:
     jump_y = jump(model, AX(model, y), 'y')
 
     and_inner = jump_x & jump_y & EF(model, x) & EF(model, y)
-    exist_y = existential(model, 'y', and_inner)
-    return existential(model, 'x', exist_y)
+    exist_y = existential(model, and_inner, 'y')
+    return existential(model, exist_y, 'x')
 
 
 # ============================================================================================= #

@@ -109,7 +109,7 @@ class EvaluateExpressionVisitor:
             elif node.value == '@':
                 result = jump(model, self.visit(node.child, model, dupl, cache), node.var[1:-1])
             elif node.value == 'Q':
-                result = existential(model, node.var[1:-1], self.visit(node.child, model, dupl, cache))
+                result = existential(model, self.visit(node.child, model, dupl, cache), node.var[1:-1])
 
         if save_to_cache:
             cache[node.subform_string] = result
