@@ -19,6 +19,8 @@ class EvaluateExpressionVisitor:
     # TODO: !bring ALL optimizations in!, (add NESTED through union, now we have just the three basic)
     # TODO: JUMP might not need x in the subformula
 
+    # TODO: implement optimization (EX SET1) | (EX SET2) == EX (SET1 | SET2) and same for AX
+
     # TODO: add explicit self-loops to optimized functions ?? they dont use pre_E_all_vars
 
     # TODO: optimize also through the intersection
@@ -26,6 +28,9 @@ class EvaluateExpressionVisitor:
     # TODO: solve the possible problem with future (self-loops again, but in sources??)
 
     # TODO: maybe change all operators in the tree to just EX, EU, EG - so that we can use cache sometimes??
+
+    # TODO: sometimes its possible to count thing once and then just rename vars, instead of counting twice
+    # TODO: for example (AG EF var) in formula: Qx.Qy.(@x. AG¬y & AG EFx) & (@y. AG EFy)
 
     # Visits node and depending on its type and operation, evaluates the subformula which it represents
     # Uses results from children, combines them until whole thing is done

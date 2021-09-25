@@ -1,8 +1,8 @@
 from collections import OrderedDict
 from termcolor import colored
-from parse_all import parse_all
+from src.parse_all import parse_all
 
-from model import *
+from src.model import *
 
 
 # ============================================================================================= #
@@ -55,6 +55,7 @@ def existential(model: Model, var: str, phi: Function) -> Function:
 
 # computes the set of states which can make transition into the initial set
 # applying the update function of the given `var`
+# SHOULD BE USED ONLY BY FUNCTIONS IN THIS FILE
 def pre_E_one_var(model: Model, var: str, initial: Function) -> Function:
     """
     NEGATIVE_PREDECESSOR = !X & Exists(SET & X, 'X') & B_X  
@@ -82,12 +83,14 @@ def pre_E_all_vars(model: Model, initial: Function) -> Function:
 
 # computes the set of states which can make transition ONLY into the initial set and nowhere else
 # applying the update function of the given `var`
+# SHOULD BE USED ONLY BY FUNCTIONS IN THIS FILE
 def pre_A_one_var(model: Model, var: str, initial: Function) -> Function:
     return ~pre_E_one_var(model, var, ~initial)
 
 
 # computes the set of successors for the given set
 # by applying the update function of the given `var`
+# SHOULD BE USED ONLY BY FUNCTIONS IN THIS FILE
 # TODO: test if right
 def post_E_one_var(model: Model, var: str, given_set: Function) -> Function:
     """
@@ -215,8 +218,6 @@ def AW(model: Model, phi1: Function, phi2: Function):
 # binder EX:   ↓var. (EX PHI)
 # var should be something like "x"
 def optimized_bind_EX(model: Model, phi: Function, var: str) -> Function:
-    # TODO: add same thing as for pre_E_all_vars - create self loops
-
     current_set = model.bdd.add_expr("False")
     comparator = create_comparator(model, var)
     vars_to_get_rid = [f"{var}__{i}" for i in range(model.num_props)]
@@ -224,14 +225,16 @@ def optimized_bind_EX(model: Model, phi: Function, var: str) -> Function:
     for i in range(model.num_props):
         intersection = comparator & pre_E_one_var(model, f"s__{i}", phi)
         current_set = current_set | model.bdd.quantify(intersection, vars_to_get_rid)
-    return current_set
+
+    # TODO: change back?? - now it artificially creates self-loops for stable states with no successor
+    # return current_set
+    stable_binded = model.bdd.quantify(comparator & (phi & model.stable), vars_to_get_rid)
+    return current_set | stable_binded
 
 
 # jump EX:   @x. (EX PHI)
 # var should be something like "x"
 def optimized_jump_EX(model: Model, phi: Function, var: str) -> Function:
-    # TODO: add same thing as for pre_E_all_vars - create self loops
-
     current_set = model.bdd.add_expr("False")
     comparator = create_comparator(model, var)
     vars_to_get_rid = [f"s__{i}" for i in range(model.num_props)]
@@ -239,20 +242,26 @@ def optimized_jump_EX(model: Model, phi: Function, var: str) -> Function:
     for i in range(model.num_props):
         intersection = comparator & pre_E_one_var(model, f"s__{i}", phi)
         current_set = current_set | model.bdd.quantify(intersection, vars_to_get_rid)
-    return current_set
+
+    # TODO: change back?? - now it artificially creates self-loops for stable states with no successor
+    # return current_set
+    stable_jumped = model.bdd.quantify(comparator & (phi & model.stable), vars_to_get_rid)
+    return current_set | stable_jumped
 
 
 # existential EX:   ∃x. (EX SET1)
 def optimized_exist_EX(model: Model, phi: Function, var: str) -> Function:
-    # TODO: add same thing as for pre_E_all_vars - create self loops
-
     current_set = model.bdd.add_expr("False")
     vars_to_get_rid = [f"{var}__{i}" for i in range(model.num_props)]
 
     for i in range(model.num_props):
         pred = pre_E_one_var(model, f"s__{i}", phi)
         current_set = current_set | model.bdd.quantify(pred, vars_to_get_rid)
-    return current_set
+
+    # TODO: change back?? - now it artificially creates self-loops for stable states with no successor
+    # return current_set
+    stable_exist = model.bdd.quantify(phi & model.stable, vars_to_get_rid)
+    return current_set | stable_exist
 
 
 # wrapper for all 3 functions above
@@ -378,34 +387,6 @@ def eval_color(assignment, num_cols) -> float:
     return result_val
 
 
-# for testing purposes
-def bdd_dumper(file_name: str):
-    # formula here is just a placeholder to save var names
-    model, _ = parse_all(file_name, "AX {x}")
-
-    result = AX(model, create_comparator(model, 'x'))
-
-    var_order = {}
-    for i in range(model.num_props):
-        var_order[f"s__{i}"] = i
-        var_order[f"x__{i}"] = i + 1
-
-    vars_to_show = [f"s__{i}" for i in range(model.num_props)]+[f"x__{i}" for i in range(model.num_props)]
-    assignments = model.bdd.pick_iter(result, care_vars=vars_to_show)  # assigning a generator again, was depleted
-    # sorting vars in individual outputs (dict has random order, even though bdd has the right one)
-    sorted_inside = [sorted(assignment.items(), key=lambda x: (x[0][0], len(x[0]), x[0])) for assignment in assignments]
-    # now sorting the outputs by its binary values (using s0,s1...) as main part + by its color as second part
-    assignments_sorted = sorted(sorted_inside, key=lambda x: (eval_assignment(x, model.num_props) + eval_color(x, model.num_params)))
-
-    # we will print params first, then proposition values
-    for assignment in assignments_sorted:
-        # we will print only 0/1 instead True/False
-        transformed_params = [int(item[1]) for item in assignment[0:model.num_params]]
-        print(transformed_params, end="  ")
-        transformed_props = [int(item[1]) for item in assignment[len(assignment) - model.num_props:]]
-        print(transformed_props)
-
-
 def print_results(result: Function, model: Model, message: str = "", show_all: bool = False) -> None:
     if message:
         print(message)
@@ -444,7 +425,6 @@ def print_results(result: Function, model: Model, message: str = "", show_all: b
     assignments_sorted = sorted(sorted_inside, key=lambda x: (eval_assignment(x, model.num_props + model.num_params)))
 
     assignments = model.bdd.pick_iter(result, care_vars=vars_to_show)
-    print(f"{len(list(assignments))} RESULTS FOUND IN TOTAL")
     for assignment in assignments_sorted:
         # we will print only 0/1 instead True/False
         transformed = [(model.name_dict[item[0]], int(item[1])) for item in assignment]

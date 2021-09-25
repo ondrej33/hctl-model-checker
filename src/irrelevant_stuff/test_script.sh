@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # first argument is number of model category to test (from 1 to 5)
-# second argument is the type of test to make (binder, jump, exist, union_one, union_both)
+# second argument is the type of test to make (binder, jump, exist, union_both)
 
 path_beginning='/home/xhuvar/dd-stuff/bnet_example_files/'
 

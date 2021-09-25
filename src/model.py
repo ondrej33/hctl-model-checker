@@ -24,6 +24,8 @@ class Model:
 
         self.stable = self.get_stable()
 
+    # computes stable states in network using "equational fixed point" - big conjunction all (s_i <=> F_s_i) formulas
+    # this is later used as a way to artificially generate self loops on stable states
     def get_stable(self) -> Function:
         current_set = self.bdd.add_expr("True")
         for i in range(self.num_props):
