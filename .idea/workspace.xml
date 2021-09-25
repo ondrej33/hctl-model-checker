@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="501566b4-125e-4202-a3dd-1c19b5d18aa3" name="Changes" comment="add optim for &quot;EX or EX&quot; and &quot;AX and AX&quot;&#10;changed existential from Q to 3">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Parsing_HCTL_formula/HCTLVisitor.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Parsing_HCTL_formula/HCTLVisitor.py" afterDir="false" />
+    <list default="true" id="501566b4-125e-4202-a3dd-1c19b5d18aa3" name="Changes" comment="added tests for &quot;EX or EX&quot;, &quot;AX and AX&quot;&#10;listed fixed formulas">
+      <change beforePath="$PROJECT_DIR$/src/Parsing_HCTL_formula/testing_parser.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Parsing_HCTL_formula/testing_parser.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -258,7 +257,7 @@
       <workItem from="1632238867098" duration="3664000" />
       <workItem from="1632393328707" duration="4247000" />
       <workItem from="1632423270281" duration="3796000" />
-      <workItem from="1632556511005" duration="17138000" />
+      <workItem from="1632556511005" duration="19262000" />
     </task>
     <task id="LOCAL-00001" summary="changed structure: paths, names, folders, includes">
       <created>1631652715774</created>
@@ -498,7 +497,21 @@
       <option name="project" value="LOCAL" />
       <updated>1632584033505</updated>
     </task>
-    <option name="localTasksCounter" value="35" />
+    <task id="LOCAL-00035" summary="unified version for True/False handled during tree creation">
+      <created>1632585649313</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1632585649313</updated>
+    </task>
+    <task id="LOCAL-00036" summary="added tests for &quot;EX or EX&quot;, &quot;AX and AX&quot;&#10;listed fixed formulas">
+      <created>1632586956556</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1632586956556</updated>
+    </task>
+    <option name="localTasksCounter" value="37" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -517,8 +530,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="changed structure: paths, names, folders, includes" />
-    <MESSAGE value="added update fn parsing, changed some comments" />
     <MESSAGE value="divided parser and evaluator" />
     <MESSAGE value="framework for parse_all, part of it is done" />
     <MESSAGE value="make parse_all work, updated most of imports, changed update_fn grammar" />
@@ -542,10 +553,12 @@
     <MESSAGE value="added self-loops to optimized versions of &quot;hybrid EX&quot;&#10;got rid of unsafe using of pre_var anywhere else&#10;added some fixed formulas for tests&#10;added some comments + todos" />
     <MESSAGE value="unified order of arguments for some fns" />
     <MESSAGE value="add optim for &quot;EX or EX&quot; and &quot;AX and AX&quot;&#10;changed existential from Q to 3" />
-    <option name="LAST_COMMIT_MESSAGE" value="add optim for &quot;EX or EX&quot; and &quot;AX and AX&quot;&#10;changed existential from Q to 3" />
+    <MESSAGE value="unified version for True/False handled during tree creation" />
+    <MESSAGE value="added tests for &quot;EX or EX&quot;, &quot;AX and AX&quot;&#10;listed fixed formulas" />
+    <option name="LAST_COMMIT_MESSAGE" value="added tests for &quot;EX or EX&quot;, &quot;AX and AX&quot;&#10;listed fixed formulas" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/HCTL_stuff$testing_parser.coverage" NAME="testing_parser Coverage Results" MODIFIED="1632584038183" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/" />
+    <SUITE FILE_PATH="coverage/HCTL_stuff$testing_parser.coverage" NAME="testing_parser Coverage Results" MODIFIED="1632586998934" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/" />
     <SUITE FILE_PATH="coverage/HCTL_stuff$parser_and_simulator.coverage" NAME="parser_and_simulator Coverage Results" MODIFIED="1631652386521" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/" />
     <SUITE FILE_PATH="coverage/HCTL_stuff$evaluator_hctl.coverage" NAME="evaluator_hctl Coverage Results" MODIFIED="1631779478349" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/HCTL_stuff$testing_optimizations.coverage" NAME="testing_optimizations Coverage Results" MODIFIED="1632206838760" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/" />

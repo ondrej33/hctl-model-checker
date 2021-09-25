@@ -38,14 +38,42 @@ class HCTLVisitor(ParseTreeVisitor):
 
     def visitBinary(self, ctx: HCTLParser.BinaryContext):
         # special case: if we have "(EX phi1) || (EX phi2)", we will make it instead as "EX (phi1 || phi2)"
-        if ctx.value.text == "||" and ctx.left.value.text == "EX" and ctx.right.value.text == "EX":
-            child_or = BinaryNode(value="||", left=self.visit(ctx.left.child), right=self.visit(ctx.right.child))
-            return UnaryNode(value="EX", child=child_or)
+        # THERE MIGHT BE PARENTHESIS NODE ON THE WAY (lets care about one layer of parentheses)
+        if ctx.value.text == "||":
+            if ctx.left.value.text == "EX" and ctx.right.value.text == "EX":
+                child_or = BinaryNode(value="||", left=self.visit(ctx.left.child), right=self.visit(ctx.right.child))
+                return UnaryNode(value="EX", child=child_or)
+            elif ctx.left.value.text == "(" and ctx.left.child.value.text == "EX" and \
+                    ctx.right.value.text == "EX":
+                child_or = BinaryNode(value="||", left=self.visit(ctx.left.child.child), right=self.visit(ctx.right.child))
+                return UnaryNode(value="EX", child=child_or)
+            elif ctx.left.value.text == "EX" and \
+                    ctx.right.value.text == "(" and ctx.right.child.value.text == "EX":
+                child_or = BinaryNode(value="||", left=self.visit(ctx.left.child), right=self.visit(ctx.right.child.child))
+                return UnaryNode(value="EX", child=child_or)
+            elif ctx.left.value.text == "(" and ctx.left.child.value.text == "EX" and \
+                    ctx.right.value.text == "(" and ctx.right.child.value.text == "EX":
+                child_or = BinaryNode(value="||", left=self.visit(ctx.left.child.child), right=self.visit(ctx.right.child.child))
+                return UnaryNode(value="EX", child=child_or)
 
         # same thing for "(AX phi1) && (AX phi2)" == "AX (phi1 && phi2)"
-        if ctx.value.text == "&&" and ctx.left.value.text == "AX" and ctx.right.value.text == "AX":
-            child_and = BinaryNode(value="&&", left=self.visit(ctx.left.child), right=self.visit(ctx.right.child))
-            return UnaryNode(value="AX", child=child_and)
+        if ctx.value.text == "&&":
+            if ctx.left.value.text == "AX" and ctx.right.value.text == "AX":
+                child_and = BinaryNode(value="&&", left=self.visit(ctx.left.child), right=self.visit(ctx.right.child))
+                return UnaryNode(value="AX", child=child_and)
+            elif ctx.left.value.text == "(" and ctx.left.child.value.text == "AX" and \
+                    ctx.right.value.text == "AX":
+                child_and = BinaryNode(value="&&", left=self.visit(ctx.left.child.child), right=self.visit(ctx.right.child))
+                return UnaryNode(value="AX", child=child_and)
+            elif ctx.left.value.text == "AX" and \
+                    ctx.right.value.text == "(" and ctx.right.child.value.text == "AX":
+                child_and = BinaryNode(value="&&", left=self.visit(ctx.left.child), right=self.visit(ctx.right.child.child))
+                return UnaryNode(value="AX", child=child_and)
+            elif ctx.left.value.text == "(" and ctx.left.child.value.text == "AX" and \
+                    ctx.right.value.text == "(" and ctx.right.child.value.text == "AX":
+                # both children have parentheses
+                child_and = BinaryNode(value="&&", left=self.visit(ctx.left.child.child), right=self.visit(ctx.right.child.child))
+                return UnaryNode(value="AX", child=child_and)
 
         return BinaryNode(value=ctx.value.text, left=self.visit(ctx.left), right=self.visit(ctx.right))
 

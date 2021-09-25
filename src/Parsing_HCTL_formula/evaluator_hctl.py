@@ -19,8 +19,6 @@ class EvaluateExpressionVisitor:
     # TODO: >>bring ALL optimizations in <<, (add NESTED through union, now we have just the three basic)
     # TODO: JUMP might not need x in the subformula
 
-    # TODO: test optimization (EX SET1) | (EX SET2) == EX (SET1 | SET2) and also AX (both implemented in tree)
-
     # TODO: optimize also through the intersection
 
     # TODO: solve the possible problem with future (self-loops again, but in sources??)
