@@ -30,6 +30,12 @@ class update_fnVisitor(ParseTreeVisitor):
         return self.visit(ctx.child)
 
     def visitTerminalNode(self, ctx: update_fnParser.TerminalNodeContext):
+        # unify all possibilities for true/false nodes into one option
+        if ctx.value.text in {"True", "true", "tt"}:
+            return TerminalNode(value="True")
+        elif ctx.value.text in {"False", "false", "ff"}:
+            return TerminalNode(value="False")
+
         return TerminalNode(value=ctx.value.text)
 
     def visitUnary(self, ctx: update_fnParser.UnaryContext):

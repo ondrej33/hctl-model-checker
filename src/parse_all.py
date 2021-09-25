@@ -11,10 +11,9 @@ from collections import OrderedDict
 def get_prop_names_from_hctl_ast(node, props_collected):
     if type(node) == TerminalNode:
         # DO not add any of true/false or vars, only proposition nodes
-        if node.value in {"True", "true", "False", "false", "ff", "tt"} or '{' in node.value:
+        if node.value == "True" or node.value == "False":
             return
-        else:
-            props_collected.add(node.value)
+        props_collected.add(node.value)
     elif type(node) == UnaryNode or type(node) == HybridNode:
         get_prop_names_from_hctl_ast(node.child, props_collected)
     elif type(node) == BinaryNode:
@@ -26,10 +25,9 @@ def get_prop_names_from_hctl_ast(node, props_collected):
 def get_names_from_update_fn_ast(node, props_and_params):
     if type(node) == TerminalNode:
         # DO not add any of true/false nodes, only proposition (param) nodes
-        if node.value in {"True", "true", "False", "false", "ff", "tt"}:
+        if node.value == "True" or node.value == "False":
             return
-        else:
-            props_and_params.add(node.value)
+        props_and_params.add(node.value)
     elif type(node) == UnaryNode:
         get_names_from_update_fn_ast(node.child, props_and_params)
     elif type(node) == BinaryNode:
@@ -40,14 +38,11 @@ def get_names_from_update_fn_ast(node, props_and_params):
 # this renames all terminal nodes in update function AST
 def rename_terminals_update_fn_ast(node, rename_dict):
     if type(node) == TerminalNode:
-        # rename proposition (param) nodes, (and also unify true/false nodes)
-        if node.value in {"True", "true", "tt"}:
-            node.value = "True"
-        elif node.value in {"False", "false", "ff"}:
-            node.value = "False"
-        else:
-            node.value = rename_dict[node.value]
-            node.subform_string = node.value
+        # rename proposition (param) nodes
+        if node.value == "True" or node.value == "False":
+            return
+        node.value = rename_dict[node.value]
+        node.subform_string = node.value
     elif type(node) == UnaryNode:
         rename_terminals_update_fn_ast(node.child, rename_dict)
         node.subform_string = "(" + node.value + node.child.subform_string + ")"
@@ -61,15 +56,10 @@ def rename_terminals_update_fn_ast(node, rename_dict):
 def rename_propositions_in_hctl_ast(node, rename_dict):
     if type(node) == TerminalNode:
         # DO NOT rename state-variable nodes, ONLY proposition nodes (and unify true/false)
-        if '{' in node.value:
+        if '{' in node.value or node.value == "True" or node.value == "False":
             return
-        elif node.value in {"True", "true", "tt"}:
-            node.value = "True"
-        elif node.value in {"False", "false", "ff"}:
-            node.value = "False"
-        else:
-            node.value = rename_dict[node.value]
-            node.subform_string = node.value
+        node.value = rename_dict[node.value]
+        node.subform_string = node.value
     elif type(node) == UnaryNode:
         rename_propositions_in_hctl_ast(node.child, rename_dict)
         node.subform_string = "(" + node.value + node.child.subform_string + ")"

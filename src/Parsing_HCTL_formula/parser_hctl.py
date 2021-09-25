@@ -29,6 +29,12 @@ class HCTLVisitor(ParseTreeVisitor):
         return self.visit(ctx.child)
 
     def visitTerminalNode(self, ctx: HCTLParser.TerminalNodeContext):
+        # unify all possibilities for true/false nodes into one option
+        if ctx.value.text in {"True", "true", "tt"}:
+            return TerminalNode(value="True")
+        elif ctx.value.text in {"False", "false", "ff"}:
+            return TerminalNode(value="False")
+        
         return TerminalNode(value=ctx.value.text)
 
     def visitUnary(self, ctx: HCTLParser.UnaryContext):
@@ -39,7 +45,7 @@ class HCTLVisitor(ParseTreeVisitor):
         if ctx.value.text == "||" and ctx.left.value.text == "EX" and ctx.right.value.text == "EX":
             child_or = BinaryNode(value="||", left=self.visit(ctx.left.child), right=self.visit(ctx.right.child))
             return UnaryNode(value="EX", child=child_or)
-        
+
         # same thing for "(AX phi1) && (AX phi2)" == "AX (phi1 && phi2)"
         if ctx.value.text == "&&" and ctx.left.value.text == "AX" and ctx.right.value.text == "AX":
             child_and = BinaryNode(value="&&", left=self.visit(ctx.left.child), right=self.visit(ctx.right.child))
