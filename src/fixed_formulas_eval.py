@@ -26,6 +26,9 @@ List of formulas includes (current version, might be changed):
     model_check_fixed16 == "!{x}: EG EF {x}"
     model_check_fixed17 == "3{x}: 3{y}: (@{x}: AG~{y} && AG EF {x}) && (@{y}: AG EF {y})"
     model_check_fixed18 == "3{x}: 3{y}: (@{x}: ~{y} && AX{x}) && (@{y}: AX{y}) && EF{x} && EF{y}"
+    model_check_fixed19 == "AX (x || EX x)"
+    model_check_fixed20 == "EX (x || EX x)"
+
 """
 
 

@@ -21,7 +21,6 @@ sys.path.append('/mnt/c/Users/Ondra/PycharmProjects/HCTL_stuff/src')
 sys.path.append('/mnt/c/Users/Ondra/PycharmProjects/HCTL_stuff/src/Parsing_HCTL_formula')
 sys.path.append('/mnt/c/Users/Ondra/PycharmProjects/HCTL_stuff/src/Parsing_update_fns')
 
-
 from parse_all import parse_all
 from Parsing_HCTL_formula.evaluator_hctl import eval_tree
 from implementation import print_results

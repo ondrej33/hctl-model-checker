@@ -5,7 +5,7 @@ from src.Parsing_HCTL_formula.parser_hctl import parse_to_tree
 from src.parse_all import parse_all
 
 from heapq import heappush, heappop
-
+from typing import Dict
 
 NUM_PROPS_AT_LEAST_TO_OPTIMIZE = 20
 
@@ -19,7 +19,7 @@ class EvaluateExpressionVisitor:
     # TODO: >>bring ALL optimizations in <<, (add NESTED through union, now we have just the three basic)
     # TODO: JUMP might not need x in the subformula
 
-    # TODO: optimize also through the intersection
+    # TODO: optimize also through the intersection ? and maybe even do something with AX ?
 
     # TODO: solve the possible problem with future (self-loops again, but in sources??)
 
@@ -37,7 +37,8 @@ class EvaluateExpressionVisitor:
     @:param optim: if optim=True, then parent was some hybrid operation and we can push it inside for example EX...
     @:param optim_op and @:param optim_var holds info about what hybrid op we are optimizing
     """
-    def visit(self, node, model: Model, dupl, cache, optim=False, optim_op=None, optim_var=None):
+    def visit(self, node, model: Model, dupl: Dict[str, int], cache: Dict[str, Function],
+              optim=False, optim_op=None, optim_var=None) -> Function:
         # TODO : subform_string problem
         # first check for if this node does not belong in the duplicates
         save_to_cache = False
@@ -100,7 +101,7 @@ class EvaluateExpressionVisitor:
                 result = EW(model, self.visit(node.left, model, dupl, cache), self.visit(node.right, model, dupl, cache))
             elif node.value == 'AW':
                 result = AW(model, self.visit(node.left, model, dupl, cache), self.visit(node.right, model, dupl, cache))
-        else:
+        elif type(node) == HybridNode:
             # if we have EX directly after this hybrid node and its subformula contains 'var',
             # we can use optimized path - however we use it only for bigger models, because it works better
             if type(node.child) == UnaryNode and node.child.value == "EX" and \
@@ -120,7 +121,7 @@ class EvaluateExpressionVisitor:
 
 # find out if we have some duplicate nodes in our parse tree
 # if so - mark them and then when evaluating, save result to some cache (and delete after the last usage)
-def mark_duplicates(root_node):
+def mark_duplicates(root_node) -> Dict[str, int]:
     # go through the nodes from top, use height to compare only those with the same level
     # once we find duplicate, do not continue traversing its branch (it will be skipped during eval)
     queue = []

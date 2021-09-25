@@ -76,7 +76,7 @@ def model_check_test5b(model: Model, set1: Function) -> Function:
 # ============================================================================================= #
 
 # create string of form x_i & ~x_j... - 50% chance that var is not present, 25% that it is positive, 25% negative
-def create_random_combination_x(number_props, var='x'):
+def create_random_combination_x(number_props: int, var: str = 'x') -> str:
     string = "( True"
     for i in range(number_props):
         num = randint(0, 4)
@@ -98,7 +98,7 @@ X_COMBINATIONS5 = ['( True)' , '( True)' , '( True)' , '( True & x__2)' , '( Tru
 X_COMBINATIONS = [X_COMBINATIONS1, X_COMBINATIONS2, X_COMBINATIONS3, X_COMBINATIONS4, X_COMBINATIONS5]
 
 
-def test_run_1_set(model: Model, seq_num: int, func, message: str):
+def test_run_1_set(model: Model, seq_num: int, func, message: str) -> None:
     message_cont = ""
     set1 = model.bdd.add_expr("True")
 
@@ -175,7 +175,7 @@ def test_run_1_set(model: Model, seq_num: int, func, message: str):
     print("time: ", end - start, '\n')
 
 
-def test_run_2_sets(model: Model, seq_num: int, func, message: str):
+def test_run_2_sets(model: Model, seq_num: int, func, message: str) -> None:
     message_cont = ""
     set1 = model.bdd.add_expr("True")
     set2 = model.bdd.add_expr("True")
@@ -286,7 +286,7 @@ def run_test_sets(file_name: str, test_name: str, test_num: int, test_type: str)
 
 
 # test "↓x (set1 | set2)" vs "(↓x set1) | (↓x set2)"
-def new_test1(file_name: str):
+def new_test1(file_name: str) -> None:
     # first we parse the input and create the model object
     model = bnet_parser(file_name)
 
@@ -311,7 +311,7 @@ def new_test1(file_name: str):
 
 
 # test "↓x (EX set1 | EX set2)"
-def new_test2(file_name: str):
+def new_test2(file_name: str) -> None:
     # first we parse the input and create the model object
     model = bnet_parser(file_name)
 
@@ -336,7 +336,7 @@ def new_test2(file_name: str):
 
 
 # test "↓x (set1 | set2)" vs "(↓x set1) | (↓x set2)"
-def new_test3(file_name: str, seq_num, seq_num2):
+def new_test3(file_name: str, seq_num, seq_num2) -> None:
     # first we parse the input and create the model object
     model = bnet_parser(file_name)
 

@@ -3,12 +3,14 @@ from src.Parsing_HCTL_formula import parser_hctl
 from src.Parsing_update_fns import parser_update_fn
 from src.Parsing_update_fns import evaluator_update_fn
 from src.abstract_syntax_tree import *
+
 from collections import OrderedDict
+from typing import Set, Dict, Tuple
 
 
 # this collects names of all variables from HCTL formula's AST into param variables
 # and all propositions into param props
-def get_prop_names_from_hctl_ast(node, props_collected):
+def get_prop_names_from_hctl_ast(node, props_collected: Set[str]) -> None:
     if type(node) == TerminalNode:
         # DO not add any of true/false or vars, only proposition nodes
         if node.value == "True" or node.value == "False":
@@ -22,7 +24,7 @@ def get_prop_names_from_hctl_ast(node, props_collected):
 
 
 # this collects names of all propositions and params in update function's AST into param props
-def get_names_from_update_fn_ast(node, props_and_params):
+def get_names_from_update_fn_ast(node, props_and_params: Set[str]) -> None:
     if type(node) == TerminalNode:
         # DO not add any of true/false nodes, only proposition (param) nodes
         if node.value == "True" or node.value == "False":
@@ -36,7 +38,7 @@ def get_names_from_update_fn_ast(node, props_and_params):
 
 
 # this renames all terminal nodes in update function AST
-def rename_terminals_update_fn_ast(node, rename_dict):
+def rename_terminals_update_fn_ast(node, rename_dict: Dict[str, str]) -> None:
     if type(node) == TerminalNode:
         # rename proposition (param) nodes
         if node.value == "True" or node.value == "False":
@@ -53,7 +55,7 @@ def rename_terminals_update_fn_ast(node, rename_dict):
 
 
 # this renames all propositions in terminal nodes in HCTL formula (does not touch vars)
-def rename_propositions_in_hctl_ast(node, rename_dict):
+def rename_propositions_in_hctl_ast(node, rename_dict: Dict[str, str]) -> None:
     if type(node) == TerminalNode:
         # DO NOT rename state-variable nodes, ONLY proposition nodes (and unify true/false)
         if '{' in node.value or node.value == "True" or node.value == "False":
@@ -75,7 +77,7 @@ def rename_propositions_in_hctl_ast(node, rename_dict):
 
 # renames as many state-variables as possible to the identical names, without changing the formula
 # its like canonicalization, we will end up with less vars in total
-def make_state_vars_canonical_ast(node, rename_dict, last_used_name: str, num_vars=0):
+def make_state_vars_canonical_ast(node, rename_dict: Dict[str, str], last_used_name: str, num_vars=0):
     """
     # if we find hybrid node with bind or exist, we add new var-name to rename_dict and stack (x, xx, xxx...)
     # we derive the name using the last thing on stack
@@ -124,7 +126,7 @@ def make_state_vars_canonical_ast(node, rename_dict, last_used_name: str, num_va
     return num_vars
 
 
-def parse_all(file_name: str, formula: str):
+def parse_all(file_name: str, formula: str) -> Tuple[Model, Node]:
     # TODO: GO THROUGH THE TREES ONLY ONCE (collect terminal names while building the trees, later just rename them)
     
     # first preprocess the file content

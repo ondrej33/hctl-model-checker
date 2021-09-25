@@ -283,7 +283,7 @@ version of bnet files that is used:
 """
 
 
-def bnet_parser(file_name: str):
+def bnet_parser(file_name: str) -> Model:
     # first preprocess the file content
     file = open(file_name, "r")
     content = file.read()
