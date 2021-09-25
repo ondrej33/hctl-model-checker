@@ -6,6 +6,28 @@ from src.parse_all import parse_all
 # ================================= FIXED FORMULAE EVALUATION ================================= #
 # ============================================================================================= #
 
+"""
+List of formulas includes (current version, might be changed):
+    model_check_fixed1 == "!{x}: EX {x}"
+    model_check_fixed2 == "!{x}: AX {x}"
+    model_check_fixed3 == "!{x}: (EX (~{x} && EX {x}))"
+    model_check_fixed4 == "!{x}: EX EF {x}"
+    model_check_fixed5 == "!{x}: (EX EF {x}) && (EG s__3)"
+    model_check_fixed6 == "EF !{x}: EF (~s__0 && EF (s__0 && {x}))"
+    model_check_fixed7 == "(EG s__2) && (EF ~s__0)"
+    model_check_fixed8 == "!{x}: AX AF {x}"
+    model_check_fixed9 == "!{x}: AG EF {x}"
+    model_check_fixed10 == "!{x}: EX (~{x} && (!{y}: AX {y}))"
+    model_check_fixed11 == "!{x}: EX (!{y}: AX ({y} && ~{x}))"
+    model_check_fixed12 == "!{x}: (3{y}: {x} && EX {y})"
+    model_check_fixed13 == "!{x}: 3{y}: ({x} && AX ({y} && AX {y}))"
+    model_check_fixed14 == "!{x}: 3{y}: ({x} && EX (~{x} && {y} && AX {y}))"
+    model_check_fixed15 == "3{x}: 3{y}: (@{x}: ~{y} && AX {x}) && (@{y}: AX {y})"
+    model_check_fixed16 == "!{x}: EG EF {x}"
+    model_check_fixed17 == "3{x}: 3{y}: (@{x}: AG~{y} && AG EF {x}) && (@{y}: AG EF {y})"
+    model_check_fixed18 == "3{x}: 3{y}: (@{x}: ~{y} && AX{x}) && (@{y}: AX{y}) && EF{x} && EF{y}"
+"""
+
 
 # formula: ↓x (EX x)
 # unstable steady states (self loop)
@@ -256,12 +278,25 @@ def model_check_fixed18(model: Model) -> Function:
     return existential(model, exist_y, 'x')
 
 
+# EX (x || EX x)
+def model_check_fixed19(model: Model) -> Function:
+    x = create_comparator(model, 'x')
+    ex_x = EX(model, x)
+    return EX(model, x | ex_x)
+
+
+# AX (x || EX x)
+def model_check_fixed20(model: Model) -> Function:
+    x = create_comparator(model, 'x')
+    ex_x = EX(model, x)
+    return AX(model, x | ex_x)
+
+
 # ============================================================================================= #
 # =================================== OTHER TESTS AND STUFF =================================== #
 # ============================================================================================= #
 
 
-# test "↓x (EX set1 | EX set2)"
 def simple_main(file_name: str):
     # formula here is just a placeholder to save var names
     model, _ = parse_all(file_name, "!{x}: (AX {x})")
@@ -269,25 +304,8 @@ def simple_main(file_name: str):
     print_results(results, model, "", True)
 
 
-def simple_main2(file_name: str):
-    model = bnet_parser(file_name)
-    x = create_comparator(model, 'x')
-    intersection = x & labeled_by(model, "s__4")
-    ax = AX(model, intersection)
-    print_results(ax, model)
-
-    comparator = create_comparator(model, "x")
-    intersection = comparator & ax
-    print_results(intersection, model)
-
-    # now lets use existential quantification to get rid of the bdd vars coding VAR
-    vars_to_get_rid = [f"x__{i}" for i in range(model.num_props)]
-    result = model.bdd.quantify(intersection, vars_to_get_rid)
-    print_results(result, model)
-
-
 # we have 4 command line args: name of file + type of test + number of test + version of test
 if __name__ == '__main__':
     # TODO change path
     path_to_bnet = "bnet_examples/007.bnet"
-    simple_main2(path_to_bnet)
+    simple_main(path_to_bnet)

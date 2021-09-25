@@ -23,6 +23,13 @@ def run_tests(model: Model):
     assert model_check_fixed17(model) == parse_and_eval("3{x}: 3{y}: (@{x}: AG~{y} && AG EF {x}) && (@{y}: AG EF {y})", model)
     assert model_check_fixed18(model) == parse_and_eval("3{x}: 3{y}: (@{x}: ~{y} && AX{x}) && (@{y}: AX{y}) && EF{x} && EF{y}", model)
 
+    # check that "(EX phi1) || (EX phi2)" == "EX (phi1 || phi2)"
+    assert parse_and_eval("(EX {x}) || (EX EX {x})", model) == parse_and_eval("EX ({x} || EX {x}) ", model)
+    assert model_check_fixed19(model) == parse_and_eval("(EX {x}) || (EX EX {x})", model)
+    # check that "(AX phi1) && (AX phi2)" == "AX (phi1 && phi2)"
+    assert parse_and_eval("(AX {x}) && (AX EX {x})", model) == parse_and_eval("AX ({x} && EX {x}) ", model)
+    assert model_check_fixed20(model) == parse_and_eval("(AX {x}) || (AX EX {x})", model)
+
 
 if __name__ == '__main__':
     # TODO change path
