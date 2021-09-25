@@ -41,7 +41,7 @@ def model_check_test2b(model: Model, set1: Function, set2: Function) -> Function
 # binder EX:   ↓x. (EX SET1)
 def model_check_test3a(model: Model, set1: Function) -> Function:
     ex = EX(model, set1)
-    return bind(model, 'x', ex)
+    return bind(model, ex, 'x')
 
 
 # binder EX, binder pushed inside:   ↓x. (EX SET1)
@@ -52,7 +52,7 @@ def model_check_test3b(model: Model, set1: Function) -> Function:
 # jump EX:   @x. (EX SET1)
 def model_check_test4a(model: Model, set1: Function) -> Function:
     ex = EX(model, set1)
-    return jump(model, 'x', ex)
+    return jump(model, ex, 'x')
 
 
 # jump EX, jump pushed inside:   @x. (EX SET1)
@@ -145,27 +145,27 @@ def test_run_1_set(model: Model, seq_num: int, func, message: str):
     x_content = X_COMBINATIONS1[model.num_props]
     if seq_num == 0:
         message_cont = f"set1= EX((s1 & s2) & {x_content}"
-        set1 = EX(model, (labeled_by('s__1', model) & labeled_by('s__2', model)) &
+        set1 = EX(model, (labeled_by(model, 's__1') & labeled_by(model, 's__2')) &
                   model.bdd.add_expr(x_content))
     elif seq_num == 1:
         message_cont = f"set1= EX((s1 => s2) & {x_content}"
-        set1 = EX(model, (labeled_by('s__1', model).implies(labeled_by('s__2', model))) &
+        set1 = EX(model, (labeled_by(model, 's__1').implies(labeled_by(model, 's__2'))) &
                   model.bdd.add_expr(x_content))
     elif seq_num == 2:
         message_cont = f"set1= EX((s1 <=> s2) & {x_content}"
-        set1 = EX(model, (labeled_by('s__1', model).equiv(labeled_by('s__2', model))) &
+        set1 = EX(model, (labeled_by(model, 's__1').equiv(labeled_by(model, 's__2'))) &
                   model.bdd.add_expr(x_content))
     if seq_num == 3:
         message_cont = f"set1= EX((s3 & s4) & {x_content}"
-        set1 = EX(model, (labeled_by('s__3', model) & labeled_by('s__4', model)) &
+        set1 = EX(model, (labeled_by(model, 's__3') & labeled_by(model, 's__4')) &
                   model.bdd.add_expr(x_content))
     elif seq_num == 4:
         message_cont = f"set1= EX((s3 => s4) & {x_content}"
-        set1 = EX(model, (labeled_by('s__3', model).implies(labeled_by('s__4', model))) &
+        set1 = EX(model, (labeled_by(model, 's__3').implies(labeled_by(model, 's__4'))) &
                   model.bdd.add_expr(x_content))
     elif seq_num == 5:
         message_cont = f"set1= EX((s3 <=> s4) & {x_content}"
-        set1 = EX(model, (labeled_by('s__3', model).equiv(labeled_by('s__4', model))) &
+        set1 = EX(model, (labeled_by(model, 's__3').equiv(labeled_by(model, 's__4'))) &
                   model.bdd.add_expr(x_content))
 
     start = time.time()
@@ -183,20 +183,20 @@ def test_run_2_sets(model: Model, seq_num: int, func, message: str):
     # first lets determine what the testing sets will be based on the seq num
     if seq_num == 0:
         message_cont = "set1= s1, set2= s2"
-        set1 = labeled_by('s__1', model)
-        set2 = labeled_by('s__1', model)
+        set1 = labeled_by(model, 's__1')
+        set2 = labeled_by(model, 's__1')
     elif seq_num == 1:
         message_cont = "set1= s2, set2= s3"
-        set1 = labeled_by('s__2', model)
-        set2 = labeled_by('s__3', model)
+        set1 = labeled_by(model, 's__2')
+        set2 = labeled_by(model, 's__3')
     elif seq_num == 2:
         message_cont = "set1= (s1 & s2), set2= (s3 & s4)"
-        set1 = labeled_by('s__1', model) & labeled_by('s__2', model)
-        set2 = labeled_by('s__3', model) & labeled_by('s__4', model)
+        set1 = labeled_by(model, 's__1') & labeled_by(model, 's__2')
+        set2 = labeled_by(model, 's__3') & labeled_by(model, 's__4')
     elif seq_num == 3:
         message_cont = "set1= (s1 | s2), set2= (s3 | s4)"
-        set1 = labeled_by('s__1', model) | labeled_by('s__2', model)
-        set2 = labeled_by('s__3', model) | labeled_by('s__4', model)
+        set1 = labeled_by(model, 's__1') | labeled_by(model, 's__2')
+        set2 = labeled_by(model, 's__3') | labeled_by(model, 's__4')
     elif seq_num == 4:
         message_cont = "set1= SINKS, set2= EX SINKS"
         set1 = model_check_fixed2_v3(model)
@@ -212,10 +212,10 @@ def test_run_2_sets(model: Model, seq_num: int, func, message: str):
     elif seq_num == 7:
         message_cont = "set1= x, set2= s1"
         set1 = create_comparator(model, 'x')
-        set2 = labeled_by('s__1', model)
+        set2 = labeled_by(model, 's__1')
     elif seq_num == 8:
         message_cont = "set1= s2, set2= x"
-        set1 = labeled_by('s__2', model)
+        set1 = labeled_by(model, 's__2')
         set2 = create_comparator(model, 'x')
     elif seq_num == 9:
         message_cont = "set1= x, set2= EF x"
@@ -291,15 +291,15 @@ def new_test1(file_name: str):
     model = bnet_parser(file_name)
 
     set1 = AX(model, create_comparator(model, 'x'))
-    set2 = create_comparator(model, 'x') & labeled_by("s__0", model)
+    set2 = create_comparator(model, 'x') & labeled_by(model, "s__0")
 
     def fn1():
         # "↓x (set1 | set2)"
-        return bind(model, 'x', set1 | set2)
+        return bind(model, set1 | set2, 'x')
 
     def fn2():
         # "(↓x set1) | (↓x set2)"
-        return bind(model, 'x', set1) | bind(model, 'x', set2)
+        return bind(model, set1, 'x') | bind(model, set2, 'x')
 
     start = time.time()
     res1 = fn1()
@@ -320,7 +320,7 @@ def new_test2(file_name: str):
 
     def fn1():
         # outside
-        return bind(model, 'x', EX(model, set1) | EX(model, set2))
+        return bind(model, EX(model, set1) | EX(model, set2), 'x')
 
     def fn2():
         # inside
@@ -347,62 +347,62 @@ def new_test3(file_name: str, seq_num, seq_num2):
 
     if seq_num == 0:
         message_cont = f"set1= EX((s1 & s2) & {x_content}"
-        set1 = EX(model, (labeled_by('s__1', model) & labeled_by('s__2', model)) &
+        set1 = EX(model, (labeled_by(model, 's__1') & labeled_by(model, 's__2')) &
                   model.bdd.add_expr(x_content))
     elif seq_num == 1:
         message_cont = f"set1= EX((s1 => s2) & {x_content}"
-        set1 = EX(model, (labeled_by('s__1', model).implies(labeled_by('s__2', model))) &
+        set1 = EX(model, (labeled_by(model, 's__1').implies(labeled_by(model, 's__2'))) &
                   model.bdd.add_expr(x_content))
     elif seq_num == 2:
         message_cont = f"set1= EX((s1 <=> s2) & {x_content}"
-        set1 = EX(model, (labeled_by('s__1', model).equiv(labeled_by('s__2', model))) &
+        set1 = EX(model, (labeled_by(model, 's__1').equiv(labeled_by(model, 's__2'))) &
                   model.bdd.add_expr(x_content))
     if seq_num == 3:
         message_cont = f"set1= EX((s3 & s4) & {x_content}"
-        set1 = EX(model, (labeled_by('s__3', model) & labeled_by('s__4', model)) &
+        set1 = EX(model, (labeled_by(model, 's__3') & labeled_by(model, 's__4')) &
                   model.bdd.add_expr(x_content))
     elif seq_num == 4:
         message_cont = f"set1= EX((s3 => s4) & {x_content}"
-        set1 = EX(model, (labeled_by('s__3', model).implies(labeled_by('s__4', model))) &
+        set1 = EX(model, (labeled_by(model, 's__3').implies(labeled_by(model, 's__4'))) &
                   model.bdd.add_expr(x_content))
     elif seq_num == 5:
         message_cont = f"set1= EX((s3 <=> s4) & {x_content}"
-        set1 = EX(model, (labeled_by('s__3', model).equiv(labeled_by('s__4', model))) &
+        set1 = EX(model, (labeled_by(model, 's__3').equiv(labeled_by(model, 's__4'))) &
                   model.bdd.add_expr(x_content))
 
     x_content = X_COMBINATIONS[random.randint(0, 4)][model.num_props]
     if seq_num2 == 0:
         message_cont += f"set1= EX((s1 & s2) & {x_content}"
-        set2 = EX(model, (labeled_by('s__1', model) & labeled_by('s__2', model)) &
+        set2 = EX(model, (labeled_by(model, 's__1') & labeled_by(model, 's__2')) &
                   model.bdd.add_expr(x_content))
     elif seq_num2 == 1:
         message_cont = f"set1= EX((s1 => s2) & {x_content}"
-        set2 = EX(model, (labeled_by('s__1', model).implies(labeled_by('s__2', model))) &
+        set2 = EX(model, (labeled_by(model, 's__1').implies(labeled_by(model, 's__2'))) &
                   model.bdd.add_expr(x_content))
     elif seq_num2 == 2:
         message_cont += f"set1= EX((s1 <=> s2) & {x_content}"
-        set2 = EX(model, (labeled_by('s__1', model).equiv(labeled_by('s__2', model))) &
+        set2 = EX(model, (labeled_by(model, 's__1').equiv(labeled_by(model, 's__2'))) &
                   model.bdd.add_expr(x_content))
     if seq_num2 == 3:
         message_cont += f"set1= EX((s3 & s4) & {x_content}"
-        set2 = EX(model, (labeled_by('s__3', model) & labeled_by('s__4', model)) &
+        set2 = EX(model, (labeled_by(model, 's__3') & labeled_by(model, 's__4')) &
                   model.bdd.add_expr(x_content))
     elif seq_num2 == 4:
         message_cont += f"set1= EX((s3 => s4) & {x_content}"
-        set2 = EX(model, (labeled_by('s__3', model).implies(labeled_by('s__4', model))) &
+        set2 = EX(model, (labeled_by(model, 's__3').implies(labeled_by(model, 's__4'))) &
                   model.bdd.add_expr(x_content))
     elif seq_num2 == 5:
         message_cont += f"set1= EX((s3 <=> s4) & {x_content}"
-        set2 = EX(model, (labeled_by('s__3', model).equiv(labeled_by('s__4', model))) &
+        set2 = EX(model, (labeled_by(model, 's__3').equiv(labeled_by(model, 's__4'))) &
                   model.bdd.add_expr(x_content))
 
     def fn1():
         # "↓x (set1 | set2)"
-        return bind(model, 'x', set1 & set2)
+        return bind(model, set1 & set2, 'x')
 
     def fn2():
         # "(↓x set1) | (↓x set2)"
-        return bind(model, 'x', set1) & bind(model, 'x', set2)
+        return bind(model, set1, 'x') & bind(model, set2, 'x')
 
     start = time.time()
     res1 = fn1()

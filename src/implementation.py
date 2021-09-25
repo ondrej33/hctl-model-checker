@@ -11,7 +11,7 @@ from src.model import *
 
 
 # creates a bdd representing all states labeled by proposition given
-def labeled_by(prop: str, model: Model) -> Function:
+def labeled_by(model: Model, prop: str) -> Function:
     return model.bdd.add_expr(prop)
 
 
@@ -25,7 +25,7 @@ def create_comparator(model: Model, var: str) -> Function:
 
 
 # Release(x, Comparator(x) & SMC(M, phi))
-def bind(model: Model, var: str, phi: Function) -> Function:
+def bind(model: Model, phi: Function, var: str) -> Function:
     comparator = create_comparator(model, var)
     intersection = comparator & phi
 
@@ -36,7 +36,7 @@ def bind(model: Model, var: str, phi: Function) -> Function:
 
 
 # Release(s, Comparator(x) & SMC(M, phi))
-def jump(model: Model, var: str, phi: Function) -> Function:
+def jump(model: Model, phi: Function, var: str) -> Function:
     comparator = create_comparator(model, var)
     intersection = comparator & phi
 
@@ -47,7 +47,7 @@ def jump(model: Model, var: str, phi: Function) -> Function:
 
 
 # Release(x, SMC(M, phi))
-def existential(model: Model, var: str, phi: Function) -> Function:
+def existential(model: Model, phi: Function, var: str) -> Function:
     vars_to_get_rid = [f"{var}__{i}" for i in range(model.num_props)]
     result = model.bdd.quantify(phi, vars_to_get_rid)
     return result
@@ -56,14 +56,14 @@ def existential(model: Model, var: str, phi: Function) -> Function:
 # computes the set of states which can make transition into the initial set
 # applying the update function of the given `var`
 # SHOULD BE USED ONLY BY FUNCTIONS IN THIS FILE
-def pre_E_one_var(model: Model, var: str, initial: Function) -> Function:
+def pre_E_one_var(model: Model, initial: Function, var: str) -> Function:
     """
     NEGATIVE_PREDECESSOR = !X & Exists(SET & X, 'X') & B_X  
     POSITIVE_PREDECESSOR = X & Exists(SET & !X, 'X') & !B_X
     PREDECESSORS_IN_X = NEGATIVE_PREDECESSOR | POSITIVE_PREDECESSOR
     """
 
-    var_bdd = labeled_by(var, model)
+    var_bdd = labeled_by(model, var)
     neg_pred = ~var_bdd & model.bdd.quantify(initial & var_bdd, [var]) & model.update_fns[var]
     pos_pred = var_bdd & model.bdd.quantify(initial & ~var_bdd, [var]) & ~model.update_fns[var]
     return neg_pred | pos_pred
@@ -74,31 +74,24 @@ def pre_E_one_var(model: Model, var: str, initial: Function) -> Function:
 def pre_E_all_vars(model: Model, initial: Function) -> Function:
     current_set = model.bdd.add_expr("False")
     for i in range(model.num_props):
-        current_set = current_set | pre_E_one_var(model, f"s__{i}", initial)
+        current_set = current_set | pre_E_one_var(model, initial, f"s__{i}")
 
     # TODO: change back?? - now it artificially creates self-loops for stable states with no successor
     # return current_set
     return current_set | (initial & model.stable)
 
 
-# computes the set of states which can make transition ONLY into the initial set and nowhere else
-# applying the update function of the given `var`
-# SHOULD BE USED ONLY BY FUNCTIONS IN THIS FILE
-def pre_A_one_var(model: Model, var: str, initial: Function) -> Function:
-    return ~pre_E_one_var(model, var, ~initial)
-
-
 # computes the set of successors for the given set
 # by applying the update function of the given `var`
 # SHOULD BE USED ONLY BY FUNCTIONS IN THIS FILE
 # TODO: test if right
-def post_E_one_var(model: Model, var: str, given_set: Function) -> Function:
+def post_E_one_var(model: Model, given_set: Function, var: str) -> Function:
     """
     GO_DOWN = !X & Exists((SET & X & !B_X), 'X')
     GO_UP = X & Exists((SET & !X & B_X), 'X')
     """
 
-    var_bdd = labeled_by(var, model)
+    var_bdd = labeled_by(model, var)
     go_down = ~var_bdd & model.bdd.quantify(given_set & var_bdd & ~model.update_fns[var], [var])
     go_up = var_bdd & model.bdd.quantify(given_set & ~var_bdd & model.update_fns[var], [var])
     return go_down | go_up
@@ -109,7 +102,7 @@ def post_E_one_var(model: Model, var: str, given_set: Function) -> Function:
 def post_E_all_vars(model: Model, given_set: Function) -> Function:
     current_set = model.bdd.add_expr("False")
     for i in range(model.num_props):
-        current_set = current_set | post_E_one_var(model, f"s__{i}", given_set)
+        current_set = current_set | post_E_one_var(model, given_set, f"s__{i}")
 
     # TODO: add same thing as for pre_E_all_vars - create self loops - this helps for "bind x: EY x"
     # TODO: problem with self-loops might arrise again, but this time in sources - we have reversed graph
@@ -223,7 +216,7 @@ def optimized_bind_EX(model: Model, phi: Function, var: str) -> Function:
     vars_to_get_rid = [f"{var}__{i}" for i in range(model.num_props)]
 
     for i in range(model.num_props):
-        intersection = comparator & pre_E_one_var(model, f"s__{i}", phi)
+        intersection = comparator & pre_E_one_var(model, phi, f"s__{i}")
         current_set = current_set | model.bdd.quantify(intersection, vars_to_get_rid)
 
     # TODO: change back?? - now it artificially creates self-loops for stable states with no successor
@@ -240,7 +233,7 @@ def optimized_jump_EX(model: Model, phi: Function, var: str) -> Function:
     vars_to_get_rid = [f"s__{i}" for i in range(model.num_props)]
 
     for i in range(model.num_props):
-        intersection = comparator & pre_E_one_var(model, f"s__{i}", phi)
+        intersection = comparator & pre_E_one_var(model, phi, f"s__{i}")
         current_set = current_set | model.bdd.quantify(intersection, vars_to_get_rid)
 
     # TODO: change back?? - now it artificially creates self-loops for stable states with no successor
@@ -255,7 +248,7 @@ def optimized_exist_EX(model: Model, phi: Function, var: str) -> Function:
     vars_to_get_rid = [f"{var}__{i}" for i in range(model.num_props)]
 
     for i in range(model.num_props):
-        pred = pre_E_one_var(model, f"s__{i}", phi)
+        pred = pre_E_one_var(model, phi, f"s__{i}")
         current_set = current_set | model.bdd.quantify(pred, vars_to_get_rid)
 
     # TODO: change back?? - now it artificially creates self-loops for stable states with no successor

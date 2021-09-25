@@ -1,5 +1,11 @@
-from src.model import *
 from src.implementation import *
+
+
+# computes the set of states which can make transition ONLY into the initial set and nowhere else
+# applying the update function of the given `var`
+# SHOULD BE USED ONLY BY FUNCTIONS IN THIS FILE
+def pre_A_one_var(model: Model, initial: Function, var: str) -> Function:
+    return ~pre_E_one_var(model, ~initial, var)
 
 
 # computes the set of states which can make transition ONLY into the initial set and nowhere else
@@ -7,7 +13,7 @@ from src.implementation import *
 def pre_A_all_vars(model: Model, initial: Function) -> Function:
     current_set = model.bdd.add_expr("True")
     for i in range(model.num_props):
-        current_set = current_set & pre_A_one_var(model, f"s__{i}", initial)
+        current_set = current_set & pre_A_one_var(model, initial, f"s__{i}")
 
     # TODO: add same thing as for pre_E_all_vars - create explicit self loops
     return current_set
@@ -46,7 +52,7 @@ def optimized_binder_AX(model: Model, set1: Function) -> Function:
     vars_to_get_rid = [f"x__{i}" for i in range(model.num_props)]
 
     for i in range(model.num_props):
-        intersection = comparator & pre_A_one_var(model, f"s__{i}", set1)
+        intersection = comparator & pre_A_one_var(model, set1, f"s__{i}")
         current_set = current_set & model.bdd.quantify(intersection, vars_to_get_rid)
 
     # TODO: add same thing as for pre_E_all_vars - create explicit self loops

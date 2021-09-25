@@ -12,7 +12,7 @@ from src.parse_all import parse_all
 def model_check_fixed1(model: Model) -> Function:
     x = create_comparator(model, 'x')
     ex = EX(model, x)
-    return bind(model, 'x', ex)
+    return bind(model, ex, 'x')
 
 
 # formula: ↓x (EX x)
@@ -27,7 +27,7 @@ def model_check_fixed1_v2(model: Model) -> Function:
 def model_check_fixed2(model: Model) -> Function:
     x = create_comparator(model, 'x')
     ax = AX(model, x)
-    return bind(model, 'x', ax)
+    return bind(model, ax, 'x')
 
 
 # TODO: update "bind AX" and use it next fn
@@ -50,7 +50,7 @@ def model_check_fixed2_v2(model: Model) -> Function:
 def model_check_fixed2_v3(model: Model) -> Function:
     current_set = model.bdd.add_expr("True")
     for i in range(model.num_props):
-        current_set = current_set & model.bdd.apply("<=>", labeled_by(f"s__{i}", model), model.update_fns[f"s__{i}"])
+        current_set = current_set & model.bdd.apply("<=>", labeled_by(model, f"s__{i}"), model.update_fns[f"s__{i}"])
     return current_set
 
 
@@ -61,7 +61,7 @@ def model_check_fixed3(model: Model) -> Function:
     ex_x = EX(model, x)
     and_inner = ~x & ex_x
     ex_outer = EX(model, and_inner)
-    return bind(model, 'x', ex_outer)
+    return bind(model, ex_outer, 'x')
 
 
 # formula: ↓x (EX (EF x))
@@ -70,7 +70,7 @@ def model_check_fixed4(model: Model) -> Function:
     x = create_comparator(model, 'x')
     ef = EF(model, x)
     ex = EX(model, ef)
-    return bind(model, 'x', ex)
+    return bind(model, ex, 'x')
 
 
 # formula: ↓x. ((EX (EF x)) & (EG s3))
@@ -78,32 +78,32 @@ def model_check_fixed4(model: Model) -> Function:
 def model_check_fixed5(model: Model) -> Function:
     x = create_comparator(model, 'x')
     ef_x = EF(model, x)
-    s3 = labeled_by("s__3", model)
+    s3 = labeled_by(model, "s__3")
 
     and_inner = EX(model, ef_x) & EG(model, s3)
-    return bind(model, 'x', and_inner)
+    return bind(model, and_inner, 'x')
 
 
 # formula: EF ↓x (EF ((~s0) & EF (s0 & x)))
 # states that are part of (unstable) cycles with oscillating gene s0
 def model_check_fixed6(model: Model) -> Function:
     x = create_comparator(model, 'x')
-    s0 = labeled_by("s__0", model)
+    s0 = labeled_by(model, "s__0")
     ef_inner_inner = EF_v2(model, x & s0)
 
     and_outer = ~s0 & ef_inner_inner
     ef_inner = EF_v2(model, and_outer)
-    binder = bind(model, 'x', ef_inner)
+    binder = bind(model, ef_inner, 'x')
     return EF_v2(model, binder)
 
 
 # formula: (EG s2) & (EF ~s0)
 # states with some possible path through only s2 states + some path reaching ~s0
 def model_check_fixed7(model: Model) -> Function:
-    s2 = labeled_by("s__2", model)
+    s2 = labeled_by(model, "s__2")
     eg_s2 = EG(model, s2)
 
-    not_s0 = ~labeled_by("s__0", model)
+    not_s0 = ~labeled_by(model, "s__0")
     ef = EF(model, not_s0)
     return eg_s2 & ef
 
@@ -114,7 +114,7 @@ def model_check_fixed8(model: Model) -> Function:
     x = create_comparator(model, 'x')
     af = AF(model, x)
     ax = AX(model, af)
-    return bind(model, 'x', ax)
+    return bind(model, ax, 'x')
 
 
 # ↓x. AG EF x
@@ -123,7 +123,7 @@ def model_check_fixed9(model: Model) -> Function:
     x = create_comparator(model, 'x')
     ef_x = EF_v2(model, x)
     ag = AG(model, ef_x)
-    return bind(model, 'x', ag)
+    return bind(model, ag, 'x')
 
 
 # ↓x. EX ( ~x & (↓y. AX y) )
@@ -134,7 +134,7 @@ def model_check_fixed10(model: Model) -> Function:
     and_inner = not_x & binder_y
 
     ex_outer = EX(model, and_inner)
-    return bind(model, 'x', ex_outer)
+    return bind(model, ex_outer, 'x')
 
 
 # ↓x. EX ( ~x & (↓y. AX y) ), with optimized version of "bind EX"
@@ -153,7 +153,7 @@ def model_check_fixed11(model: Model) -> Function:
     and_inner = not_x & y
 
     # TODO: update and use better version for "bind AX"
-    binder_y = bind(model, 'y', AX(model, and_inner))
+    binder_y = bind(model, AX(model, and_inner), 'y')
     return optimized_bind_EX(model, binder_y, 'x')
 
 
@@ -166,7 +166,7 @@ def model_check_fixed12(model: Model) -> Function:
     ex_y = EX(model, y)
     intersection = x & ex_y
     exists_y = existential(model, 'y', intersection)
-    return bind(model, 'x', exists_y)
+    return bind(model, exists_y, 'x')
 
 
 # ↓x. (∃y. (x & AX (y & AX y)))
@@ -181,7 +181,7 @@ def model_check_fixed13(model: Model) -> Function:
     intersection_outer = x & ax_outer
 
     exists_y = existential(model, 'y', intersection_outer)
-    return bind(model, 'x', exists_y)
+    return bind(model, exists_y, 'x')
 
 
 # ↓x. (∃y. (x & EX (~x & y & AX y)))
@@ -197,7 +197,7 @@ def model_check_fixed14(model: Model) -> Function:
     intersection_outer = x & ex
 
     exists_y = existential(model, 'y', intersection_outer)
-    return bind(model, 'x', exists_y)
+    return bind(model, exists_y, 'x')
 
 
 # ∃x. ∃y. ((@x. ~y & AX x) & (@y. AX y))
@@ -206,8 +206,8 @@ def model_check_fixed15(model: Model) -> Function:
     x = create_comparator(model, 'x')
     y = create_comparator(model, 'y')
 
-    jump_y = jump(model, 'y', AX(model, y))
-    jump_x = jump(model, 'x', ~y & AX(model, x))
+    jump_y = jump(model, AX(model, y), 'y')
+    jump_x = jump(model, ~y & AX(model, x), 'x')
 
     and_inner = jump_x & jump_y
     exist_y = existential(model, 'y', and_inner)
@@ -220,7 +220,7 @@ def model_check_fixed16(model: Model) -> Function:
     x = create_comparator(model, 'x')
     ef_x = EF_v2(model, x)
     eg = EG(model, ef_x)
-    return bind(model, 'x', eg)
+    return bind(model, eg, 'x')
 
 
 # ∃x.∃y.(@x. AG¬y & AG EFx) & (@y. AG EFy)
@@ -230,11 +230,11 @@ def model_check_fixed17(model: Model) -> Function:
     y = create_comparator(model, 'y')
 
     ag_ef_y = AG(model, EF_v2(model, y))
-    jump_y = jump(model, 'y', ag_ef_y)
+    jump_y = jump(model, ag_ef_y, 'y')
 
     ag_ef_x = AG(model, EF_v2(model, x))
     ag_not_y = AG(model, ~y)
-    jump_x = jump(model, 'x', ag_not_y & ag_ef_x)
+    jump_x = jump(model, ag_not_y & ag_ef_x, 'x')
 
     and_inner = jump_x & jump_y
     exist_y = existential(model, 'y', and_inner)
@@ -248,8 +248,8 @@ def model_check_fixed18(model: Model) -> Function:
     x = create_comparator(model, 'x')
     y = create_comparator(model, 'y')
 
-    jump_x = jump(model, 'x', ~x & AX(model, x))
-    jump_y = jump(model, 'y', AX(model, y))
+    jump_x = jump(model, ~x & AX(model, x), 'x')
+    jump_y = jump(model, AX(model, y), 'y')
 
     and_inner = jump_x & jump_y & EF(model, x) & EF(model, y)
     exist_y = existential(model, 'y', and_inner)
@@ -272,7 +272,7 @@ def simple_main(file_name: str):
 def simple_main2(file_name: str):
     model = bnet_parser(file_name)
     x = create_comparator(model, 'x')
-    intersection = x & labeled_by("s__4", model)
+    intersection = x & labeled_by(model, "s__4")
     ax = AX(model, intersection)
     print_results(ax, model)
 

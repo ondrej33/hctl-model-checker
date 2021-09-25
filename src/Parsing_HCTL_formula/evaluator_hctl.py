@@ -105,9 +105,9 @@ class EvaluateExpressionVisitor:
                     node.var in node.child.subform_string and model.num_props > NUM_PROPS_AT_LEAST_TO_OPTIMIZE:
                 result = self.visit(node.child, model, dupl, cache, optim=True, optim_op=node.value, optim_var=node.var[1:-1])
             elif node.value == '!':
-                result = bind(model, node.var[1:-1], self.visit(node.child, model, dupl, cache))
+                result = bind(model, self.visit(node.child, model, dupl, cache), node.var[1:-1])
             elif node.value == '@':
-                result = jump(model, node.var[1:-1], self.visit(node.child, model, dupl, cache))
+                result = jump(model, self.visit(node.child, model, dupl, cache), node.var[1:-1])
             elif node.value == 'Q':
                 result = existential(model, node.var[1:-1], self.visit(node.child, model, dupl, cache))
 
