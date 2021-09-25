@@ -57,7 +57,7 @@ class HCTLParser ( Parser ):
     literalNames = [ "<INVALID>", "'('", "')'", "':'", "<INVALID>", "<INVALID>", 
                      "'~'", "'&&'", "'||'", "'->'", "'<->'", "'A'", "'E'", 
                      "<INVALID>", "'X'", "'Y'", "'F'", "'G'", "<INVALID>", 
-                     "'EU'", "'AU'", "'EW'", "'AW'", "'!'", "'@'", "'Q'" ]
+                     "'EU'", "'AU'", "'EW'", "'AW'", "'!'", "'@'", "'3'" ]
 
     symbolicNames = [ "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
                       "TRUE", "FALSE", "NEG", "CON", "DIS", "IMPL", "EQIV", 

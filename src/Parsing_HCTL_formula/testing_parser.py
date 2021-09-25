@@ -15,13 +15,13 @@ def run_tests(model: Model):
     assert model_check_fixed10(model) == parse_and_eval("!{x}: EX (~{x} && (!{y}: AX {y}))", model)
     assert model_check_fixed10_v2(model) == parse_and_eval("!{x}: EX (~{x} && (!{y}: AX {y}))", model)
     assert model_check_fixed11(model) == parse_and_eval("!{x}: EX (!{y}: AX ({y} && ~{x}))", model)
-    assert model_check_fixed12(model) == parse_and_eval("!{x}: (Q{y}: {x} && EX {y})", model)
-    assert model_check_fixed13(model) == parse_and_eval("!{x}: Q{y}: ({x} && AX ({y} && AX {y}))", model)
-    assert model_check_fixed14(model) == parse_and_eval("!{x}: Q{y}: ({x} && EX (~{x} && {y} && AX {y}))", model)
-    assert model_check_fixed15(model) == parse_and_eval("Q{x}: Q{y}: (@{x}: ~{y} && AX {x}) && (@{y}: AX {y})", model)
+    assert model_check_fixed12(model) == parse_and_eval("!{x}: (3{y}: {x} && EX {y})", model)
+    assert model_check_fixed13(model) == parse_and_eval("!{x}: 3{y}: ({x} && AX ({y} && AX {y}))", model)
+    assert model_check_fixed14(model) == parse_and_eval("!{x}: 3{y}: ({x} && EX (~{x} && {y} && AX {y}))", model)
+    assert model_check_fixed15(model) == parse_and_eval("3{x}: 3{y}: (@{x}: ~{y} && AX {x}) && (@{y}: AX {y})", model)
     assert model_check_fixed16(model) == parse_and_eval("!{x}: EG EF {x}", model)
-    assert model_check_fixed17(model) == parse_and_eval("Q{x}: Q{y}: (@{x}: AG~{y} && AG EF {x}) && (@{y}: AG EF {y})", model)
-    assert model_check_fixed18(model) == parse_and_eval("Q{x}: Q{y}: (@{x}: ~{y} && AX{x}) && (@{y}: AX{y}) && EF{x} && EF{y}", model)
+    assert model_check_fixed17(model) == parse_and_eval("3{x}: 3{y}: (@{x}: AG~{y} && AG EF {x}) && (@{y}: AG EF {y})", model)
+    assert model_check_fixed18(model) == parse_and_eval("3{x}: 3{y}: (@{x}: ~{y} && AX{x}) && (@{y}: AX{y}) && EF{x} && EF{y}", model)
 
 
 if __name__ == '__main__':

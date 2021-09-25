@@ -11,7 +11,7 @@ from src.abstract_syntax_tree import *
 # then change HCTLVisitor to this: (and add import of structures)
 
 """
-# code changed in HCTLVisitor follows (this is backup, it might disappear when creating new parser):
+# code changed in HCTLVisitor follows (this is backup, it might disappear when creating generating new grammar):
 
 class HCTLVisitor(ParseTreeVisitor):
 
@@ -35,6 +35,16 @@ class HCTLVisitor(ParseTreeVisitor):
         return UnaryNode(value=ctx.value.text, child=self.visit(ctx.child))
 
     def visitBinary(self, ctx: HCTLParser.BinaryContext):
+        # special case: if we have "(EX phi1) || (EX phi2)", we will make it instead as "EX (phi1 || phi2)"
+        if ctx.value.text == "||" and ctx.left.value.text == "EX" and ctx.right.value.text == "EX":
+            child_or = BinaryNode(value="||", left=self.visit(ctx.left.child), right=self.visit(ctx.right.child))
+            return UnaryNode(value="EX", child=child_or)
+        
+        # same thing for "(AX phi1) && (AX phi2)" == "AX (phi1 && phi2)"
+        if ctx.value.text == "&&" and ctx.left.value.text == "AX" and ctx.right.value.text == "AX":
+            child_and = BinaryNode(value="&&", left=self.visit(ctx.left.child), right=self.visit(ctx.right.child))
+            return UnaryNode(value="AX", child=child_and)
+
         return BinaryNode(value=ctx.value.text, left=self.visit(ctx.left), right=self.visit(ctx.right))
 
     def visitHybrid(self, ctx: HCTLParser.HybridContext):

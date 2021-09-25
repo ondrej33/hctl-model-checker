@@ -44,15 +44,16 @@ if __name__ == '__main__':
     if len(sys.argv) == 3:
         run_test(sys.argv[1], sys.argv[2])
     else:
-        path_to_bnet = "bnet_examples/067_free.bnet"
+        path_to_bnet = "bnet_examples/095_free.bnet"
         """
-        run_test(path_to_bnet, "Q{x}:Q{y}: (@{x}: ~{y} && AX {x}) && (@{y}: AX {y})")
         run_test(path_to_bnet, "!{x}: AX {x}")
         run_test(path_to_bnet, "!{x}: AX AF {x}")
         run_test(path_to_bnet, "!{x}: AG EF {x}")
         run_test(path_to_bnet, "!{x}: EG EF {x}")
+
+        run_test(path_to_bnet, "3{x}: 3{y}: (@{x}: ~{y} && AX {x}) && (@{y}: AX {y})")
+        run_test(path_to_bnet, "3{x}: 3{y}: (@{x}: AG~{y} && AG EF {x}) && (@{y}: AG EF {y})")
         """
-        run_test(path_to_bnet, "!{x}: AX {x}")
-        run_test(path_to_bnet, "Q{x}:Q{y}: (@{x}: ~{y} && AX {x}) && (@{y}: AX {y})")
+        run_test(path_to_bnet, "3{x}: 3{y}: (@{x}: ~{y} && AX {x}) && (@{y}: AX {y})")
 
 

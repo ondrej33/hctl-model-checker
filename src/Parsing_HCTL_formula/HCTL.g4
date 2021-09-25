@@ -68,7 +68,7 @@ A_W : 'AW';
 /** Hybrid operators **/
 BIND : '!';
 JUMP : '@';
-EXISTS: 'Q';
+EXISTS: '3';
 
 
 /** Propositions and variables **/

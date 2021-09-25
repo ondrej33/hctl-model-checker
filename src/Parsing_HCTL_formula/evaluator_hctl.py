@@ -12,16 +12,14 @@ NUM_PROPS_AT_LEAST_TO_OPTIMIZE = 20
 
 class EvaluateExpressionVisitor:
 
-    # TODO: test parser on many many propositional formulas + construct more tests for CTL/HCTL formulas
+    # TODO: test parser and evaluator on more CTL/HCTL formulas
 
     # TODO: FINISH and TEST CACHE
 
-    # TODO: !bring ALL optimizations in!, (add NESTED through union, now we have just the three basic)
+    # TODO: >>bring ALL optimizations in <<, (add NESTED through union, now we have just the three basic)
     # TODO: JUMP might not need x in the subformula
 
-    # TODO: implement optimization (EX SET1) | (EX SET2) == EX (SET1 | SET2) and same for AX
-
-    # TODO: add explicit self-loops to optimized functions ?? they dont use pre_E_all_vars
+    # TODO: test optimization (EX SET1) | (EX SET2) == EX (SET1 | SET2) and also AX (both implemented in tree)
 
     # TODO: optimize also through the intersection
 
@@ -29,19 +27,25 @@ class EvaluateExpressionVisitor:
 
     # TODO: maybe change all operators in the tree to just EX, EU, EG - so that we can use cache sometimes??
 
-    # TODO: sometimes its possible to count thing once and then just rename vars, instead of counting twice
-    # TODO: for example (AG EF var) in formula: Qx.Qy.(@x. AG¬y & AG EFx) & (@y. AG EFy)
+    # TODO: sometimes its possible to eval thing once and then just rename vars, instead of counting twice
+    # TODO: for example (AG EF var) in formula: 3x.3y.(@x. AG¬y & AG EFx) & (@y. AG EFy)
 
-    # Visits node and depending on its type and operation, evaluates the subformula which it represents
-    # Uses results from children, combines them until whole thing is done
-    # if optimize=True, then parent was some hybrid operation and we can push it inside for example EX...
+    """
+    Visits node and depending on its type and operation, evaluates the subformula which it represents
+    @:param node:  node in abstract syntax tree of HCTL formula, it represents a subformula
+    @:param model: model containing var/param/prop names, bdds for update fns and so on
+    @:param dupl:  dict of subformulas (str) being present more times in the formula (val is how many are left)
+    @:param cache: dict of solved subformulas from dupl and their results
+    @:param optim: if optim=True, then parent was some hybrid operation and we can push it inside for example EX...
+    @:param optim_op and @:param optim_var holds info about what hybrid op we are optimizing
+    """
     def visit(self, node, model: Model, dupl, cache, optim=False, optim_op=None, optim_var=None):
         # TODO : subform_string problem
         # first check for if this node does not belong in the duplicates
         save_to_cache = False
         if node.subform_string in dupl:
             if node.subform_string in cache:
-                # one duplicate less now, if we already got all of them, lets delete the cached value
+                # one duplicate less now, if we already visited all of them, lets delete the cached value
                 dupl[node.subform_string] -= 1
                 result = cache[node.subform_string]
                 if dupl[node.subform_string] == 0:
@@ -53,7 +57,7 @@ class EvaluateExpressionVisitor:
 
         result = model.bdd.add_expr("False")
         if type(node) == TerminalNode:
-            # we must differentiate between propositions (params) VS state-variables
+            # we must differentiate between atomic props VS state-variables
             # if we have a state-variable, node.value has form of {var_name}
             if '{' in node.value:
                 result = create_comparator(model, node.value[1:-1])
@@ -108,7 +112,7 @@ class EvaluateExpressionVisitor:
                 result = bind(model, self.visit(node.child, model, dupl, cache), node.var[1:-1])
             elif node.value == '@':
                 result = jump(model, self.visit(node.child, model, dupl, cache), node.var[1:-1])
-            elif node.value == 'Q':
+            elif node.value == '3':
                 result = existential(model, self.visit(node.child, model, dupl, cache), node.var[1:-1])
 
         if save_to_cache:

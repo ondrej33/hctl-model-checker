@@ -115,7 +115,7 @@ def make_state_vars_canonical_ast(node, rename_dict, last_used_name: str, num_va
         node.subform_string = "(" + node.left.subform_string + node.value + node.right.subform_string + ")"
     elif type(node) == HybridNode:
         # if we hit binder or exist, we are adding its new var name to dict & stack
-        if node.value == "!" or node.value == "Q":
+        if node.value == "!" or node.value == "3":
             last_used_name = last_used_name + 'x'
             rename_dict[node.var[1:-1]] = last_used_name
             num_vars = max(num_vars, len(last_used_name))
@@ -128,7 +128,7 @@ def make_state_vars_canonical_ast(node, rename_dict, last_used_name: str, num_va
         node.subform_string = "(" + node.value + node.var + ":" + node.child.subform_string + ")"
 
         # and at last, when we leave binder/exist, we delete the added var from dict and stack
-        if node.value == "!" or node.value == "Q":
+        if node.value == "!" or node.value == "3":
             # last_used_name = last_used_name[0:-1]
             rename_dict.pop(var_before)
     return num_vars

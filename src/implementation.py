@@ -263,7 +263,7 @@ def optimized_hybrid_EX(model: Model, phi: Function, var: str, operation: str) -
         return optimized_bind_EX(model, phi, var)
     elif operation == "@":
         return optimized_jump_EX(model, phi, var)
-    elif operation == "Q":
+    elif operation == "3":
         return optimized_exist_EX(model, phi, var)
 
 
