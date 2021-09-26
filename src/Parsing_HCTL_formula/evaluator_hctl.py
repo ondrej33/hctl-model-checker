@@ -7,8 +7,8 @@ from src.parse_all import parse_all
 from heapq import heappush, heappop
 from typing import Dict
 
-# TODO: make it 25+ at least
-MIN_NUM_PROPS_TO_OPTIMIZE = 5
+# TODO: make it around 25 at least (lower number is just for testing)
+MIN_NUM_PROPS_TO_OPTIMIZE = 25
 
 
 def is_node_ex_to_optimize(node, var: str) -> bool:
@@ -48,6 +48,8 @@ class EvaluateExpressionVisitor:
 
     # TODO: maybe change all operators in the tree to just EX, EU, EG - so that we can use cache sometimes??
 
+    # TODO: use some kind of canonization and renaming DURING EVALUATION (regexes)
+    # TODO: because what we have now, only the vars on the same "nesting level" are the same
     # TODO: sometimes its possible to eval thing once and then just rename vars, instead of counting twice
     # TODO: for example (AG EF var) in formula: 3x.3y.(@x. AG¬y & AG EFx) & (@y. AG EFy)
 

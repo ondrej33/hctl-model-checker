@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="501566b4-125e-4202-a3dd-1c19b5d18aa3" name="Changes" comment="fixed back HCTL evaluator&#10;added some comments, types">
+    <list default="true" id="501566b4-125e-4202-a3dd-1c19b5d18aa3" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Parsing_HCTL_formula/evaluator_hctl.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Parsing_HCTL_formula/evaluator_hctl.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Parsing_HCTL_formula/testing_parser.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Parsing_HCTL_formula/testing_parser.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/fixed_formulas_eval.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/fixed_formulas_eval.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -261,7 +259,8 @@
       <workItem from="1632393328707" duration="4247000" />
       <workItem from="1632423270281" duration="3796000" />
       <workItem from="1632556511005" duration="25757000" />
-      <workItem from="1632639978347" duration="6150000" />
+      <workItem from="1632639978347" duration="7933000" />
+      <workItem from="1632654861621" duration="225000" />
     </task>
     <task id="LOCAL-00001" summary="changed structure: paths, names, folders, includes">
       <created>1631652715774</created>
@@ -529,7 +528,14 @@
       <option name="project" value="LOCAL" />
       <updated>1632599396791</updated>
     </task>
-    <option name="localTasksCounter" value="39" />
+    <task id="LOCAL-00039" summary="extented optimizations for hybrid operators through union&#10;added and fixed some test cases">
+      <created>1632648047254</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1632648047254</updated>
+    </task>
+    <option name="localTasksCounter" value="40" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -559,7 +565,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="make parse_all work, updated most of imports, changed update_fn grammar" />
     <MESSAGE value="fixed updating of subform_str during renaming terminals" />
     <MESSAGE value="parse_all fixed, added some testing" />
     <MESSAGE value="added __init__ to src + added dd_dir" />
@@ -584,21 +589,11 @@
     <MESSAGE value="added tests for &quot;EX or EX&quot;, &quot;AX and AX&quot;&#10;listed fixed formulas" />
     <MESSAGE value="solved problem with parentheses nodes in optim of (EX || EX)" />
     <MESSAGE value="fixed back HCTL evaluator&#10;added some comments, types" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed back HCTL evaluator&#10;added some comments, types" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/src/Parsing_HCTL_formula/testing_parser.py</url>
-          <line>36</line>
-          <option name="timeStamp" value="5" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
+    <MESSAGE value="extented optimizations for hybrid operators through union&#10;added and fixed some test cases" />
+    <option name="LAST_COMMIT_MESSAGE" value="extented optimizations for hybrid operators through union&#10;added and fixed some test cases" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/HCTL_stuff$testing_parser.coverage" NAME="testing_parser Coverage Results" MODIFIED="1632646322376" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/" />
+    <SUITE FILE_PATH="coverage/HCTL_stuff$testing_parser.coverage" NAME="testing_parser Coverage Results" MODIFIED="1632647894018" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/" />
     <SUITE FILE_PATH="coverage/HCTL_stuff$parser_and_simulator.coverage" NAME="parser_and_simulator Coverage Results" MODIFIED="1631652386521" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/" />
     <SUITE FILE_PATH="coverage/HCTL_stuff$evaluator_hctl.coverage" NAME="evaluator_hctl Coverage Results" MODIFIED="1631779478349" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/HCTL_stuff$testing_optimizations.coverage" NAME="testing_optimizations Coverage Results" MODIFIED="1632206838760" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/" />
