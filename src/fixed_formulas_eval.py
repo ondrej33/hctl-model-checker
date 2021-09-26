@@ -26,8 +26,11 @@ List of formulas includes (current version, might be changed):
     model_check_fixed16 == "!{x}: EG EF {x}"
     model_check_fixed17 == "3{x}: 3{y}: (@{x}: AG~{y} && AG EF {x}) && (@{y}: AG EF {y})"
     model_check_fixed18 == "3{x}: 3{y}: (@{x}: ~{y} && AX{x}) && (@{y}: AX{y}) && EF{x} && EF{y}"
-    model_check_fixed19 == "AX (x || EX x)"
-    model_check_fixed20 == "EX (x || EX x)"
+    model_check_fixed19 == "EX ({x} || EX {x})"
+    model_check_fixed20 == "AX ({x} && EX {x})"
+    model_check_fixed21 == "!{x}: (EX {x} || ({x} && s__1))"
+    model_check_fixed22 == "!{x}: (AX {x} || ({x} && s__1))"
+    model_check_fixed23 == "!{x}: ((AX {x} || s__1) || (s__2 || EX {x}))"
 
 """
 
@@ -273,7 +276,7 @@ def model_check_fixed18(model: Model) -> Function:
     x = create_comparator(model, 'x')
     y = create_comparator(model, 'y')
 
-    jump_x = jump(model, ~x & AX(model, x), 'x')
+    jump_x = jump(model, ~y & AX(model, x), 'x')
     jump_y = jump(model, AX(model, y), 'y')
 
     and_inner = jump_x & jump_y & EF(model, x) & EF(model, y)
@@ -288,11 +291,33 @@ def model_check_fixed19(model: Model) -> Function:
     return EX(model, x | ex_x)
 
 
-# AX (x || EX x)
+# AX (x && EX x)
 def model_check_fixed20(model: Model) -> Function:
     x = create_comparator(model, 'x')
     ex_x = EX(model, x)
-    return AX(model, x | ex_x)
+    return AX(model, x & ex_x)
+
+
+# ↓x. (EX x | (x & s1))
+def model_check_fixed21(model: Model) -> Function:
+    x = create_comparator(model, 'x')
+    s1 = labeled_by(model, "s__1")
+    return bind(model, EX(model, x) | (x & s1), 'x')
+
+
+# ↓x. (AX x | (x & s1))
+def model_check_fixed22(model: Model) -> Function:
+    x = create_comparator(model, 'x')
+    s1 = labeled_by(model, "s__1")
+    return bind(model, AX(model, x) | (x & s1), 'x')
+
+
+# ↓x. ((AX x | s1) | (s2 | EX x))
+def model_check_fixed23(model: Model) -> Function:
+    x = create_comparator(model, 'x')
+    s1 = labeled_by(model, "s__1")
+    s2 = labeled_by(model, "s__2")
+    return bind(model, (AX(model, x) | s1) | (s2 | EX(model, x)), 'x')
 
 
 # ============================================================================================= #

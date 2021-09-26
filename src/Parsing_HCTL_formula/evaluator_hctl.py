@@ -7,7 +7,31 @@ from src.parse_all import parse_all
 from heapq import heappush, heappop
 from typing import Dict
 
-NUM_PROPS_AT_LEAST_TO_OPTIMIZE = 20
+# TODO: make it 25+ at least
+MIN_NUM_PROPS_TO_OPTIMIZE = 5
+
+
+def is_node_ex_to_optimize(node, var: str) -> bool:
+    return type(node) == UnaryNode and node.value == "EX" and var in node.subform_string
+
+
+def is_node_union(node) -> bool:
+    return type(node) == BinaryNode and node.value == "||"
+
+
+# checks if we can get to some EX node if we travel only through the union nodes
+# this is for optimizing inner EX in hybrid formulas (var is variable bound by hybrid operator)
+def check_descendants_for_ex(node, var: str) -> bool:
+    # if we came to EX node (whose subformula includes the var), we are done
+    if is_node_ex_to_optimize(node, var):
+        return True
+
+    # another chance is to find the goal in at least one child of an Union node
+    if is_node_union(node):
+        return check_descendants_for_ex(node.left, var) or check_descendants_for_ex(node.right, var)
+
+    # otherwise there is no point in optimizing
+    return False
 
 
 class EvaluateExpressionVisitor:
@@ -17,9 +41,8 @@ class EvaluateExpressionVisitor:
     # TODO: FINISH and TEST CACHE
 
     # TODO: >>bring ALL optimizations in <<, (add NESTED through union, now we have just the three basic)
-    # TODO: JUMP might not need x in the subformula
-
     # TODO: optimize also through the intersection ? and maybe even do something with AX ?
+    # TODO: solve collisions of CACHE vs OPTIMISATIONS
 
     # TODO: solve the possible problem with future (self-loops again, but in sources??)
 
@@ -50,9 +73,13 @@ class EvaluateExpressionVisitor:
                 if dupl[node.subform_string] == 0:
                     dupl.pop(node.subform_string)
                     cache.pop(node.subform_string)
-                return result
+
+                # we can only return cached value if we are not in the middle of optimizing
+                if not optim:
+                    return result
             else:
-                save_to_cache = True
+                # we want to save the result of this subformula unless we are in the middle of optimizing
+                save_to_cache = not optim
 
         result = model.bdd.add_expr("False")
         if type(node) == TerminalNode:
@@ -85,10 +112,28 @@ class EvaluateExpressionVisitor:
             elif node.value == 'AG':
                 result = AG(model, self.visit(node.child, model, dupl, cache))
         elif type(node) == BinaryNode:
-            if node.value == '&&':
+            if node.value == '||':
+                # if we have enabled optim, procedure depends what types of children we have
+                if optim:
+                    optim_left = is_node_ex_to_optimize(node.left, optim_var) or is_node_union(node.left)
+                    optim_right = is_node_ex_to_optimize(node.right, optim_var) or is_node_union(node.right)
+                    if optim_left:
+                        if optim_right:
+                            result = self.visit(node.left, model, dupl, cache, optim, optim_op, optim_var) | \
+                                     self.visit(node.right, model, dupl, cache, optim, optim_op, optim_var)
+                        else:
+                            result = self.visit(node.left, model, dupl, cache, optim, optim_op, optim_var) | \
+                                     self.visit_with_hybrid_op(optim_var, optim_op, node.right, model, dupl, cache)
+                    else:
+                        if optim_right:
+                            result = self.visit_with_hybrid_op(optim_var, optim_op, node.left, model, dupl, cache) | \
+                                     self.visit(node.right, model, dupl, cache, optim, optim_op, optim_var)
+                        else:
+                            result = self.visit_with_hybrid_op(optim_var, optim_op, node, model, dupl, cache)
+                else:
+                    result = self.visit(node.left, model, dupl, cache) | self.visit(node.right, model, dupl, cache)
+            elif node.value == '&&':
                 result = self.visit(node.left, model, dupl, cache) & self.visit(node.right, model, dupl, cache)
-            elif node.value == '||':
-                result = self.visit(node.left, model, dupl, cache) | self.visit(node.right, model, dupl, cache)
             elif node.value == '->':
                 result = self.visit(node.left, model, dupl, cache).implies(self.visit(node.right, model, dupl, cache))
             elif node.value == '<->':
@@ -102,10 +147,12 @@ class EvaluateExpressionVisitor:
             elif node.value == 'AW':
                 result = AW(model, self.visit(node.left, model, dupl, cache), self.visit(node.right, model, dupl, cache))
         elif type(node) == HybridNode:
-            # if we have EX directly after this hybrid node and its subformula contains 'var',
-            # we can use optimized path - however we use it only for bigger models, because it works better
-            if type(node.child) == UnaryNode and node.child.value == "EX" and \
-                    node.var in node.child.subform_string and model.num_props > NUM_PROPS_AT_LEAST_TO_OPTIMIZE:
+            """
+            # Decide if there is a chance to optimize something - our goal is to optimize EX in some descendant node,
+            # and we can distribute hybrid ops through the union.
+            # We optimize only for bigger models - for smaller there is not much difference.
+            """
+            if model.num_props > MIN_NUM_PROPS_TO_OPTIMIZE and check_descendants_for_ex(node.child, node.var):
                 result = self.visit(node.child, model, dupl, cache, optim=True, optim_op=node.value, optim_var=node.var[1:-1])
             elif node.value == '!':
                 result = bind(model, self.visit(node.child, model, dupl, cache), node.var[1:-1])
@@ -117,6 +164,16 @@ class EvaluateExpressionVisitor:
         if save_to_cache:
             cache[node.subform_string] = result
         return result
+
+    # gets the result of evaluated node, but applies hybrid op on it in the end
+    def visit_with_hybrid_op(self, var: str, op: str, node,
+                             model: Model, dupl: Dict[str, int], cache: Dict[str, Function]) -> Function:
+        if op == "!":
+            return bind(model, self.visit(node, model, dupl, cache), var)
+        elif op == "@":
+            return jump(model, self.visit(node, model, dupl, cache), var)
+        elif op == "3":
+            return existential(model, self.visit(node, model, dupl, cache), var)
 
 
 # find out if we have some duplicate nodes in our parse tree

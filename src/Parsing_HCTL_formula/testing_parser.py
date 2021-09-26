@@ -9,7 +9,7 @@ def run_tests(model: Model) -> None:
     assert model_check_fixed19(model) == parse_and_eval("(EX {x}) || (EX EX {x})", model)
     # check that "(AX phi1) && (AX phi2)" == "AX (phi1 && phi2)"
     assert parse_and_eval("(AX s__1) && (AX EX {x})", model) == parse_and_eval("AX (s__1 && EX {x}) ", model)
-    assert model_check_fixed20(model) == parse_and_eval("(AX {x}) || (AX EX {x})", model)
+    assert model_check_fixed20(model) == parse_and_eval("(AX {x}) && (AX EX {x})", model)
 
     # check all the other formulas that are built in fixed_formulas_eval.py
     assert model_check_fixed1_v2(model) == parse_and_eval("!{x}: EX {x}", model)
@@ -32,9 +32,14 @@ def run_tests(model: Model) -> None:
     assert model_check_fixed17(model) == parse_and_eval("3{x}: 3{y}: (@{x}: AG~{y} && AG EF {x}) && (@{y}: AG EF {y})", model)
     assert model_check_fixed18(model) == parse_and_eval("3{x}: 3{y}: (@{x}: ~{y} && AX{x}) && (@{y}: AX{y}) && EF{x} && EF{y}", model)
 
+    # those should be evaluated with optimizations
+    assert model_check_fixed21(model) == parse_and_eval("!{x}: (EX {x} || ({x} && s__1))", model)
+    assert model_check_fixed22(model) == parse_and_eval("!{x}: (AX {x} || ({x} && s__1))", model)
+    assert model_check_fixed23(model) == parse_and_eval("!{x}: ((AX {x} || s__1) || (s__2 || EX {x}))", model)
+
 
 if __name__ == '__main__':
     # TODO change path
-    path_to_bnet = "bnet_examples/023.bnet"
+    path_to_bnet = "bnet_examples/095a.bnet"
     m = bnet_parser(path_to_bnet)
     run_tests(m)
