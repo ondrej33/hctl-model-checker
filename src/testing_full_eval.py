@@ -13,13 +13,15 @@ sys.path.append('/home/xhuvar/HCTL_stuff/venv/lib/python3.8/site-packages')
 
 import os
 # Change the current working directory
-os.chdir('/mnt/c/Users/Ondra/PycharmProjects/HCTL_stuff')
+SRC_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_DIR = os.path.dirname(SRC_DIR)
+os.chdir(PROJECT_DIR)
 
 import sys
-sys.path.append('/mnt/c/Users/Ondra/PycharmProjects/HCTL_stuff/')
-sys.path.append('/mnt/c/Users/Ondra/PycharmProjects/HCTL_stuff/src')
-sys.path.append('/mnt/c/Users/Ondra/PycharmProjects/HCTL_stuff/src/Parsing_HCTL_formula')
-sys.path.append('/mnt/c/Users/Ondra/PycharmProjects/HCTL_stuff/src/Parsing_update_fns')
+sys.path.append(PROJECT_DIR)
+sys.path.append('{SRC_DIR}')
+sys.path.append('{SRC_DIR}/Parsing_HCTL_formula')
+sys.path.append('{SRC_DIR}/Parsing_update_fns')
 
 from parse_all import parse_all
 from Parsing_HCTL_formula.evaluator_hctl import eval_tree
