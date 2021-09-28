@@ -35,8 +35,3 @@ def eval_tree(as_tree: Node, bdd):  # -> Function:
 def parse_and_eval(formula: str, bdd):  # -> Function:
     as_tree = parse_to_tree(formula)
     return eval_tree(as_tree, bdd)
-
-
-if __name__ == '__main__':
-    # TODO: change path
-    bnet_path = "bnet_examples/023.bnet"

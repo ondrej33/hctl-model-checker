@@ -2,7 +2,7 @@
 
 from src.NodeTypeEnum import NodeType, OP_DICT
 
-
+# base class for syntax trees of HCTL formulas and also update functions in BN
 class Node:
     def __init__(self, value):
         self.value = value
@@ -15,6 +15,7 @@ class Node:
         return self.value < other.value
 
 
+# specialized node for variables/propositions/params/booleans
 class TerminalNode(Node):
     def __init__(self, value):
         super().__init__(value)
@@ -33,6 +34,7 @@ class TerminalNode(Node):
             return NodeType.PROP
 
 
+# specialized node for unary operators
 class UnaryNode(Node):
     def __init__(self, child, value):
         super().__init__(value)
@@ -42,6 +44,7 @@ class UnaryNode(Node):
         self.category = OP_DICT[value]
 
 
+# specialized node for binary operators
 class BinaryNode(Node):
     def __init__(self, left, right, value):
         super().__init__(value)
@@ -52,6 +55,7 @@ class BinaryNode(Node):
         self.category = OP_DICT[value]
 
 
+# specialized node for hybrid operators
 class HybridNode(Node):
     def __init__(self, var, child, value):
         super().__init__(value)

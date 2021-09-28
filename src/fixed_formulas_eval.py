@@ -58,7 +58,7 @@ def model_check_fixed2(model: Model) -> Function:
     return bind(model, ax, 'x')
 
 
-# TODO: update "bind AX" and use it next fn
+# TODO: maybe update "bind AX" and use it next fn
 """
 # formula: ↓x (AX x), stable steady states (self loop only, sink)
 # faster version, uses binder already during computing the AX, with smaller BDDs
@@ -180,7 +180,7 @@ def model_check_fixed11(model: Model) -> Function:
     not_x = ~create_comparator(model, 'x')
     and_inner = not_x & y
 
-    # TODO: update and use better version for "bind AX"
+    # TODO: maybe update and use better version for "bind AX"
     binder_y = bind(model, AX(model, and_inner), 'y')
     return optimized_bind_EX(model, binder_y, 'x')
 
@@ -318,22 +318,3 @@ def model_check_fixed23(model: Model) -> Function:
     s1 = labeled_by(model, "s__1")
     s2 = labeled_by(model, "s__2")
     return bind(model, (AX(model, x) | s1) | (s2 | EX(model, x)), 'x')
-
-
-# ============================================================================================= #
-# =================================== OTHER TESTS AND STUFF =================================== #
-# ============================================================================================= #
-
-
-def simple_main(file_name: str):
-    # formula here is just a placeholder to save var names
-    model, _ = parse_all(file_name, "!{x}: (AX {x})")
-    results = model_check_fixed9(model)
-    print_results(results, model, "", True)
-
-
-# we have 4 command line args: name of file + type of test + number of test + version of test
-if __name__ == '__main__':
-    # TODO change path
-    path_to_bnet = "bnet_examples/007.bnet"
-    simple_main(path_to_bnet)

@@ -1,6 +1,7 @@
 from enum import Enum, auto
 
 
+# enum for categories of nodes in formula syntax tree
 class NodeType(Enum):
     PROP = auto()
     VAR = auto()

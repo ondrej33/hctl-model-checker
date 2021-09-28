@@ -86,6 +86,7 @@ class HCTLVisitor(ParseTreeVisitor):
 """
 
 
+# parses given HCTL formula into the syntax tree
 def parse_to_tree(formula: str) -> Node:
     lexer = HCTLLexer(InputStream(formula))
     stream = CommonTokenStream(lexer)

@@ -25,6 +25,7 @@ We suppose the subform is:
     1) syntactically VALID hctl formula, minimized by minimize_number_of_state_vars function
     2) with NO EXCESS SPACES and includes all PARENTHESES
 for example "(3{x}:(3{xx}:((@{x}:((~{xx})&&(AX{x})))&&(@{xx}:(AX{xx})))))" is valid input
+any node.subform_string field should be OK to use
 """
 def canonize_subform(subform, idx, translate_dict, canonical, stack_len=0) -> int:
     while idx < len(subform):
@@ -68,12 +69,14 @@ def canonize_subform(subform, idx, translate_dict, canonical, stack_len=0) -> in
     return idx
 
 
+# returns semantically same subformula, but with "canonized" var names
 def get_canonical(subform) -> str:
     canonical = []
     canonize_subform(subform, 0, {}, canonical)
     return ''.join(canonical)
 
 
+# returns subformula with "canonized" var names and the dictionary with renamings
 def get_canonical_and_dict(subform) -> Tuple[str, Dict[str, str]]:
     canonical = []
     rename_dict = {}
@@ -109,6 +112,8 @@ class EvaluateExpressionVisitor:
     # TODO: solve the possible problem with future (self-loops again, but in sources??)
 
     # TODO: maybe change all operators in the tree to just EX, EU, EG - so that we can use cache sometimes??
+
+    # TODO: start to use safe ENUM instead of strings
 
     """
     Visits node and depending on its type and operation, evaluates the subformula which it represents
@@ -244,6 +249,7 @@ class EvaluateExpressionVisitor:
 
 # find out if we have some duplicate nodes in our parse tree
 # if so - mark them and then when evaluating, save result to some cache (and delete after the last usage)
+# uses some kind of canonization - EX{x} and EX{y} recognized as duplicates
 def mark_duplicates(root_node) -> Dict[str, int]:
     # TODO: mark canonized duplicates
     # go through the nodes from top, use height to compare only those with the same level

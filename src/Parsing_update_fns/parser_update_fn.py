@@ -46,6 +46,7 @@ class update_fnVisitor(ParseTreeVisitor):
 """
 
 
+# parses given formula of update function into the syntax tree
 def parse_to_tree(formula) -> Node:
     lexer = update_fnLexer(InputStream(formula))
     stream = CommonTokenStream(lexer)

@@ -272,26 +272,23 @@ def optimized_hybrid_EX(model: Model, phi: Function, var: str, operation: str) -
 # ============================================================================================= #
 
 
-# parses a file with a boolean network, creates model from it - BUT STATE VARIABLES ARE ADDED MANUALLY atm
-# only testing version, can break quickly...
-# TODO: remake this, implicitly add vars from formula
-# TODO: better handle the renaming of variables (now vars cant be 'number', 's', 'x'...)
 """
 version of bnet files that is used:
     all lines except first one are in the form: "variable_name, update_fn"
     BUT to handle params, we will add lines in form: "param_name," (there is no update fn) - those will be params
 """
 
-
+# parses a file with a boolean network, creates model from it - BUT STATE VARIABLES ARE ADDED MANUALLY atm
+# only testing version, can break quickly...
+# TODO: this is obsolete, will be removed, use parse_all() instead
 def bnet_parser(file_name: str) -> Model:
     # first preprocess the file content
     file = open(file_name, "r")
     content = file.read()
     # TODO: maybe clean the content (no need atm, because test examples are clean)
     
-    lines = content.split("\n")[1:]  # first line does not contain data
-    if not lines[-1]:
-        lines.pop()  # last item might be just empty string after last newline
+    lines = content.split("\n")[1:]           # first line does not contain data
+    lines = [line for line in lines if line]  # remove empty lines
     lines_ordered = sorted(lines, key=lambda x: x.split(",")[0])
 
     # collect all the variable names and their update functions and reorder them
@@ -329,7 +326,6 @@ def bnet_parser(file_name: str) -> Model:
     bdd.declare(*vrs)
 
     # reordering to some desired order (now it is s0,x0,y0,s1...,p0,p1...)
-    # TODO: try different orders
     my_order = dict()
     for i in range(num_props):
         my_order[f"s__{i}"] = i * 3

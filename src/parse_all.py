@@ -9,8 +9,7 @@ from collections import OrderedDict
 from typing import Set, Dict, Tuple
 
 
-# this collects names of all variables from HCTL formula's AST into param variables
-# and all propositions into param props
+# this collects names of all propositions from HCTL formula into param props_collected
 def get_prop_names_from_hctl_ast(node, props_collected: Set[str]) -> None:
     if type(node) == TerminalNode:
         # DO not add any of true/false or vars, only proposition nodes
@@ -24,7 +23,7 @@ def get_prop_names_from_hctl_ast(node, props_collected: Set[str]) -> None:
         get_prop_names_from_hctl_ast(node.right, props_collected)
 
 
-# this collects names of all propositions and params in update function's AST into param props
+# this collects names of all propositions and params in update function's tree into props_and_params
 def get_names_from_update_fn_ast(node, props_and_params: Set[str]) -> None:
     if type(node) == TerminalNode:
         # DO not add any of true/false nodes, only proposition (param) nodes
@@ -38,7 +37,7 @@ def get_names_from_update_fn_ast(node, props_and_params: Set[str]) -> None:
         get_names_from_update_fn_ast(node.right, props_and_params)
 
 
-# this renames all terminal nodes in update function AST
+# this renames all terminal nodes in update function's tree
 def rename_terminals_update_fn_ast(node, rename_dict: Dict[str, str]) -> None:
     if type(node) == TerminalNode:
         # rename proposition (param) nodes
@@ -76,18 +75,15 @@ def rename_props_in_hctl_ast(node, rename_dict: Dict[str, str]) -> None:
         node.subform_string = "(" + node.value + node.var + ":" + node.child.subform_string + ")"
 
 
-# renames as many state-variables as possible to the identical names, without changing the formula
-# its bit like "canonicalization", we will end up with less vars in total
+# renames as many state-variables as possible to the identical names, without changing the formula itself
+# it is first step to "canonicalization", we will end up with less vars in total for now
 def minimize_number_of_state_vars(node, rename_dict: Dict[str, str], last_used_name: str, num_vars=0):
     """
-    # if we find hybrid node with bind or exist, we add new var-name to rename_dict and stack (x, xx, xxx...)
-    # we derive the name using the last thing on stack
-    # after we leave this binder/exist, we remove its var from rename_dict and stack
-    # dont forget to rename var field in hybrid node
+    # If we find hybrid node with bind or exist, we add new var-name to rename_dict and stack (x, xx, xxx...)
+    # After we leave this binder/exist, we remove its var from rename_dict
+    # When we find terminal with free variable, we rename it using rename-dict, we do the same when we encounter jump
 
-    # when we find terminal with free variable, we rename it using rename-dict, we do the same when we encounter jump
-
-    # possible problem: we want to rename var to "x", but "x" is already somewhere in subformula -> is it ok?
+    # possible problem: we want to rename var to "x", but "x" is already in subformula -> is it ok? - probably OK
     """
 
     if type(node) == TerminalNode:
@@ -127,6 +123,7 @@ def minimize_number_of_state_vars(node, rename_dict: Dict[str, str], last_used_n
     return num_vars
 
 
+# parses boolean network file and formula into a Model structure and formula tree
 def parse_all(file_name: str, formula: str) -> Tuple[Model, Node]:
     # TODO: GO THROUGH THE TREES ONLY ONCE (collect terminal names while building the trees, later just rename them)
     
