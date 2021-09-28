@@ -33,8 +33,9 @@ class NodeType(Enum):
 
 OP_DICT = {
     "~": NodeType.NEG,
-    "||": NodeType.DIS,
+    "|": NodeType.DIS,
     "&&": NodeType.CON,
+    "&": NodeType.CON,
     "->": NodeType.IMPL,
     "<->": NodeType.EQIV,
 
