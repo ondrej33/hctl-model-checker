@@ -93,7 +93,7 @@ def make_state_vars_canonical_ast(node, rename_dict: Dict[str, str], last_used_n
     if type(node) == TerminalNode:
         # DO NOT change names of any true/false or proposition nodes, only state-variables
         if '{' not in node.value:
-            return
+            return 0
         node.value = '{' + rename_dict[node.value[1:-1]] + '}'
         node.subform_string = node.value
     elif type(node) == UnaryNode:
