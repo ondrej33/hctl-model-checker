@@ -13,7 +13,7 @@ V Parsing_update_fns/ je pak podobná gramatika, parser a evaluator, ale tentokr
 Soubor parse_all.py pak obsahuje velkou funkci, která zastřešuje parsování booleovské sítě i formule, a vytváří strukturu modelu.
 Navíc vrací už upravenou verzi stromu pro HCTL formuli (kanonizované formule apod).
 
-Soubory abstract_syntax_tree.py a model.py pak obsahují hlavní datové struktury.
+Soubory abstract_syntax_tree.py a model.py pak obsahují hlavní datové struktury. V model.py se dá vybrat jestli chci python verzi dd knihovny, nebo cudd verzi.
 
 Zbytek jsou různé testy, helper scripty apod., nic moc důležitého.
 
