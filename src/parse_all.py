@@ -3,6 +3,7 @@ from src.Parsing_HCTL_formula import parser_hctl
 from src.Parsing_update_fns import parser_update_fn
 from src.Parsing_update_fns import evaluator_update_fn
 from src.abstract_syntax_tree import *
+from src.exceptions import *
 
 from collections import OrderedDict
 from typing import Set, Dict, Tuple
@@ -13,7 +14,7 @@ from typing import Set, Dict, Tuple
 def get_prop_names_from_hctl_ast(node, props_collected: Set[str]) -> None:
     if type(node) == TerminalNode:
         # DO not add any of true/false or vars, only proposition nodes
-        if node.value == "True" or node.value == "False":
+        if node.value == "True" or node.value == "False" or "{" in node.value:
             return
         props_collected.add(node.value)
     elif type(node) == UnaryNode or type(node) == HybridNode:
@@ -146,7 +147,11 @@ def parse_all(file_name: str, formula: str) -> Tuple[Model, Node]:
     as_tree_hctl = parser_hctl.parse_to_tree(formula)
     props_in_hctl = set()
     get_prop_names_from_hctl_ast(as_tree_hctl, props_in_hctl)
-    # TODO: check that props_in_hctl correspond with prop_names (that theres nothing wrong in formula)
+
+    # check that props_in_hctl includes only props from prop_names
+    invalid_props = props_in_hctl.difference(prop_names)
+    if invalid_props:
+        raise InvalidPropError(invalid_props.pop())
 
     # rename state-vars to canonical form in hctl tree, add new names to list
     num_vars = make_state_vars_canonical_ast(as_tree_hctl, dict(), "", 0)
