@@ -1,6 +1,6 @@
 # TODO: use some inheritance and merge some code
 
-from NodeTypeEnum import NodeType, OP_DICT
+from src.NodeTypeEnum import NodeType, OP_DICT
 
 
 class Node:

@@ -41,7 +41,7 @@ def main(file_name: str, formula: str):
     try:
         res = eval_tree(as_tree_hctl, model)
         print_results(res, model, f"model: {model.name}, formula: {formula}", show_all=False)
-    except:
+    except Exception:
         print("Error during evaluation happened")
 
 

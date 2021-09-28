@@ -56,7 +56,7 @@ def rename_terminals_update_fn_ast(node, rename_dict: Dict[str, str]) -> None:
 
 
 # this renames all propositions in terminal nodes in HCTL formula (does not touch vars)
-def rename_propositions_in_hctl_ast(node, rename_dict: Dict[str, str]) -> None:
+def rename_props_in_hctl_ast(node, rename_dict: Dict[str, str]) -> None:
     if type(node) == TerminalNode:
         # DO NOT rename state-variable nodes, ONLY proposition nodes (and unify true/false)
         if '{' in node.value or node.value == "True" or node.value == "False":
@@ -64,21 +64,21 @@ def rename_propositions_in_hctl_ast(node, rename_dict: Dict[str, str]) -> None:
         node.value = rename_dict[node.value]
         node.subform_string = node.value
     elif type(node) == UnaryNode:
-        rename_propositions_in_hctl_ast(node.child, rename_dict)
+        rename_props_in_hctl_ast(node.child, rename_dict)
         node.subform_string = "(" + node.value + node.child.subform_string + ")"
     elif type(node) == BinaryNode:
-        rename_propositions_in_hctl_ast(node.left, rename_dict)
-        rename_propositions_in_hctl_ast(node.right, rename_dict)
+        rename_props_in_hctl_ast(node.left, rename_dict)
+        rename_props_in_hctl_ast(node.right, rename_dict)
         node.subform_string = "(" + node.left.subform_string + node.value + node.right.subform_string + ")"
     elif type(node) == HybridNode:
         # first rename the "var" field of the node, then move to child
-        rename_propositions_in_hctl_ast(node.child, rename_dict)
+        rename_props_in_hctl_ast(node.child, rename_dict)
         node.subform_string = "(" + node.value + node.var + ":" + node.child.subform_string + ")"
 
 
 # renames as many state-variables as possible to the identical names, without changing the formula
-# its like canonicalization, we will end up with less vars in total
-def make_state_vars_canonical_ast(node, rename_dict: Dict[str, str], last_used_name: str, num_vars=0):
+# its bit like "canonicalization", we will end up with less vars in total
+def minimize_number_of_state_vars(node, rename_dict: Dict[str, str], last_used_name: str, num_vars=0):
     """
     # if we find hybrid node with bind or exist, we add new var-name to rename_dict and stack (x, xx, xxx...)
     # we derive the name using the last thing on stack
@@ -98,12 +98,12 @@ def make_state_vars_canonical_ast(node, rename_dict: Dict[str, str], last_used_n
         node.subform_string = node.value
     elif type(node) == UnaryNode:
         # just dive deeper and then rename string
-        num_vars = make_state_vars_canonical_ast(node.child, rename_dict, last_used_name, num_vars)
+        num_vars = minimize_number_of_state_vars(node.child, rename_dict, last_used_name, num_vars)
         node.subform_string = "(" + node.value + node.child.subform_string + ")"
     elif type(node) == BinaryNode:
         # just dive deeper and then rename string
-        num_vars1 = make_state_vars_canonical_ast(node.left, rename_dict, last_used_name, num_vars)
-        num_vars2 = make_state_vars_canonical_ast(node.right, rename_dict, last_used_name, num_vars)
+        num_vars1 = minimize_number_of_state_vars(node.left, rename_dict, last_used_name, num_vars)
+        num_vars2 = minimize_number_of_state_vars(node.right, rename_dict, last_used_name, num_vars)
         num_vars = max(num_vars1, num_vars2)
         node.subform_string = "(" + node.left.subform_string + node.value + node.right.subform_string + ")"
     elif type(node) == HybridNode:
@@ -117,7 +117,7 @@ def make_state_vars_canonical_ast(node, rename_dict: Dict[str, str], last_used_n
         var_before = node.var[1:-1]
         node.var = '{' + rename_dict[node.var[1:-1]] + '}'
         # and we dive deeper in the tree
-        num_vars = make_state_vars_canonical_ast(node.child, rename_dict, last_used_name, num_vars)
+        num_vars = minimize_number_of_state_vars(node.child, rename_dict, last_used_name, num_vars)
         node.subform_string = "(" + node.value + node.var + ":" + node.child.subform_string + ")"
 
         # and at last, when we leave binder/exist, we delete the added var from dict and stack
@@ -153,8 +153,8 @@ def parse_all(file_name: str, formula: str) -> Tuple[Model, Node]:
     if invalid_props:
         raise InvalidPropError(invalid_props.pop())
 
-    # rename state-vars to canonical form in hctl tree, add new names to list
-    num_vars = make_state_vars_canonical_ast(as_tree_hctl, dict(), "", 0)
+    # rename state-vars in hctl tree so that we have minimum vars needed, add new names to list
+    num_vars = minimize_number_of_state_vars(as_tree_hctl, dict(), "", 0)
     var_names = ["x" * i for i in range(1, num_vars + 1)]
     # TODO: check that binders and free variables correspond to each other, no free vars
 
@@ -176,7 +176,7 @@ def parse_all(file_name: str, formula: str) -> Tuple[Model, Node]:
         name_dict[param_names[i]] = f"p__{i}"
 
     # rename props in hctl formula tree, rename props/params in update trees
-    rename_propositions_in_hctl_ast(as_tree_hctl, name_dict)
+    rename_props_in_hctl_ast(as_tree_hctl, name_dict)
     for as_tree in update_fn_trees:
         rename_terminals_update_fn_ast(as_tree, name_dict)
 

@@ -3,7 +3,6 @@ from src.Parsing_HCTL_formula.evaluator_hctl import parse_and_eval
 
 
 def run_tests(model: Model) -> None:
-
     # check that "(EX phi1) || (EX phi2)" == "EX (phi1 || phi2)"
     assert parse_and_eval("(EX s__1) || (EX EX {x})", model) == parse_and_eval("EX (s__1 || EX {x}) ", model)
     assert model_check_fixed19(model) == parse_and_eval("(EX {x}) || (EX EX {x})", model)

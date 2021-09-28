@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="501566b4-125e-4202-a3dd-1c19b5d18aa3" name="Changes" comment="added main, VERY basic exceptions">
-      <change afterPath="$PROJECT_DIR$/src/NodeTypeEnum.py" afterDir="false" />
+    <list default="true" id="501566b4-125e-4202-a3dd-1c19b5d18aa3" name="Changes" comment="added '&amp;' for and and '|' for or to HCTL grammar">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NodeTypeEnum.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/NodeTypeEnum.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Parsing_HCTL_formula/evaluator_hctl.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Parsing_HCTL_formula/evaluator_hctl.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Parsing_HCTL_formula/testing_parser.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Parsing_HCTL_formula/testing_parser.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/abstract_syntax_tree.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/abstract_syntax_tree.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/parse_all.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/parse_all.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/testing_full_eval.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/testing_full_eval.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,6 +48,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/src/irrelevant_stuff" />
+    <property name="restartRequiresConfirmation" value="false" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
@@ -57,7 +63,7 @@
       <recent name="C:\Users\Ondra\PycharmProjects\HCTL_stuff\src" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.testing_full_eval">
+  <component name="RunManager" selected="Python.testing_parser">
     <configuration name="evaluator_hctl" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="HCTL_stuff" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -223,8 +229,8 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.testing_full_eval" />
         <item itemvalue="Python.testing_parser" />
+        <item itemvalue="Python.testing_full_eval" />
         <item itemvalue="Python.sat_solver" />
         <item itemvalue="Python.testing_optimizations" />
         <item itemvalue="Python.fixed_formulas_eval" />
@@ -262,7 +268,7 @@
       <workItem from="1632556511005" duration="25757000" />
       <workItem from="1632639978347" duration="7933000" />
       <workItem from="1632654861621" duration="843000" />
-      <workItem from="1632828332355" duration="5761000" />
+      <workItem from="1632828332355" duration="20999000" />
     </task>
     <task id="LOCAL-00001" summary="changed structure: paths, names, folders, includes">
       <created>1631652715774</created>
@@ -551,7 +557,28 @@
       <option name="project" value="LOCAL" />
       <updated>1632832065473</updated>
     </task>
-    <option name="localTasksCounter" value="42" />
+    <task id="LOCAL-00042" summary="added enum for node category to the tree, not used yet">
+      <created>1632839605706</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1632839605706</updated>
+    </task>
+    <task id="LOCAL-00043" summary="added enum for node category to the tree, not used yet">
+      <created>1632839675054</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1632839675054</updated>
+    </task>
+    <task id="LOCAL-00044" summary="added '&amp;' for and and '|' for or to HCTL grammar">
+      <created>1632839902844</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1632839902844</updated>
+    </task>
+    <option name="localTasksCounter" value="45" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -581,8 +608,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="added __init__ to src + added dd_dir" />
-    <MESSAGE value="added __init__ + added sys path" />
     <MESSAGE value="added sys path" />
     <MESSAGE value="added os chdir" />
     <MESSAGE value="added sys.path" />
@@ -606,17 +631,30 @@
     <MESSAGE value="extented optimizations for hybrid operators through union&#10;added and fixed some test cases" />
     <MESSAGE value="added TODO for canonization" />
     <MESSAGE value="added main, VERY basic exceptions" />
-    <option name="LAST_COMMIT_MESSAGE" value="added main, VERY basic exceptions" />
+    <MESSAGE value="added enum for node category to the tree, not used yet" />
+    <MESSAGE value="added '&amp;' for and and '|' for or to HCTL grammar" />
+    <option name="LAST_COMMIT_MESSAGE" value="added '&amp;' for and and '|' for or to HCTL grammar" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/src/testing_full_eval.py</url>
+          <line>56</line>
+          <option name="timeStamp" value="8" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/HCTL_stuff$testing_parser.coverage" NAME="testing_parser Coverage Results" MODIFIED="1632647894018" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/" />
+    <SUITE FILE_PATH="coverage/HCTL_stuff$testing_parser.coverage" NAME="testing_parser Coverage Results" MODIFIED="1632858421063" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/" />
     <SUITE FILE_PATH="coverage/HCTL_stuff$parser_and_simulator.coverage" NAME="parser_and_simulator Coverage Results" MODIFIED="1631652386521" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/" />
     <SUITE FILE_PATH="coverage/HCTL_stuff$evaluator_hctl.coverage" NAME="evaluator_hctl Coverage Results" MODIFIED="1631779478349" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/HCTL_stuff$testing_optimizations.coverage" NAME="testing_optimizations Coverage Results" MODIFIED="1632206838760" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/" />
     <SUITE FILE_PATH="coverage/HCTL_stuff$fixed_formulas_eval.coverage" NAME="fixed_formulas_eval Coverage Results" MODIFIED="1631780170725" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/" />
     <SUITE FILE_PATH="coverage/HCTL_stuff$testing_parser__1_.coverage" NAME="testing_parser Coverage Results" MODIFIED="1631779721189" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/" />
     <SUITE FILE_PATH="coverage/HCTL_stuff$sat_solver.coverage" NAME="sat_solver Coverage Results" MODIFIED="1632393506358" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/Parsing_update_fns" />
-    <SUITE FILE_PATH="coverage/HCTL_stuff$testing_full_eval.coverage" NAME="testing_full_eval Coverage Results" MODIFIED="1632831843759" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/HCTL_stuff$testing_full_eval.coverage" NAME="testing_full_eval Coverage Results" MODIFIED="1632855860445" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/HCTL_stuff$evaluator_hctl__1_.coverage" NAME="evaluator_hctl Coverage Results" MODIFIED="1631719349528" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

@@ -23,9 +23,9 @@ sys.path.append('{SRC_DIR}')
 sys.path.append('{SRC_DIR}/Parsing_HCTL_formula')
 sys.path.append('{SRC_DIR}/Parsing_update_fns')
 
-from parse_all import parse_all
+from src.parse_all import parse_all
 from Parsing_HCTL_formula.evaluator_hctl import eval_tree
-from implementation import print_results
+from src.implementation import print_results
 import time
 
 
@@ -45,7 +45,7 @@ if __name__ == '__main__':
     if len(sys.argv) == 3:
         run_test(sys.argv[1], sys.argv[2])
     else:
-        path_to_bnet = "bnet_examples/095_free.bnet"
+        path_to_bnet = "bnet_examples/007.bnet"
         """
         run_test(path_to_bnet, "!{x}: AX {x}")
         run_test(path_to_bnet, "!{x}: AX AF {x}")
@@ -55,6 +55,5 @@ if __name__ == '__main__':
         run_test(path_to_bnet, "3{x}: 3{y}: (@{x}: ~{y} && AX {x}) && (@{y}: AX {y})")
         run_test(path_to_bnet, "3{x}: 3{y}: (@{x}: AG~{y} && AG EF {x}) && (@{y}: AG EF {y})")
         """
-        run_test(path_to_bnet, "3{x}: 3{y}: (@{x}: ~{y} && AX {x}) && (@{y}: AX {y})")
 
-
+        run_test(path_to_bnet, "3{x}: 3{y}: (@{x}: AG~{y} && AG EF {x}) && (@{y}: AG EF {y})")
