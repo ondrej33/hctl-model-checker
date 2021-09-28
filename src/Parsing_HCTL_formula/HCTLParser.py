@@ -55,8 +55,8 @@ class HCTLParser ( Parser ):
     sharedContextCache = PredictionContextCache()
 
     literalNames = [ "<INVALID>", "'('", "')'", "':'", "<INVALID>", "<INVALID>", 
-                     "'~'", "'&&'", "'||'", "'->'", "'<->'", "'A'", "'E'", 
-                     "<INVALID>", "'X'", "'Y'", "'F'", "'G'", "<INVALID>", 
+                     "'~'", "<INVALID>", "<INVALID>", "'->'", "'<->'", "'A'", 
+                     "'E'", "<INVALID>", "'X'", "'Y'", "'F'", "'G'", "<INVALID>", 
                      "'EU'", "'AU'", "'EW'", "'AW'", "'!'", "'@'", "'3'" ]
 
     symbolicNames = [ "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
