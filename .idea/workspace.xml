@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="501566b4-125e-4202-a3dd-1c19b5d18aa3" name="Changes" comment="added var canonization for cache and duplicates">
+    <list default="true" id="501566b4-125e-4202-a3dd-1c19b5d18aa3" name="Changes" comment="Relative paths added to main.py">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Parsing_HCTL_formula/evaluator_hctl.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Parsing_HCTL_formula/evaluator_hctl.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/testing_full_eval.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/testing_full_eval.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,7 +59,7 @@
       <recent name="C:\Users\Ondra\PycharmProjects\HCTL_stuff\src" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.testing_parser">
+  <component name="RunManager" selected="Python.testing_full_eval">
     <configuration name="evaluator_hctl" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="HCTL_stuff" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -222,8 +225,8 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.testing_parser" />
         <item itemvalue="Python.testing_full_eval" />
+        <item itemvalue="Python.testing_parser" />
         <item itemvalue="Python.sat_solver" />
         <item itemvalue="Python.testing_optimizations" />
         <item itemvalue="Python.fixed_formulas_eval" />
@@ -261,7 +264,7 @@
       <workItem from="1632556511005" duration="25757000" />
       <workItem from="1632639978347" duration="7933000" />
       <workItem from="1632654861621" duration="843000" />
-      <workItem from="1632828332355" duration="21380000" />
+      <workItem from="1632828332355" duration="22422000" />
     </task>
     <task id="LOCAL-00001" summary="changed structure: paths, names, folders, includes">
       <created>1631652715774</created>
@@ -578,7 +581,14 @@
       <option name="project" value="LOCAL" />
       <updated>1632861857333</updated>
     </task>
-    <option name="localTasksCounter" value="46" />
+    <task id="LOCAL-00046" summary="Relative paths added to main.py">
+      <created>1632862160657</created>
+      <option name="number" value="00046" />
+      <option name="presentableId" value="LOCAL-00046" />
+      <option name="project" value="LOCAL" />
+      <updated>1632862160657</updated>
+    </task>
+    <option name="localTasksCounter" value="47" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -608,7 +618,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="added os chdir" />
     <MESSAGE value="added sys.path" />
     <MESSAGE value="changed result of parse_all" />
     <MESSAGE value="add free bnets" />
@@ -633,28 +642,18 @@
     <MESSAGE value="added enum for node category to the tree, not used yet" />
     <MESSAGE value="added '&amp;' for and and '|' for or to HCTL grammar" />
     <MESSAGE value="added var canonization for cache and duplicates" />
-    <option name="LAST_COMMIT_MESSAGE" value="added var canonization for cache and duplicates" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/src/testing_full_eval.py</url>
-          <line>58</line>
-          <option name="timeStamp" value="8" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
+    <MESSAGE value="Relative paths added to main.py" />
+    <option name="LAST_COMMIT_MESSAGE" value="Relative paths added to main.py" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/HCTL_stuff$testing_parser.coverage" NAME="testing_parser Coverage Results" MODIFIED="1632858421063" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/" />
+    <SUITE FILE_PATH="coverage/HCTL_stuff$testing_parser.coverage" NAME="testing_parser Coverage Results" MODIFIED="1632862249732" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/" />
     <SUITE FILE_PATH="coverage/HCTL_stuff$parser_and_simulator.coverage" NAME="parser_and_simulator Coverage Results" MODIFIED="1631652386521" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/" />
     <SUITE FILE_PATH="coverage/HCTL_stuff$evaluator_hctl.coverage" NAME="evaluator_hctl Coverage Results" MODIFIED="1631779478349" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/HCTL_stuff$testing_optimizations.coverage" NAME="testing_optimizations Coverage Results" MODIFIED="1632206838760" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/" />
     <SUITE FILE_PATH="coverage/HCTL_stuff$fixed_formulas_eval.coverage" NAME="fixed_formulas_eval Coverage Results" MODIFIED="1631780170725" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/" />
     <SUITE FILE_PATH="coverage/HCTL_stuff$testing_parser__1_.coverage" NAME="testing_parser Coverage Results" MODIFIED="1631779721189" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/" />
     <SUITE FILE_PATH="coverage/HCTL_stuff$sat_solver.coverage" NAME="sat_solver Coverage Results" MODIFIED="1632393506358" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/Parsing_update_fns" />
-    <SUITE FILE_PATH="coverage/HCTL_stuff$testing_full_eval.coverage" NAME="testing_full_eval Coverage Results" MODIFIED="1632855860445" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/HCTL_stuff$testing_full_eval.coverage" NAME="testing_full_eval Coverage Results" MODIFIED="1632862791352" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/HCTL_stuff$evaluator_hctl__1_.coverage" NAME="evaluator_hctl Coverage Results" MODIFIED="1631719349528" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

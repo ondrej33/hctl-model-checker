@@ -100,20 +100,15 @@ class EvaluateExpressionVisitor:
 
     # TODO: test parser and evaluator on more CTL/HCTL formulas
 
-    # TODO: FINISH and TEST CACHE
+    # TODO: TEST CACHE AND CANONIZATION, a lot
 
-    # TODO: >>bring ALL optimizations in <<, (add NESTED through union, now we have just the three basic)
+    # TODO: TEST optimizations - nesting through union
     # TODO: optimize also through the intersection ? and maybe even do something with AX ?
-    # TODO: solve collisions of CACHE vs OPTIMISATIONS
+    # TODO: solve collisions of CACHE vs OPTIMISATIONS if there are some
 
     # TODO: solve the possible problem with future (self-loops again, but in sources??)
 
     # TODO: maybe change all operators in the tree to just EX, EU, EG - so that we can use cache sometimes??
-
-    # TODO: use some kind of canonization and renaming DURING EVALUATION (regexes)
-    # TODO: because what we have now, only the vars on the same "nesting level" are the same
-    # TODO: sometimes its possible to eval thing once and then just rename vars, instead of counting twice
-    # TODO: for example (AG EF var) in formula: 3x.3y.(@x. AG¬y & AG EFx) & (@y. AG EFy)
 
     """
     Visits node and depending on its type and operation, evaluates the subformula which it represents
@@ -273,13 +268,11 @@ def mark_duplicates(root_node) -> Dict[str, int]:
                     # TODO : subform_string string problem?
                     if n_canonic_subform in duplicates:
                         duplicates[n_canonic_subform] += 1
-                        skip = True  # we wont be traversing subtree of this (cache will be used)
+                        skip = True  # we wont be traversing subtree of this node (cache will be used)
                     else:
                         duplicates[n_canonic_subform] = 1
                     break
             # do not include subtree of the duplicate in the traversing (will be cached during eval)
-            # TODO: since we are evaluating BOTTOM-UP, we will ONCE traverse subtree of every duplicate
-            # TODO: so, mark duplicates also in this ONE subtree
             if skip:
                 continue
             same_height_nodes.add((node, get_canonical(node.subform_string)))

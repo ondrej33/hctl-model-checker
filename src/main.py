@@ -6,9 +6,9 @@ os.chdir(PROJECT_DIR)
 
 import sys
 sys.path.append(PROJECT_DIR)
-sys.path.append('{SRC_DIR}')
-sys.path.append('{SRC_DIR}/Parsing_HCTL_formula')
-sys.path.append('{SRC_DIR}/Parsing_update_fns')
+sys.path.append(f'{SRC_DIR}')
+sys.path.append(f'{SRC_DIR}/Parsing_HCTL_formula')
+sys.path.append(f'{SRC_DIR}/Parsing_update_fns')
 
 from parse_all import parse_all
 from Parsing_HCTL_formula.evaluator_hctl import eval_tree
