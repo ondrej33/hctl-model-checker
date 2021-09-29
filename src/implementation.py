@@ -376,6 +376,14 @@ def eval_color(assignment, num_cols) -> float:
     return result_val
 
 
+# Print number of computed results in the final BDD. That is, the number of state-color pairs.
+def print_results_fast(result: Function, model: Model, message: str = ""):
+    if message:
+        print(message)
+
+    assignments = model.bdd.count(result, nvars=model.num_props + model.num_params);
+    print(f"{assignments} RESULTS FOUND IN TOTAL")
+
 def print_results(result: Function, model: Model, message: str = "", show_all: bool = False) -> None:
     if message:
         print(message)
