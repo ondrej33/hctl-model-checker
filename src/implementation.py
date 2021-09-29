@@ -3,6 +3,7 @@ from termcolor import colored
 from src.parse_all import parse_all
 
 from src.model import *
+import gc
 
 
 # ============================================================================================= #
@@ -123,6 +124,10 @@ def EU(model: Model, phi1: Function, phi2: Function) -> Function:
     while old != new:
         new = old
         old = old | (phi1 & EX(model, old))
+        #print(len(old))
+        if len(model.bdd) > 1_000_000:
+            gc.collect()
+            model.bdd.collect_garbage()
     return old
 
 
@@ -149,6 +154,10 @@ def EG(model: Model, phi: Function) -> Function:
     while old != new:
         new = old
         old = old & EX(model, old)
+        #print(len(old))
+        if len(model.bdd) > 1_000_000:
+            gc.collect()
+            model.bdd.collect_garbage()
     return old
 
 
