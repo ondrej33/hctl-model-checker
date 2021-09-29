@@ -12,7 +12,7 @@ sys.path.append(f'{SRC_DIR}/Parsing_update_fns')
 
 from src.parse_all import parse_all
 from Parsing_HCTL_formula.evaluator_hctl import eval_tree
-from src.implementation import print_results
+from src.implementation import print_results_fast
 import time
 
 
@@ -23,7 +23,7 @@ def run_test(file_name, formula):
     end = time.time()
     res_time = end - start
 
-    print_results(res, model, f"model: {model.name}, formula: {formula}", show_all=False)
+    print_results_fast(res, model, f"model: {model.name}, formula: {formula}")
     print(formula, ": ", res_time, "\n")
 
 

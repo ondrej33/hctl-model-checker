@@ -3,6 +3,7 @@ from termcolor import colored
 from src.parse_all import parse_all
 
 from src.model import *
+import gc
 
 
 # ============================================================================================= #
@@ -123,6 +124,10 @@ def EU(model: Model, phi1: Function, phi2: Function) -> Function:
     while old != new:
         new = old
         old = old | (phi1 & EX(model, old))
+        #print(len(old))
+        if len(model.bdd) > 1_000_000:
+            gc.collect()
+            model.bdd.collect_garbage()
     return old
 
 
@@ -149,6 +154,10 @@ def EG(model: Model, phi: Function) -> Function:
     while old != new:
         new = old
         old = old & EX(model, old)
+        #print(len(old))
+        if len(model.bdd) > 1_000_000:
+            gc.collect()
+            model.bdd.collect_garbage()
     return old
 
 
@@ -375,6 +384,14 @@ def eval_color(assignment, num_cols) -> float:
         result_val += assignment[len(assignment) - 1 - i][1] * (1 / 2 ** i)
     return result_val
 
+
+# Print number of computed results in the final BDD. That is, the number of state-color pairs.
+def print_results_fast(result: Function, model: Model, message: str = ""):
+    if message:
+        print(message)
+
+    assignments = model.bdd.count(result, nvars=model.num_props + model.num_params);
+    print(f"{assignments} RESULTS FOUND IN TOTAL")
 
 def print_results(result: Function, model: Model, message: str = "", show_all: bool = False) -> None:
     if message:
