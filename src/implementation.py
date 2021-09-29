@@ -10,6 +10,8 @@ import gc
 # ============================= SUBFORMULAS EVALUATION PART =================================== #
 # ============================================================================================= #
 
+NODE_LIMIT_FOR_GARBAGE = 1_000_000
+
 
 # creates a bdd representing all states labeled by proposition given
 def labeled_by(model: Model, prop: str) -> Function:
@@ -125,7 +127,7 @@ def EU(model: Model, phi1: Function, phi2: Function) -> Function:
         new = old
         old = old | (phi1 & EX(model, old))
         #print(len(old))
-        if len(model.bdd) > 1_000_000:
+        if len(model.bdd) > NODE_LIMIT_FOR_GARBAGE:
             gc.collect()
             model.bdd.collect_garbage()
     return old
@@ -145,6 +147,10 @@ def EF_v2(model: Model, phi: Function) -> Function:
     while old != new:
         new = old
         old = old | EX(model, old)
+        #print(len(old))
+        if len(model.bdd) > NODE_LIMIT_FOR_GARBAGE:
+            gc.collect()
+            model.bdd.collect_garbage()
     return old
 
 
@@ -155,7 +161,7 @@ def EG(model: Model, phi: Function) -> Function:
         new = old
         old = old & EX(model, old)
         #print(len(old))
-        if len(model.bdd) > 1_000_000:
+        if len(model.bdd) > NODE_LIMIT_FOR_GARBAGE:
             gc.collect()
             model.bdd.collect_garbage()
     return old
@@ -199,6 +205,10 @@ def AU_v2(model: Model, phi1: Function, phi2: Function) -> Function:
     while old != new:
         new = old
         old = old | (phi1 & AX(model, old))
+        #print(len(old))
+        if len(model.bdd) > NODE_LIMIT_FOR_GARBAGE:
+            gc.collect()
+            model.bdd.collect_garbage()
     return old
 
 

@@ -42,9 +42,19 @@ if __name__ == '__main__':
 
         run_test(path_to_bnet, "3{x}: 3{y}: (@{x}: ~{y} && AX {x}) && (@{y}: AX {y})")
         run_test(path_to_bnet, "3{x}: 3{y}: (@{x}: AG~{y} && AG EF {x}) && (@{y}: AG EF {y})")
-        """
 
-        run_test(path_to_bnet, "!{x}: AX {x}")
+        # Strong basin of an oscillating attractor
+        AF !{x}: (AX (~{x} && AF {x}))
+
+        # Strong basin of an oscillating attractor which is not a cycle
+        AF !{x}: ((AX (~{x} && AF {x})) && (EF !{y}: EX EG ~{y}))
+
+        # Existence of two sinks
+        3{x}: 3{y}: (@{x}: (~y && AX x)) && (@{y}: (~x && AX y))
+
+        # Existence of a "fork" state
+        3{x}: 3{y}: (@{x}: (~y && AX x)) && (@{y}: (~x && AX y)) && (!{z}: AX (EF {x} ^ EF {y}))
+
+        """
         run_test(path_to_bnet, "!{x}: AG EF {x}")
-        run_test(path_to_bnet, "3{x}: 3{y}: (@{x}: ~{y} && AX {x}) && (@{y}: AX {y})")
         run_test(path_to_bnet, "3{x}: 3{y}: (@{x}: AG~{y} && AG EF {x}) && (@{y}: AG EF {y})")
