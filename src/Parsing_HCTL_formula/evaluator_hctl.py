@@ -115,6 +115,8 @@ class EvaluateExpressionVisitor:
 
     # TODO: start to use safe ENUM instead of strings
 
+    # TODO: add XOR to both grammars, both evaluators, NodeType, and maybe somewhere else
+
     """
     Visits node and depending on its type and operation, evaluates the subformula which it represents
     @:param node:  node in abstract syntax tree of HCTL formula, it represents a subformula
@@ -207,7 +209,7 @@ class EvaluateExpressionVisitor:
             elif node.value == 'EU':
                 result = EU(model, self.visit(node.left, model, dupl, cache), self.visit(node.right, model, dupl, cache))
             elif node.value == 'AU':
-                result = AU(model, self.visit(node.left, model, dupl, cache), self.visit(node.right, model, dupl, cache))
+                result = AU_v2(model, self.visit(node.left, model, dupl, cache), self.visit(node.right, model, dupl, cache))
             elif node.value == 'EW':
                 result = EW(model, self.visit(node.left, model, dupl, cache), self.visit(node.right, model, dupl, cache))
             elif node.value == 'AW':

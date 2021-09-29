@@ -318,3 +318,19 @@ def model_check_fixed23(model: Model) -> Function:
     s1 = labeled_by(model, "s__1")
     s2 = labeled_by(model, "s__2")
     return bind(model, (AX(model, x) | s1) | (s2 | EX(model, x)), 'x')
+
+
+# TODO: create fixed evaluation for following:
+"""
+        # Strong basin of an oscillating attractor
+        AF !{x}: (AX (~{x} && AF {x}))
+
+        # Strong basin of an oscillating attractor which is not a cycle
+        AF !{x}: ((AX (~{x} && AF {x})) && (EF !{y}: EX EG ~{y}))
+
+        # Existence of two sinks
+        3{x}: 3{y}: (@{x}: (~y && AX x)) && (@{y}: (~x && AX y))
+
+        # Existence of a "fork" state
+        3{x}: 3{y}: (@{x}: (~y && AX x)) && (@{y}: (~x && AX y)) && (!{z}: AX (EF {x} ^ EF {y}))
+"""

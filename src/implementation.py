@@ -88,6 +88,8 @@ def EX(model: Model, phi: Function) -> Function:
     return pre_E_all_vars(model, phi)
 
 
+# TODO: create explicit function for garbage collection and use it in all fixpoints
+
 def EU(model: Model, phi1: Function, phi2: Function) -> Function:
     old = phi2
     new = model.bdd.add_expr("False")
