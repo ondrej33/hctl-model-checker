@@ -84,40 +84,8 @@ def pre_E_all_vars(model: Model, initial: Function) -> Function:
     return current_set | (initial & model.stable)
 
 
-# computes the set of successors for the given set
-# by applying the update function of the given `var`
-# SHOULD BE USED ONLY BY FUNCTIONS IN THIS FILE
-# TODO: test if right
-def post_E_one_var(model: Model, given_set: Function, var: str) -> Function:
-    """
-    GO_DOWN = !X & Exists((SET & X & !B_X), 'X')
-    GO_UP = X & Exists((SET & !X & B_X), 'X')
-    """
-
-    var_bdd = labeled_by(model, var)
-    go_down = ~var_bdd & model.bdd.quantify(given_set & var_bdd & ~model.update_fns[var], [var])
-    go_up = var_bdd & model.bdd.quantify(given_set & ~var_bdd & model.update_fns[var], [var])
-    return go_down | go_up
-
-
-# computes the set of successors for the given set
-# by applying ALL of the update functions
-def post_E_all_vars(model: Model, given_set: Function) -> Function:
-    current_set = model.bdd.add_expr("False")
-    for i in range(model.num_props):
-        current_set = current_set | post_E_one_var(model, given_set, f"s__{i}")
-
-    # TODO: add same thing as for pre_E_all_vars - create self loops - this helps for "bind x: EY x"
-    # TODO: problem with self-loops might arrise again, but this time in sources - we have reversed graph
-    return current_set
-
-
 def EX(model: Model, phi: Function) -> Function:
     return pre_E_all_vars(model, phi)
-
-
-def EY(model: Model, phi: Function) -> Function:
-    return post_E_all_vars(model, phi)
 
 
 def EU(model: Model, phi1: Function, phi2: Function) -> Function:
@@ -171,12 +139,6 @@ def EG(model: Model, phi: Function) -> Function:
 def AX(model: Model, phi: Function) -> Function:
     # AX f = ~EX (~f)
     return ~EX(model, ~phi)
-
-
-# computed through pure EY
-# TODO: check if this is right
-def AY(model: Model, phi: Function) -> Function:
-    return ~EY(model, ~phi)
 
 
 def AF(model: Model, phi1: Function) -> Function:

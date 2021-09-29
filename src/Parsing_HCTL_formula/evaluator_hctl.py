@@ -169,10 +169,6 @@ class EvaluateExpressionVisitor:
                     result = EX(model, self.visit(node.child, model, dupl, cache))
             elif node.value == 'AX':
                 result = AX(model, self.visit(node.child, model, dupl, cache))
-            elif node.value == 'EY':
-                result = EY(model, self.visit(node.child, model, dupl, cache))
-            elif node.value == 'AY':
-                result = AY(model, self.visit(node.child, model, dupl, cache))
             elif node.value == 'EF':
                 result = EF(model, self.visit(node.child, model, dupl, cache))
             elif node.value == 'AF':

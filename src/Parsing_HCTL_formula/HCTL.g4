@@ -53,11 +53,10 @@ PATH : (A|E);
 /** Temporal operators **/
 
 X : 'X';
-Y : 'Y';
 F : 'F';
 G : 'G';
 
-TEMPORAL_UNARY : PATH (Y|X|G|F);
+TEMPORAL_UNARY : PATH (X|G|F);
 
 E_U : 'EU';
 A_U : 'AU';

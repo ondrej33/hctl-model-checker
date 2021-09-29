@@ -24,8 +24,6 @@ class NodeType(Enum):
     AG = auto()
     EW = auto()
     AW = auto()
-    EY = auto()
-    AY = auto()
 
     BIND = auto()
     JUMP = auto()
@@ -51,8 +49,6 @@ OP_DICT = {
     "AU": NodeType.AU,
     "EW": NodeType.EW,
     "AW": NodeType.AW,
-    "EY": NodeType.EY,
-    "AY": NodeType.AY,
 
     "!": NodeType.BIND,
     "@": NodeType.JUMP,
