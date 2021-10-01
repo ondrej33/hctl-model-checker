@@ -12,7 +12,7 @@ sys.path.append(f'{SRC_DIR}/Parsing_update_fns')
 
 from src.parse_all import parse_all
 from Parsing_HCTL_formula.evaluator_hctl import eval_tree
-from src.implementation import print_results_fast
+from src.implementation import print_results_fast, print_results
 import time
 
 
@@ -23,7 +23,8 @@ def run_test(file_name, formula):
     end = time.time()
     res_time = end - start
 
-    print_results_fast(res, model, f"model: {model.name}, formula: {formula}")
+    # print_results_fast(res, model, f"model: {model.name}, formula: {formula}")
+    print_results(res, model, show_all=True)
     print(formula, ": ", res_time, "\n")
 
 
@@ -32,29 +33,34 @@ if __name__ == '__main__':
     if len(sys.argv) == 3:
         run_test(sys.argv[1], sys.argv[2])
     else:
-        path_to_bnet = "bnet_examples/023.bnet"
+        path_to_bnet = "bnet_examples/vlastni.bnet"
         """
         # pre-defined formulas to choose from:
         run_test(path_to_bnet, "!{x}: AX {x}")
         run_test(path_to_bnet, "!{x}: AX AF {x}")
         run_test(path_to_bnet, "!{x}: AG EF {x}")
         run_test(path_to_bnet, "!{x}: EG EF {x}")
-
-        run_test(path_to_bnet, "3{x}: 3{y}: (@{x}: ~{y} && AX {x}) && (@{y}: AX {y})")
+        
+        # Existence of two SCCs
         run_test(path_to_bnet, "3{x}: 3{y}: (@{x}: AG~{y} && AG EF {x}) && (@{y}: AG EF {y})")
 
         # Strong basin of an oscillating attractor
-        AF !{x}: (AX (~{x} && AF {x}))
+        run_test(path_to_bnet, "AF !{x}: (AX (~{x} && AF {x}))")
 
         # Strong basin of an oscillating attractor which is not a cycle
-        AF !{x}: ((AX (~{x} && AF {x})) && (EF !{y}: EX EG ~{y}))
+        run_test(path_to_bnet, "AF !{x}: ((AX (~{x} && AF {x})) && (EF !{y}: EX EG ~{y}))")
 
         # Existence of two sinks
-        3{x}: 3{y}: (@{x}: (~y && AX x)) && (@{y}: (~x && AX y))
+        run_test(path_to_bnet, "3{x}: 3{y}: (@{x}: ~{y} && AX {x}) && (@{y}: AX {y})")
 
-        # Existence of a "fork" state
-        3{x}: 3{y}: (@{x}: (~y && AX x)) && (@{y}: (~x && AX y)) && (!{z}: AX (EF {x} ^ EF {y}))
+        # Existence of a "fork" state - MAYBE
+        run_test(path_to_bnet, "3{x}: 3{y}: (@{x}: (~{y} && AX {x})) && (@{y}: (AX {y})) && (3{z}: @{z}: (EF {x}) && (EF {y}) && (AX (EF {x} ^ EF {y})))")
+
+        # "Fork states" - MAYBE
+        run_test(path_to_bnet, "3{x}: 3{y}: (@{x}: (~{y} && AX {x})) && (@{y}: (AX {y})) && (!{z}: @{z}: (EF {x}) && (EF {y}) && (AX (EF {x} ^ EF {y})))")
 
         """
-        run_test(path_to_bnet, "!{x}: AG EF {x}")
-        run_test(path_to_bnet, "3{x}: 3{y}: (@{x}: AG~{y} && AG EF {x}) && (@{y}: AG EF {y})")
+        # fork states but nested: "3{z}: 3{x}: 3{y}: (@{x}: (~{y} && AX {x})) && (@{y}: (AX {y})) && (@{z}: (EF {x}) && (EF {y}) && (AX (EF {x} ^ EF {y})))"
+
+        # TESTING formula for fork state existence
+        run_test(path_to_bnet, "3{x}: 3{y}: (@{x}: (~{y} && AX {x})) && (@{y}: (AX {y})) && (3{z}: @{z}: (EF {x}) && (EF {y}) && (AX (EF {x} ^ EF {y})))")

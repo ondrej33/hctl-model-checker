@@ -117,6 +117,8 @@ class EvaluateExpressionVisitor:
 
     # TODO: test xor
 
+    # TODO: collect variables also from hybrid operators - we can have 3{z}: (EF (s1 & s2 & s3))
+
     """
     Visits node and depending on its type and operation, evaluates the subformula which it represents
     @:param node:  node in abstract syntax tree of HCTL formula, it represents a subformula
@@ -148,6 +150,7 @@ class EvaluateExpressionVisitor:
                     combined_renaming = {result_renaming[val] : key for key, val in renaming.items()}
                     renaming_vectors = {f"{key}__{i}": f"{val}__{i}" for key, val in combined_renaming.items() for i in range(model.num_props)}
                     renamed_res = model.bdd.let(renaming_vectors, result)
+                    # print_results(renamed_res, model, node.subform_string, show_all=True)
                     return renamed_res
             else:
                 # we want to save the result of this subformula unless we are in the middle of optimizing
@@ -234,6 +237,7 @@ class EvaluateExpressionVisitor:
         if save_to_cache:
             cache[canonized_subform] = (result, renaming)
 
+        # print_results(result, model, node.subform_string, show_all=True)
         return result
 
     # gets the result of evaluated node, but applies hybrid op on it in the end
@@ -307,13 +311,3 @@ def eval_tree(as_tree: Node, model: Model) -> Function:
 def parse_and_eval(formula: str, model: Model) -> Function:
     as_tree = parse_to_tree(formula)
     return eval_tree(as_tree, model)
-
-
-if __name__ == '__main__':
-    # TODO: change path
-    bnet_path = "bnet_examples/064_free.bnet"
-    f = "!{x}: (AG EF {x})"
-
-    m, tree = parse_all(bnet_path, f)
-    res = eval_tree(tree, m)
-    print_results(res, m, f"model: {m.name}, formula: {f}", True)

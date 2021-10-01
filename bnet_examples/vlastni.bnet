@@ -1,4 +1,6 @@
 targets,factors
-s1, s2
-s2, s3
-s3, s1
+Her6, (!miR9 & !N)
+HuC, (!miR9 & !P)
+P, ((!Her6 & Zic5) | Her6)
+Zic5, (!miR9 & !N)
+miR9, (!Her6 & !N)

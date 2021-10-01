@@ -320,17 +320,42 @@ def model_check_fixed23(model: Model) -> Function:
     return bind(model, (AX(model, x) | s1) | (s2 | EX(model, x)), 'x')
 
 
-# TODO: create fixed evaluation for following:
+# AF !{x}: (AX (~{x} && AF {x}))
+# Strong basin of an oscillating attractor
+def model_check_fixed24(model: Model) -> Function:
+    x = create_comparator(model, 'x')
+    ax = AX(model, ~x & AF(model, x))
+    binder = bind(model, ax, 'x')
+    return AF(model, binder)
+
+
+# AF !{x}: ((AX (~{x} && AF {x})) && (EF !{y}: EX EG ~{y}))
+# Strong basin of an oscillating attractor which is not a cycle
+def model_check_fixed25(model: Model) -> Function:
+    x = create_comparator(model, 'x')
+    y = create_comparator(model, 'y')
+    ax = AX(model, ~x & AF(model, x))
+
+    inner_binder = bind(model, EX(model, EG(model, ~y)), 'y')
+    ef = EF(model, inner_binder)
+
+    outer_binder = bind(model, ax & ef, 'x')
+    return AF(model, outer_binder)
+
+
+# Existence of a "fork" state
+# TODO: remake this
 """
-        # Strong basin of an oscillating attractor
-        AF !{x}: (AX (~{x} && AF {x}))
+# 3{x}: 3{y}: (@{x}: (~{y} && AX {x})) && (@{y}: (AX {y})) && (!{z}: AX (EF {x} ^ EF {y}))
+def model_check_fixed26(model: Model) -> Function:
+    x = create_comparator(model, 'x')
+    y = create_comparator(model, 'y')
 
-        # Strong basin of an oscillating attractor which is not a cycle
-        AF !{x}: ((AX (~{x} && AF {x})) && (EF !{y}: EX EG ~{y}))
+    jump_x = jump(model, ~y & AX(model, x), 'x')
+    jump_y = jump(model, AX(model, y), 'y')
+    bind_z = bind(model, AX(model, ~ EF(model, x).equiv(EF(model, y))), 'z')
 
-        # Existence of two sinks
-        3{x}: 3{y}: (@{x}: (~y && AX x)) && (@{y}: (~x && AX y))
-
-        # Existence of a "fork" state
-        3{x}: 3{y}: (@{x}: (~y && AX x)) && (@{y}: (~x && AX y)) && (!{z}: AX (EF {x} ^ EF {y}))
+    and_inner = jump_x & jump_y & bind_z
+    exist_y = existential(model, and_inner, 'y')
+    return existential(model, exist_y, 'x')
 """

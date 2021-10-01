@@ -36,6 +36,12 @@ def run_tests(model: Model) -> None:
     assert model_check_fixed22(model) == parse_and_eval("!{x}: (AX {x} || ({x} && s__1))", model)
     assert model_check_fixed23(model) == parse_and_eval("!{x}: ((AX {x} || s__1) || (s__2 || EX {x}))", model)
 
+    assert model_check_fixed24(model) == parse_and_eval("AF !{x}: (AX (~{x} && AF {x}))", model)
+    assert model_check_fixed25(model) == parse_and_eval("AF !{x}: ((AX (~{x} && AF {x})) && (EF !{y}: EX EG ~{y}))", model)
+
+    # might not be right (or there is bug)
+    # assert model_check_fixed26(model) == parse_and_eval("3{x}: 3{y}: (@{x}: (~{y} && AX {x})) && (@{y}: (AX {y})) && (!{z}: AX (EF {x} ^ EF {y}))", model)
+
 
 if __name__ == '__main__':
     # TODO change path

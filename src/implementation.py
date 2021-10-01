@@ -302,16 +302,18 @@ def bnet_parser(file_name: str) -> Model:
     vrs.extend(f"p__{i}" for i in range(num_params))  # params
     vrs.extend(f"x__{i}" for i in range(num_props))   # state-variable x (for HCTL MC)
     vrs.extend(f"y__{i}" for i in range(num_props))   # state-variable y (for HCTL MC)
+    vrs.extend(f"z__{i}" for i in range(num_props))   # state-variable z (for HCTL MC)
     bdd.declare(*vrs)
 
-    # reordering to some desired order (now it is s0,x0,y0,s1...,p0,p1...)
+    # reordering to some desired order (now it is s0,x0,y0,z0,s1,x1...,p0,p1...)
     my_order = dict()
     for i in range(num_props):
-        my_order[f"s__{i}"] = i * 3
-        my_order[f"x__{i}"] = i * 3 + 1
-        my_order[f"y__{i}"] = i * 3 + 2
+        my_order[f"s__{i}"] = i * 4
+        my_order[f"x__{i}"] = i * 4 + 1
+        my_order[f"y__{i}"] = i * 4 + 2
+        my_order[f"z__{i}"] = i * 4 + 3
     for i in range(num_params):
-        my_order[f"p__{i}"] = i + 3 * num_props
+        my_order[f"p__{i}"] = i + 4 * num_props
     bdd.reorder(my_order)
     # bdd.configure(reordering=False)  # auto reorder disabled (probably)? - it is slower when disabled
 
@@ -328,7 +330,7 @@ def bnet_parser(file_name: str) -> Model:
     # pack it all into a whole model and return it
     name_dict_reversed = {y: x for x, y in name_dict.items()}
     model_name = file_name.split("\\")[-1]
-    model = Model(model_name, bdd, prop_names, param_names, ['x', 'y'], real_update_dict, name_dict_reversed)
+    model = Model(model_name, bdd, prop_names, param_names, ['x', 'y', 'z'], real_update_dict, name_dict_reversed)
     return model
 
 
@@ -360,16 +362,17 @@ def print_results_fast(result: Function, model: Model, message: str = ""):
     if message:
         print(message)
 
-    assignments = model.bdd.count(result, nvars=model.num_props + model.num_params);
+    assignments = model.bdd.count(result, nvars=model.num_props + model.num_params)
     print(f"{assignments} RESULTS FOUND IN TOTAL")
 
 def print_results(result: Function, model: Model, message: str = "", show_all: bool = False) -> None:
     if message:
         print(message)
 
-    vars_to_show = [f"s__{i}" for i in range(model.num_props)]+[f"p__{i}" for i in range(model.num_params)]
-    assignments = model.bdd.pick_iter(result, care_vars=vars_to_show)
-    print(f"{len(list(assignments))} RESULTS FOUND IN TOTAL")
+    #vars_to_show = [f"s__{i}" for i in range(model.num_props)]+[f"p__{i}" for i in range(model.num_params)]
+    #assignments = model.bdd.pick_iter(result, care_vars=vars_to_show)
+    #print(f"{len(list(assignments))} RESULTS FOUND IN TOTAL")
+    print("supports: ", model.bdd.support(result))
 
     if not show_all:
         return
@@ -393,7 +396,7 @@ def print_results(result: Function, model: Model, message: str = "", show_all: b
     # -----------------------------------------------------------------------------------
 
     # printing all variables in alphabetical order, colored, like in AEON
-    
+    """
     assignments = model.bdd.pick_iter(result, care_vars=vars_to_show)  # assigning a generator again, was depleted
     # sorting vars in individual outputs (dict has random order, even though bdd has the right one)
     sorted_inside = [sorted(assignment.items(), key=lambda x: (model.name_dict[x[0]])) for assignment in assignments]
@@ -413,13 +416,12 @@ def print_results(result: Function, model: Model, message: str = "", show_all: b
             print(text, end=" ")
         print()
     print()
-
     """
-    vars_to_show = [f"s__{i}" for i in range(model.num_props)]+[f"p__{i}" for i in range(model.num_params)]+[f"x__{i}" for i in range(model.num_props)]
-    assignments = model.bdd.pick_iter(result, care_vars=vars_to_show)
+
+    assignments = model.bdd.pick_iter(result)
     print(f"{len(list(assignments))} RESULTS FOUND IN TOTAL")
 
-    assignments = model.bdd.pick_iter(result, care_vars=vars_to_show)
+    assignments = model.bdd.pick_iter(result)
     sorted_inside = [sorted(assignment.items(), key=lambda x: x[0]) for assignment in assignments]
 
     for assignment in sorted_inside:
@@ -434,5 +436,5 @@ def print_results(result: Function, model: Model, message: str = "", show_all: b
             print(text, end=" ")
         print()
     print()
-    """
+
 
