@@ -17,6 +17,7 @@ formula : value=PROP_NAME                                                      #
         | left=formula value=DIS right=formula                                 #binary
         | <assoc=right> left=formula value=IMPL right=formula                  #binary
         | left=formula value=EQIV right=formula                                #binary
+        | left=formula value=XOR right=formula                                 #binary
         | left=formula value=E_U right=formula                                 #binary
         | left=formula value=A_U right=formula                                 #binary
         | <assoc=right> left=formula value=E_W right=formula                   #binary
@@ -40,7 +41,7 @@ CON : ('&&' | '&');
 DIS : ('||' | '|');
 IMPL : '->';
 EQIV : '<->';
-
+XOR : '^';
 
 /** Path quantifiers **/
 

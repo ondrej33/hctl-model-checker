@@ -15,6 +15,7 @@ formula : value=PROP_NAME                                                      #
         | left=formula value=DIS right=formula                                 #binary
         | <assoc=right> left=formula value=IMPL right=formula                  #binary
         | left=formula value=EQIV right=formula                                #binary
+        | left=formula value=XOR right=formula                                 #binary
         ;
 
 
@@ -31,6 +32,7 @@ CON : ('&&' | '&');
 DIS : ('||' | '|');
 IMPL : '->';
 EQIV : '<->';
+XOR : '^';
 
 
 /** Propositions **/

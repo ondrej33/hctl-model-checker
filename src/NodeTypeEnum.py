@@ -13,6 +13,7 @@ class NodeType(Enum):
     CON = auto()
     IMPL = auto()
     EQIV = auto()
+    XOR = auto()
 
     EX = auto()
     AX = auto()
@@ -38,6 +39,7 @@ OP_DICT = {
     "&": NodeType.CON,
     "->": NodeType.IMPL,
     "<->": NodeType.EQIV,
+    "^": NodeType.XOR,
 
     "EX": NodeType.EX,
     "AX": NodeType.AX,

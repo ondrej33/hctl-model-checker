@@ -206,6 +206,8 @@ class EvaluateExpressionVisitor:
                 result = self.visit(node.left, model, dupl, cache).implies(self.visit(node.right, model, dupl, cache))
             elif node.value == '<->':
                 result = self.visit(node.left, model, dupl, cache).equiv(self.visit(node.right, model, dupl, cache))
+            elif node.value == '^':
+                result = ~ self.visit(node.left, model, dupl, cache).equiv(self.visit(node.right, model, dupl, cache))
             elif node.value == 'EU':
                 result = EU(model, self.visit(node.left, model, dupl, cache), self.visit(node.right, model, dupl, cache))
             elif node.value == 'AU':

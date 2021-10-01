@@ -24,6 +24,8 @@ class EvaluateExpressionVisitor:
                 result = self.visit(node.left, bdd).implies(self.visit(node.right, bdd))
             elif node.value == '<->':
                 result = self.visit(node.left, bdd).equiv(self.visit(node.right, bdd))
+            elif node.value == '^':
+                result = ~ self.visit(node.left, bdd).equiv(self.visit(node.right, bdd))
         return result
 
 

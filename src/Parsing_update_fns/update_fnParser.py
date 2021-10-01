@@ -11,27 +11,28 @@ else:
 
 def serializedATN():
     with StringIO() as buf:
-        buf.write("\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\17")
-        buf.write("\67\4\2\t\2\4\3\t\3\4\4\t\4\3\2\6\2\n\n\2\r\2\16\2\13")
-        buf.write("\5\2\16\n\2\3\2\3\2\3\2\3\3\6\3\24\n\3\r\3\16\3\25\3\3")
-        buf.write("\5\3\31\n\3\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\5\4$\n")
-        buf.write("\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\7\4")
-        buf.write("\62\n\4\f\4\16\4\65\13\4\3\4\2\3\6\5\2\4\6\2\3\3\2\5\6")
-        buf.write("\2>\2\r\3\2\2\2\4\30\3\2\2\2\6#\3\2\2\2\b\n\7\r\2\2\t")
-        buf.write("\b\3\2\2\2\n\13\3\2\2\2\13\t\3\2\2\2\13\f\3\2\2\2\f\16")
-        buf.write("\3\2\2\2\r\t\3\2\2\2\r\16\3\2\2\2\16\17\3\2\2\2\17\20")
-        buf.write("\5\6\4\2\20\21\5\4\3\2\21\3\3\2\2\2\22\24\7\r\2\2\23\22")
-        buf.write("\3\2\2\2\24\25\3\2\2\2\25\23\3\2\2\2\25\26\3\2\2\2\26")
-        buf.write("\31\3\2\2\2\27\31\7\2\2\3\30\23\3\2\2\2\30\27\3\2\2\2")
-        buf.write("\31\5\3\2\2\2\32\33\b\4\1\2\33$\7\f\2\2\34$\t\2\2\2\35")
-        buf.write("\36\7\3\2\2\36\37\5\6\4\2\37 \7\4\2\2 $\3\2\2\2!\"\7\7")
-        buf.write("\2\2\"$\5\6\4\7#\32\3\2\2\2#\34\3\2\2\2#\35\3\2\2\2#!")
-        buf.write("\3\2\2\2$\63\3\2\2\2%&\f\6\2\2&\'\7\b\2\2\'\62\5\6\4\7")
-        buf.write("()\f\5\2\2)*\7\t\2\2*\62\5\6\4\6+,\f\4\2\2,-\7\n\2\2-")
-        buf.write("\62\5\6\4\4./\f\3\2\2/\60\7\13\2\2\60\62\5\6\4\4\61%\3")
-        buf.write("\2\2\2\61(\3\2\2\2\61+\3\2\2\2\61.\3\2\2\2\62\65\3\2\2")
-        buf.write("\2\63\61\3\2\2\2\63\64\3\2\2\2\64\7\3\2\2\2\65\63\3\2")
-        buf.write("\2\2\t\13\r\25\30#\61\63")
+        buf.write("\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\20")
+        buf.write(":\4\2\t\2\4\3\t\3\4\4\t\4\3\2\6\2\n\n\2\r\2\16\2\13\5")
+        buf.write("\2\16\n\2\3\2\3\2\3\2\3\3\6\3\24\n\3\r\3\16\3\25\3\3\5")
+        buf.write("\3\31\n\3\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\5\4$\n\4")
+        buf.write("\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3")
+        buf.write("\4\3\4\7\4\65\n\4\f\4\16\48\13\4\3\4\2\3\6\5\2\4\6\2\3")
+        buf.write("\3\2\5\6\2B\2\r\3\2\2\2\4\30\3\2\2\2\6#\3\2\2\2\b\n\7")
+        buf.write("\16\2\2\t\b\3\2\2\2\n\13\3\2\2\2\13\t\3\2\2\2\13\f\3\2")
+        buf.write("\2\2\f\16\3\2\2\2\r\t\3\2\2\2\r\16\3\2\2\2\16\17\3\2\2")
+        buf.write("\2\17\20\5\6\4\2\20\21\5\4\3\2\21\3\3\2\2\2\22\24\7\16")
+        buf.write("\2\2\23\22\3\2\2\2\24\25\3\2\2\2\25\23\3\2\2\2\25\26\3")
+        buf.write("\2\2\2\26\31\3\2\2\2\27\31\7\2\2\3\30\23\3\2\2\2\30\27")
+        buf.write("\3\2\2\2\31\5\3\2\2\2\32\33\b\4\1\2\33$\7\r\2\2\34$\t")
+        buf.write("\2\2\2\35\36\7\3\2\2\36\37\5\6\4\2\37 \7\4\2\2 $\3\2\2")
+        buf.write("\2!\"\7\7\2\2\"$\5\6\4\b#\32\3\2\2\2#\34\3\2\2\2#\35\3")
+        buf.write("\2\2\2#!\3\2\2\2$\66\3\2\2\2%&\f\7\2\2&\'\7\b\2\2\'\65")
+        buf.write("\5\6\4\b()\f\6\2\2)*\7\t\2\2*\65\5\6\4\7+,\f\5\2\2,-\7")
+        buf.write("\n\2\2-\65\5\6\4\5./\f\4\2\2/\60\7\13\2\2\60\65\5\6\4")
+        buf.write("\5\61\62\f\3\2\2\62\63\7\f\2\2\63\65\5\6\4\4\64%\3\2\2")
+        buf.write("\2\64(\3\2\2\2\64+\3\2\2\2\64.\3\2\2\2\64\61\3\2\2\2\65")
+        buf.write("8\3\2\2\2\66\64\3\2\2\2\66\67\3\2\2\2\67\7\3\2\2\28\66")
+        buf.write("\3\2\2\2\t\13\r\25\30#\64\66")
         return buf.getvalue()
 
 
@@ -46,10 +47,11 @@ class update_fnParser ( Parser ):
     sharedContextCache = PredictionContextCache()
 
     literalNames = [ "<INVALID>", "'('", "')'", "<INVALID>", "<INVALID>", 
-                     "<INVALID>", "<INVALID>", "<INVALID>", "'->'", "'<->'" ]
+                     "<INVALID>", "<INVALID>", "<INVALID>", "'->'", "'<->'", 
+                     "'^'" ]
 
     symbolicNames = [ "<INVALID>", "<INVALID>", "<INVALID>", "TRUE", "FALSE", 
-                      "NEG", "CON", "DIS", "IMPL", "EQIV", "PROP_NAME", 
+                      "NEG", "CON", "DIS", "IMPL", "EQIV", "XOR", "PROP_NAME", 
                       "NEWLINE", "WS", "Block_comment" ]
 
     RULE_root = 0
@@ -68,10 +70,11 @@ class update_fnParser ( Parser ):
     DIS=7
     IMPL=8
     EQIV=9
-    PROP_NAME=10
-    NEWLINE=11
-    WS=12
-    Block_comment=13
+    XOR=10
+    PROP_NAME=11
+    NEWLINE=12
+    WS=13
+    Block_comment=14
 
     def __init__(self, input:TokenStream, output:TextIO = sys.stdout):
         super().__init__(input, output)
@@ -277,6 +280,8 @@ class update_fnParser ( Parser ):
             return self.getToken(update_fnParser.IMPL, 0)
         def EQIV(self):
             return self.getToken(update_fnParser.EQIV, 0)
+        def XOR(self):
+            return self.getToken(update_fnParser.XOR, 0)
 
         def enterRule(self, listener:ParseTreeListener):
             if hasattr( listener, "enterBinary" ):
@@ -431,13 +436,13 @@ class update_fnParser ( Parser ):
                 self.state = 31
                 localctx.value = self.match(update_fnParser.NEG)
                 self.state = 32
-                localctx.child = self.formula(5)
+                localctx.child = self.formula(6)
                 pass
             else:
                 raise NoViableAltException(self)
 
             self._ctx.stop = self._input.LT(-1)
-            self.state = 49
+            self.state = 52
             self._errHandler.sync(self)
             _alt = self._interp.adaptivePredict(self._input,6,self._ctx)
             while _alt!=2 and _alt!=ATN.INVALID_ALT_NUMBER:
@@ -445,7 +450,7 @@ class update_fnParser ( Parser ):
                     if self._parseListeners is not None:
                         self.triggerExitRuleEvent()
                     _prevctx = localctx
-                    self.state = 47
+                    self.state = 50
                     self._errHandler.sync(self)
                     la_ = self._interp.adaptivePredict(self._input,5,self._ctx)
                     if la_ == 1:
@@ -453,13 +458,13 @@ class update_fnParser ( Parser ):
                         localctx.left = _prevctx
                         self.pushNewRecursionContext(localctx, _startState, self.RULE_formula)
                         self.state = 35
-                        if not self.precpred(self._ctx, 4):
+                        if not self.precpred(self._ctx, 5):
                             from antlr4.error.Errors import FailedPredicateException
-                            raise FailedPredicateException(self, "self.precpred(self._ctx, 4)")
+                            raise FailedPredicateException(self, "self.precpred(self._ctx, 5)")
                         self.state = 36
                         localctx.value = self.match(update_fnParser.CON)
                         self.state = 37
-                        localctx.right = self.formula(5)
+                        localctx.right = self.formula(6)
                         pass
 
                     elif la_ == 2:
@@ -467,13 +472,13 @@ class update_fnParser ( Parser ):
                         localctx.left = _prevctx
                         self.pushNewRecursionContext(localctx, _startState, self.RULE_formula)
                         self.state = 38
-                        if not self.precpred(self._ctx, 3):
+                        if not self.precpred(self._ctx, 4):
                             from antlr4.error.Errors import FailedPredicateException
-                            raise FailedPredicateException(self, "self.precpred(self._ctx, 3)")
+                            raise FailedPredicateException(self, "self.precpred(self._ctx, 4)")
                         self.state = 39
                         localctx.value = self.match(update_fnParser.DIS)
                         self.state = 40
-                        localctx.right = self.formula(4)
+                        localctx.right = self.formula(5)
                         pass
 
                     elif la_ == 3:
@@ -481,13 +486,13 @@ class update_fnParser ( Parser ):
                         localctx.left = _prevctx
                         self.pushNewRecursionContext(localctx, _startState, self.RULE_formula)
                         self.state = 41
-                        if not self.precpred(self._ctx, 2):
+                        if not self.precpred(self._ctx, 3):
                             from antlr4.error.Errors import FailedPredicateException
-                            raise FailedPredicateException(self, "self.precpred(self._ctx, 2)")
+                            raise FailedPredicateException(self, "self.precpred(self._ctx, 3)")
                         self.state = 42
                         localctx.value = self.match(update_fnParser.IMPL)
                         self.state = 43
-                        localctx.right = self.formula(2)
+                        localctx.right = self.formula(3)
                         pass
 
                     elif la_ == 4:
@@ -495,17 +500,31 @@ class update_fnParser ( Parser ):
                         localctx.left = _prevctx
                         self.pushNewRecursionContext(localctx, _startState, self.RULE_formula)
                         self.state = 44
-                        if not self.precpred(self._ctx, 1):
+                        if not self.precpred(self._ctx, 2):
                             from antlr4.error.Errors import FailedPredicateException
-                            raise FailedPredicateException(self, "self.precpred(self._ctx, 1)")
+                            raise FailedPredicateException(self, "self.precpred(self._ctx, 2)")
                         self.state = 45
                         localctx.value = self.match(update_fnParser.EQIV)
                         self.state = 46
+                        localctx.right = self.formula(3)
+                        pass
+
+                    elif la_ == 5:
+                        localctx = update_fnParser.BinaryContext(self, update_fnParser.FormulaContext(self, _parentctx, _parentState))
+                        localctx.left = _prevctx
+                        self.pushNewRecursionContext(localctx, _startState, self.RULE_formula)
+                        self.state = 47
+                        if not self.precpred(self._ctx, 1):
+                            from antlr4.error.Errors import FailedPredicateException
+                            raise FailedPredicateException(self, "self.precpred(self._ctx, 1)")
+                        self.state = 48
+                        localctx.value = self.match(update_fnParser.XOR)
+                        self.state = 49
                         localctx.right = self.formula(2)
                         pass
 
              
-                self.state = 51
+                self.state = 54
                 self._errHandler.sync(self)
                 _alt = self._interp.adaptivePredict(self._input,6,self._ctx)
 
@@ -531,18 +550,22 @@ class update_fnParser ( Parser ):
 
     def formula_sempred(self, localctx:FormulaContext, predIndex:int):
             if predIndex == 0:
-                return self.precpred(self._ctx, 4)
+                return self.precpred(self._ctx, 5)
          
 
             if predIndex == 1:
-                return self.precpred(self._ctx, 3)
+                return self.precpred(self._ctx, 4)
          
 
             if predIndex == 2:
-                return self.precpred(self._ctx, 2)
+                return self.precpred(self._ctx, 3)
          
 
             if predIndex == 3:
+                return self.precpred(self._ctx, 2)
+         
+
+            if predIndex == 4:
                 return self.precpred(self._ctx, 1)
          
 

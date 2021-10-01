@@ -37,6 +37,12 @@ class HCTLVisitor(ParseTreeVisitor):
         return UnaryNode(value=ctx.value.text, child=self.visit(ctx.child))
 
     def visitBinary(self, ctx: HCTLParser.BinaryContext):
+        # first lets check for some ambiguities
+        if ctx.value.text == "|":
+            ctx.value.text = "||"
+        if ctx.value.text == "&":
+            ctx.value.text = "&&"
+
         # special case: if we have "(EX phi1) || (EX phi2)", we will make it instead as "EX (phi1 || phi2)"
         # THERE MIGHT BE PARENTHESIS NODE ON THE WAY (lets care about one layer of parentheses)
         if ctx.value.text == "||":

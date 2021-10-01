@@ -12,35 +12,36 @@ else:
 def serializedATN():
     with StringIO() as buf:
         buf.write("\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3 ")
-        buf.write("R\4\2\t\2\4\3\t\3\4\4\t\4\3\2\6\2\n\n\2\r\2\16\2\13\5")
+        buf.write("U\4\2\t\2\4\3\t\3\4\4\t\4\3\2\6\2\n\n\2\r\2\16\2\13\5")
         buf.write("\2\16\n\2\3\2\3\2\3\2\3\3\6\3\24\n\3\r\3\16\3\25\3\3\5")
         buf.write("\3\31\n\3\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4")
         buf.write("\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\5")
         buf.write("\4\63\n\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4")
-        buf.write("\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\7")
-        buf.write("\4M\n\4\f\4\16\4P\13\4\3\4\2\3\6\5\2\4\6\2\3\3\2\6\7\2")
-        buf.write("b\2\r\3\2\2\2\4\30\3\2\2\2\6\62\3\2\2\2\b\n\7\36\2\2\t")
-        buf.write("\b\3\2\2\2\n\13\3\2\2\2\13\t\3\2\2\2\13\f\3\2\2\2\f\16")
-        buf.write("\3\2\2\2\r\t\3\2\2\2\r\16\3\2\2\2\16\17\3\2\2\2\17\20")
-        buf.write("\5\6\4\2\20\21\5\4\3\2\21\3\3\2\2\2\22\24\7\36\2\2\23")
-        buf.write("\22\3\2\2\2\24\25\3\2\2\2\25\23\3\2\2\2\25\26\3\2\2\2")
-        buf.write("\26\31\3\2\2\2\27\31\7\2\2\3\30\23\3\2\2\2\30\27\3\2\2")
-        buf.write("\2\31\5\3\2\2\2\32\33\b\4\1\2\33\63\7\35\2\2\34\63\7\34")
-        buf.write("\2\2\35\63\t\2\2\2\36\37\7\3\2\2\37 \5\6\4\2 !\7\4\2\2")
-        buf.write("!\63\3\2\2\2\"#\7\b\2\2#\63\5\6\4\17$%\7\24\2\2%\63\5")
-        buf.write("\6\4\16&\'\7\31\2\2\'(\7\34\2\2()\7\5\2\2)\63\5\6\4\5")
-        buf.write("*+\7\32\2\2+,\7\34\2\2,-\7\5\2\2-\63\5\6\4\4./\7\33\2")
-        buf.write("\2/\60\7\34\2\2\60\61\7\5\2\2\61\63\5\6\4\3\62\32\3\2")
-        buf.write("\2\2\62\34\3\2\2\2\62\35\3\2\2\2\62\36\3\2\2\2\62\"\3")
-        buf.write("\2\2\2\62$\3\2\2\2\62&\3\2\2\2\62*\3\2\2\2\62.\3\2\2\2")
-        buf.write("\63N\3\2\2\2\64\65\f\r\2\2\65\66\7\t\2\2\66M\5\6\4\16")
-        buf.write("\678\f\f\2\289\7\n\2\29M\5\6\4\r:;\f\13\2\2;<\7\13\2\2")
-        buf.write("<M\5\6\4\13=>\f\n\2\2>?\7\f\2\2?M\5\6\4\13@A\f\t\2\2A")
-        buf.write("B\7\25\2\2BM\5\6\4\nCD\f\b\2\2DE\7\26\2\2EM\5\6\4\tFG")
-        buf.write("\f\7\2\2GH\7\27\2\2HM\5\6\4\7IJ\f\6\2\2JK\7\30\2\2KM\5")
-        buf.write("\6\4\6L\64\3\2\2\2L\67\3\2\2\2L:\3\2\2\2L=\3\2\2\2L@\3")
-        buf.write("\2\2\2LC\3\2\2\2LF\3\2\2\2LI\3\2\2\2MP\3\2\2\2NL\3\2\2")
-        buf.write("\2NO\3\2\2\2O\7\3\2\2\2PN\3\2\2\2\t\13\r\25\30\62LN")
+        buf.write("\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3")
+        buf.write("\4\3\4\3\4\7\4P\n\4\f\4\16\4S\13\4\3\4\2\3\6\5\2\4\6\2")
+        buf.write("\3\3\2\6\7\2f\2\r\3\2\2\2\4\30\3\2\2\2\6\62\3\2\2\2\b")
+        buf.write("\n\7\36\2\2\t\b\3\2\2\2\n\13\3\2\2\2\13\t\3\2\2\2\13\f")
+        buf.write("\3\2\2\2\f\16\3\2\2\2\r\t\3\2\2\2\r\16\3\2\2\2\16\17\3")
+        buf.write("\2\2\2\17\20\5\6\4\2\20\21\5\4\3\2\21\3\3\2\2\2\22\24")
+        buf.write("\7\36\2\2\23\22\3\2\2\2\24\25\3\2\2\2\25\23\3\2\2\2\25")
+        buf.write("\26\3\2\2\2\26\31\3\2\2\2\27\31\7\2\2\3\30\23\3\2\2\2")
+        buf.write("\30\27\3\2\2\2\31\5\3\2\2\2\32\33\b\4\1\2\33\63\7\35\2")
+        buf.write("\2\34\63\7\34\2\2\35\63\t\2\2\2\36\37\7\3\2\2\37 \5\6")
+        buf.write("\4\2 !\7\4\2\2!\63\3\2\2\2\"#\7\b\2\2#\63\5\6\4\20$%\7")
+        buf.write("\24\2\2%\63\5\6\4\17&\'\7\31\2\2\'(\7\34\2\2()\7\5\2\2")
+        buf.write(")\63\5\6\4\5*+\7\32\2\2+,\7\34\2\2,-\7\5\2\2-\63\5\6\4")
+        buf.write("\4./\7\33\2\2/\60\7\34\2\2\60\61\7\5\2\2\61\63\5\6\4\3")
+        buf.write("\62\32\3\2\2\2\62\34\3\2\2\2\62\35\3\2\2\2\62\36\3\2\2")
+        buf.write("\2\62\"\3\2\2\2\62$\3\2\2\2\62&\3\2\2\2\62*\3\2\2\2\62")
+        buf.write(".\3\2\2\2\63Q\3\2\2\2\64\65\f\16\2\2\65\66\7\t\2\2\66")
+        buf.write("P\5\6\4\17\678\f\r\2\289\7\n\2\29P\5\6\4\16:;\f\f\2\2")
+        buf.write(";<\7\13\2\2<P\5\6\4\f=>\f\13\2\2>?\7\f\2\2?P\5\6\4\f@")
+        buf.write("A\f\n\2\2AB\7\r\2\2BP\5\6\4\13CD\f\t\2\2DE\7\25\2\2EP")
+        buf.write("\5\6\4\nFG\f\b\2\2GH\7\26\2\2HP\5\6\4\tIJ\f\7\2\2JK\7")
+        buf.write("\27\2\2KP\5\6\4\7LM\f\6\2\2MN\7\30\2\2NP\5\6\4\6O\64\3")
+        buf.write("\2\2\2O\67\3\2\2\2O:\3\2\2\2O=\3\2\2\2O@\3\2\2\2OC\3\2")
+        buf.write("\2\2OF\3\2\2\2OI\3\2\2\2OL\3\2\2\2PS\3\2\2\2QO\3\2\2\2")
+        buf.write("QR\3\2\2\2R\7\3\2\2\2SQ\3\2\2\2\t\13\r\25\30\62OQ")
         return buf.getvalue()
 
 
@@ -55,13 +56,13 @@ class HCTLParser ( Parser ):
     sharedContextCache = PredictionContextCache()
 
     literalNames = [ "<INVALID>", "'('", "')'", "':'", "<INVALID>", "<INVALID>", 
-                     "'~'", "<INVALID>", "<INVALID>", "'->'", "'<->'", "'A'", 
-                     "'E'", "<INVALID>", "'X'", "'Y'", "'F'", "'G'", "<INVALID>", 
+                     "'~'", "<INVALID>", "<INVALID>", "'->'", "'<->'", "'^'", 
+                     "'A'", "'E'", "<INVALID>", "'X'", "'F'", "'G'", "<INVALID>", 
                      "'EU'", "'AU'", "'EW'", "'AW'", "'!'", "'@'", "'3'" ]
 
     symbolicNames = [ "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
                       "TRUE", "FALSE", "NEG", "CON", "DIS", "IMPL", "EQIV", 
-                      "A", "E", "PATH", "X", "Y", "F", "G", "TEMPORAL_UNARY", 
+                      "XOR", "A", "E", "PATH", "X", "F", "G", "TEMPORAL_UNARY", 
                       "E_U", "A_U", "E_W", "A_W", "BIND", "JUMP", "EXISTS", 
                       "VAR_NAME", "PROP_NAME", "NEWLINE", "WS", "Block_comment" ]
 
@@ -82,11 +83,11 @@ class HCTLParser ( Parser ):
     DIS=8
     IMPL=9
     EQIV=10
-    A=11
-    E=12
-    PATH=13
-    X=14
-    Y=15
+    XOR=11
+    A=12
+    E=13
+    PATH=14
+    X=15
     F=16
     G=17
     TEMPORAL_UNARY=18
@@ -343,6 +344,8 @@ class HCTLParser ( Parser ):
             return self.getToken(HCTLParser.IMPL, 0)
         def EQIV(self):
             return self.getToken(HCTLParser.EQIV, 0)
+        def XOR(self):
+            return self.getToken(HCTLParser.XOR, 0)
         def E_U(self):
             return self.getToken(HCTLParser.E_U, 0)
         def A_U(self):
@@ -516,7 +519,7 @@ class HCTLParser ( Parser ):
                 self.state = 32
                 localctx.value = self.match(HCTLParser.NEG)
                 self.state = 33
-                localctx.child = self.formula(13)
+                localctx.child = self.formula(14)
                 pass
             elif token in [HCTLParser.TEMPORAL_UNARY]:
                 localctx = HCTLParser.UnaryContext(self, localctx)
@@ -525,7 +528,7 @@ class HCTLParser ( Parser ):
                 self.state = 34
                 localctx.value = self.match(HCTLParser.TEMPORAL_UNARY)
                 self.state = 35
-                localctx.child = self.formula(12)
+                localctx.child = self.formula(13)
                 pass
             elif token in [HCTLParser.BIND]:
                 localctx = HCTLParser.HybridContext(self, localctx)
@@ -570,7 +573,7 @@ class HCTLParser ( Parser ):
                 raise NoViableAltException(self)
 
             self._ctx.stop = self._input.LT(-1)
-            self.state = 76
+            self.state = 79
             self._errHandler.sync(self)
             _alt = self._interp.adaptivePredict(self._input,6,self._ctx)
             while _alt!=2 and _alt!=ATN.INVALID_ALT_NUMBER:
@@ -578,7 +581,7 @@ class HCTLParser ( Parser ):
                     if self._parseListeners is not None:
                         self.triggerExitRuleEvent()
                     _prevctx = localctx
-                    self.state = 74
+                    self.state = 77
                     self._errHandler.sync(self)
                     la_ = self._interp.adaptivePredict(self._input,5,self._ctx)
                     if la_ == 1:
@@ -586,13 +589,13 @@ class HCTLParser ( Parser ):
                         localctx.left = _prevctx
                         self.pushNewRecursionContext(localctx, _startState, self.RULE_formula)
                         self.state = 50
-                        if not self.precpred(self._ctx, 11):
+                        if not self.precpred(self._ctx, 12):
                             from antlr4.error.Errors import FailedPredicateException
-                            raise FailedPredicateException(self, "self.precpred(self._ctx, 11)")
+                            raise FailedPredicateException(self, "self.precpred(self._ctx, 12)")
                         self.state = 51
                         localctx.value = self.match(HCTLParser.CON)
                         self.state = 52
-                        localctx.right = self.formula(12)
+                        localctx.right = self.formula(13)
                         pass
 
                     elif la_ == 2:
@@ -600,13 +603,13 @@ class HCTLParser ( Parser ):
                         localctx.left = _prevctx
                         self.pushNewRecursionContext(localctx, _startState, self.RULE_formula)
                         self.state = 53
-                        if not self.precpred(self._ctx, 10):
+                        if not self.precpred(self._ctx, 11):
                             from antlr4.error.Errors import FailedPredicateException
-                            raise FailedPredicateException(self, "self.precpred(self._ctx, 10)")
+                            raise FailedPredicateException(self, "self.precpred(self._ctx, 11)")
                         self.state = 54
                         localctx.value = self.match(HCTLParser.DIS)
                         self.state = 55
-                        localctx.right = self.formula(11)
+                        localctx.right = self.formula(12)
                         pass
 
                     elif la_ == 3:
@@ -614,13 +617,13 @@ class HCTLParser ( Parser ):
                         localctx.left = _prevctx
                         self.pushNewRecursionContext(localctx, _startState, self.RULE_formula)
                         self.state = 56
-                        if not self.precpred(self._ctx, 9):
+                        if not self.precpred(self._ctx, 10):
                             from antlr4.error.Errors import FailedPredicateException
-                            raise FailedPredicateException(self, "self.precpred(self._ctx, 9)")
+                            raise FailedPredicateException(self, "self.precpred(self._ctx, 10)")
                         self.state = 57
                         localctx.value = self.match(HCTLParser.IMPL)
                         self.state = 58
-                        localctx.right = self.formula(9)
+                        localctx.right = self.formula(10)
                         pass
 
                     elif la_ == 4:
@@ -628,13 +631,13 @@ class HCTLParser ( Parser ):
                         localctx.left = _prevctx
                         self.pushNewRecursionContext(localctx, _startState, self.RULE_formula)
                         self.state = 59
-                        if not self.precpred(self._ctx, 8):
+                        if not self.precpred(self._ctx, 9):
                             from antlr4.error.Errors import FailedPredicateException
-                            raise FailedPredicateException(self, "self.precpred(self._ctx, 8)")
+                            raise FailedPredicateException(self, "self.precpred(self._ctx, 9)")
                         self.state = 60
                         localctx.value = self.match(HCTLParser.EQIV)
                         self.state = 61
-                        localctx.right = self.formula(9)
+                        localctx.right = self.formula(10)
                         pass
 
                     elif la_ == 5:
@@ -642,13 +645,13 @@ class HCTLParser ( Parser ):
                         localctx.left = _prevctx
                         self.pushNewRecursionContext(localctx, _startState, self.RULE_formula)
                         self.state = 62
-                        if not self.precpred(self._ctx, 7):
+                        if not self.precpred(self._ctx, 8):
                             from antlr4.error.Errors import FailedPredicateException
-                            raise FailedPredicateException(self, "self.precpred(self._ctx, 7)")
+                            raise FailedPredicateException(self, "self.precpred(self._ctx, 8)")
                         self.state = 63
-                        localctx.value = self.match(HCTLParser.E_U)
+                        localctx.value = self.match(HCTLParser.XOR)
                         self.state = 64
-                        localctx.right = self.formula(8)
+                        localctx.right = self.formula(9)
                         pass
 
                     elif la_ == 6:
@@ -656,13 +659,13 @@ class HCTLParser ( Parser ):
                         localctx.left = _prevctx
                         self.pushNewRecursionContext(localctx, _startState, self.RULE_formula)
                         self.state = 65
-                        if not self.precpred(self._ctx, 6):
+                        if not self.precpred(self._ctx, 7):
                             from antlr4.error.Errors import FailedPredicateException
-                            raise FailedPredicateException(self, "self.precpred(self._ctx, 6)")
+                            raise FailedPredicateException(self, "self.precpred(self._ctx, 7)")
                         self.state = 66
-                        localctx.value = self.match(HCTLParser.A_U)
+                        localctx.value = self.match(HCTLParser.E_U)
                         self.state = 67
-                        localctx.right = self.formula(7)
+                        localctx.right = self.formula(8)
                         pass
 
                     elif la_ == 7:
@@ -670,13 +673,13 @@ class HCTLParser ( Parser ):
                         localctx.left = _prevctx
                         self.pushNewRecursionContext(localctx, _startState, self.RULE_formula)
                         self.state = 68
-                        if not self.precpred(self._ctx, 5):
+                        if not self.precpred(self._ctx, 6):
                             from antlr4.error.Errors import FailedPredicateException
-                            raise FailedPredicateException(self, "self.precpred(self._ctx, 5)")
+                            raise FailedPredicateException(self, "self.precpred(self._ctx, 6)")
                         self.state = 69
-                        localctx.value = self.match(HCTLParser.E_W)
+                        localctx.value = self.match(HCTLParser.A_U)
                         self.state = 70
-                        localctx.right = self.formula(5)
+                        localctx.right = self.formula(7)
                         pass
 
                     elif la_ == 8:
@@ -684,17 +687,31 @@ class HCTLParser ( Parser ):
                         localctx.left = _prevctx
                         self.pushNewRecursionContext(localctx, _startState, self.RULE_formula)
                         self.state = 71
+                        if not self.precpred(self._ctx, 5):
+                            from antlr4.error.Errors import FailedPredicateException
+                            raise FailedPredicateException(self, "self.precpred(self._ctx, 5)")
+                        self.state = 72
+                        localctx.value = self.match(HCTLParser.E_W)
+                        self.state = 73
+                        localctx.right = self.formula(5)
+                        pass
+
+                    elif la_ == 9:
+                        localctx = HCTLParser.BinaryContext(self, HCTLParser.FormulaContext(self, _parentctx, _parentState))
+                        localctx.left = _prevctx
+                        self.pushNewRecursionContext(localctx, _startState, self.RULE_formula)
+                        self.state = 74
                         if not self.precpred(self._ctx, 4):
                             from antlr4.error.Errors import FailedPredicateException
                             raise FailedPredicateException(self, "self.precpred(self._ctx, 4)")
-                        self.state = 72
+                        self.state = 75
                         localctx.value = self.match(HCTLParser.A_W)
-                        self.state = 73
+                        self.state = 76
                         localctx.right = self.formula(4)
                         pass
 
              
-                self.state = 78
+                self.state = 81
                 self._errHandler.sync(self)
                 _alt = self._interp.adaptivePredict(self._input,6,self._ctx)
 
@@ -720,34 +737,38 @@ class HCTLParser ( Parser ):
 
     def formula_sempred(self, localctx:FormulaContext, predIndex:int):
             if predIndex == 0:
-                return self.precpred(self._ctx, 11)
+                return self.precpred(self._ctx, 12)
          
 
             if predIndex == 1:
-                return self.precpred(self._ctx, 10)
+                return self.precpred(self._ctx, 11)
          
 
             if predIndex == 2:
-                return self.precpred(self._ctx, 9)
+                return self.precpred(self._ctx, 10)
          
 
             if predIndex == 3:
-                return self.precpred(self._ctx, 8)
+                return self.precpred(self._ctx, 9)
          
 
             if predIndex == 4:
-                return self.precpred(self._ctx, 7)
+                return self.precpred(self._ctx, 8)
          
 
             if predIndex == 5:
-                return self.precpred(self._ctx, 6)
+                return self.precpred(self._ctx, 7)
          
 
             if predIndex == 6:
-                return self.precpred(self._ctx, 5)
+                return self.precpred(self._ctx, 6)
          
 
             if predIndex == 7:
+                return self.precpred(self._ctx, 5)
+         
+
+            if predIndex == 8:
                 return self.precpred(self._ctx, 4)
          
 
