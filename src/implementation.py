@@ -1,6 +1,5 @@
 from collections import OrderedDict
 from termcolor import colored
-from src.parse_all import parse_all
 
 from src.model import *
 import gc
@@ -10,7 +9,14 @@ import gc
 # ============================= SUBFORMULAS EVALUATION PART =================================== #
 # ============================================================================================= #
 
+
 NODE_LIMIT_FOR_GARBAGE = 1_000_000
+
+
+def collect_garbage_if_needed(bdd: BDD) -> None:
+    if len(bdd) > NODE_LIMIT_FOR_GARBAGE:
+        gc.collect()
+        bdd.collect_garbage()
 
 
 # creates a bdd representing all states labeled by proposition given
@@ -88,8 +94,6 @@ def EX(model: Model, phi: Function) -> Function:
     return pre_E_all_vars(model, phi)
 
 
-# TODO: create explicit function for garbage collection and use it in all fixpoints
-
 def EU(model: Model, phi1: Function, phi2: Function) -> Function:
     old = phi2
     new = model.bdd.add_expr("False")
@@ -97,9 +101,7 @@ def EU(model: Model, phi1: Function, phi2: Function) -> Function:
         new = old
         old = old | (phi1 & EX(model, old))
         #print(len(old))
-        if len(model.bdd) > NODE_LIMIT_FOR_GARBAGE:
-            gc.collect()
-            model.bdd.collect_garbage()
+        collect_garbage_if_needed(model.bdd)
     return old
 
 
@@ -118,9 +120,7 @@ def EF_v2(model: Model, phi: Function) -> Function:
         new = old
         old = old | EX(model, old)
         #print(len(old))
-        if len(model.bdd) > NODE_LIMIT_FOR_GARBAGE:
-            gc.collect()
-            model.bdd.collect_garbage()
+        collect_garbage_if_needed(model.bdd)
     return old
 
 
@@ -131,9 +131,7 @@ def EG(model: Model, phi: Function) -> Function:
         new = old
         old = old & EX(model, old)
         #print(len(old))
-        if len(model.bdd) > NODE_LIMIT_FOR_GARBAGE:
-            gc.collect()
-            model.bdd.collect_garbage()
+        collect_garbage_if_needed(model.bdd)
     return old
 
 
@@ -170,9 +168,7 @@ def AU_v2(model: Model, phi1: Function, phi2: Function) -> Function:
         new = old
         old = old | (phi1 & AX(model, old))
         #print(len(old))
-        if len(model.bdd) > NODE_LIMIT_FOR_GARBAGE:
-            gc.collect()
-            model.bdd.collect_garbage()
+        collect_garbage_if_needed(model.bdd)
     return old
 
 

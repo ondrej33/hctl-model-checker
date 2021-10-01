@@ -115,7 +115,7 @@ class EvaluateExpressionVisitor:
 
     # TODO: start to use safe ENUM instead of strings
 
-    # TODO: add XOR to both grammars, both evaluators, NodeType, and maybe somewhere else
+    # TODO: test xor
 
     """
     Visits node and depending on its type and operation, evaluates the subformula which it represents
