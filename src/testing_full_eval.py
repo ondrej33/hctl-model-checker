@@ -38,7 +38,7 @@ if __name__ == '__main__':
     if len(sys.argv) == 3:
         run_test(sys.argv[1], sys.argv[2])
     else:
-        path_to_bnet = "bnet_examples/095_free.bnet"
+        path_to_bnet = "bnet_examples/029_free.bnet"
         """
         # pre-defined formulas to choose from:
         run_test(path_to_bnet, "!{x}: AX {x}")
@@ -81,13 +81,14 @@ if __name__ == '__main__':
         # we want to use same model and bdd for all parts (formulas use same number of vars, etc)
         m, _ = parse_all(path_to_bnet, fork_exist1)  # just to get model, we'll use it for all formulas
 
-        assert get_result(path_to_bnet, fork_exist1, m) == get_result(path_to_bnet, fork_exist2, m)
-        print(1)
+        existence = get_result(path_to_bnet, fork_exist1, m)
+        print_results(existence, m, "existence", show_all=True)
 
         forks = get_result(path_to_bnet, fork_exactly1, m)
+        print_results(forks, m, "forks", show_all=True)
+
+        assert existence == get_result(path_to_bnet, fork_exist2, m)
+
         assert forks == get_result(path_to_bnet, fork_exactly2, m)
-        print(2)
         assert forks == get_result(path_to_bnet, fork_exactly3, m)
-        print(3)
         assert forks == get_result(path_to_bnet, fork_exactly4, m)
-        print(4)
