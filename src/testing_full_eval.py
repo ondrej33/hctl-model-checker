@@ -28,12 +28,17 @@ def run_test(file_name, formula):
     print(formula, ": ", res_time, "\n")
 
 
+def get_result(file_name, formula, real_model):
+    _, as_tree_hctl = parse_all(file_name, formula)
+    return eval_tree(as_tree_hctl, real_model)
+
+
 # usage: testing_full_eval.py path_to_bnet formula
 if __name__ == '__main__':
     if len(sys.argv) == 3:
         run_test(sys.argv[1], sys.argv[2])
     else:
-        path_to_bnet = "bnet_examples/vlastni.bnet"
+        path_to_bnet = "bnet_examples/095_free.bnet"
         """
         # pre-defined formulas to choose from:
         run_test(path_to_bnet, "!{x}: AX {x}")
@@ -53,14 +58,36 @@ if __name__ == '__main__':
         # Existence of two sinks
         run_test(path_to_bnet, "3{x}: 3{y}: (@{x}: ~{y} && AX {x}) && (@{y}: AX {y})")
 
-        # Existence of a "fork" state - MAYBE
-        run_test(path_to_bnet, "3{x}: 3{y}: (@{x}: (~{y} && AX {x})) && (@{y}: (AX {y})) && (3{z}: @{z}: (EF {x}) && (EF {y}) && (AX (EF {x} ^ EF {y})))")
 
-        # "Fork states" - MAYBE
-        run_test(path_to_bnet, "3{x}: 3{y}: (@{x}: (~{y} && AX {x})) && (@{y}: (AX {y})) && (!{z}: @{z}: (EF {x}) && (EF {y}) && (AX (EF {x} ^ EF {y})))")
+        # MAYBE: fork existence / fork states exactly
+        fork_exist1 = "3{z}: 3{x}: 3{y}: (@{x}: (~{y} && AX {x})) && (@{y}: (AX {y})) && (@{z}: (EF {x}) && (EF {y}) && (AX (EF {x} ^ EF {y})))"
+        fork_exist2 = "3{x}: 3{y}: (@{x}: (~{y} && AX {x})) && (@{y}: (AX {y})) && (3{z}: @{z}: (EF {x}) && (EF {y}) && (AX (EF {x} ^ EF {y})))"
 
+        fork_exactly1 = "!{z}: 3{x}: 3{y}: (@{x}: (~{y} && AX {x})) && (@{y}: (AX {y})) && (@{z}: (EF {x}) && (EF {y}) && (AX (EF {x} ^ EF {y})))"
+        fork_exactly2 = "3{x}: 3{y}: (@{x}: (~{y} && AX {x})) && (@{y}: (AX {y})) && (!{z}: @{z}: (EF {x}) && (EF {y}) && (AX (EF {x} ^ EF {y})))"
+        fork_exactly3 = "3{x}: 3{y}: (@{x}: (~{y} && AX {x})) && (@{y}: (AX {y})) && (!{z}: (EF {x}) && (EF {y}) && (AX (EF {x} ^ EF {y})))"
+        fork_exactly4 = "3{x}: 3{y}: (@{x}: (~{y} && AX {x})) && (@{y}: (AX {y})) && (3{z}: (EF {x}) && (EF {y}) && (AX (EF {x} ^ EF {y})))"
         """
-        # fork states but nested: "3{z}: 3{x}: 3{y}: (@{x}: (~{y} && AX {x})) && (@{y}: (AX {y})) && (@{z}: (EF {x}) && (EF {y}) && (AX (EF {x} ^ EF {y})))"
 
         # TESTING formula for fork state existence
-        run_test(path_to_bnet, "3{x}: 3{y}: (@{x}: (~{y} && AX {x})) && (@{y}: (AX {y})) && (3{z}: @{z}: (EF {x}) && (EF {y}) && (AX (EF {x} ^ EF {y})))")
+        fork_exist1 = "3{z}: 3{x}: 3{y}: (@{x}: (~{y} && AX {x})) && (@{y}: (AX {y})) && (@{z}: (EF {x}) && (EF {y}) && (AX (EF {x} ^ EF {y})))"
+        fork_exist2 = "3{x}: 3{y}: (@{x}: (~{y} && AX {x})) && (@{y}: (AX {y})) && (3{z}: @{z}: (EF {x}) && (EF {y}) && (AX (EF {x} ^ EF {y})))"
+
+        fork_exactly1 = "!{z}: 3{x}: 3{y}: (@{x}: (~{y} && AX {x})) && (@{y}: (AX {y})) && (@{z}: (EF {x}) && (EF {y}) && (AX (EF {x} ^ EF {y})))"
+        fork_exactly2 = "3{x}: 3{y}: (@{x}: (~{y} && AX {x})) && (@{y}: (AX {y})) && (!{z}: @{z}: (EF {x}) && (EF {y}) && (AX (EF {x} ^ EF {y})))"
+        fork_exactly3 = "3{x}: 3{y}: (@{x}: (~{y} && AX {x})) && (@{y}: (AX {y})) && (!{z}: (EF {x}) && (EF {y}) && (AX (EF {x} ^ EF {y})))"
+        fork_exactly4 = "3{x}: 3{y}: (@{x}: (~{y} && AX {x})) && (@{y}: (AX {y})) && (3{z}: (EF {x}) && (EF {y}) && (AX (EF {x} ^ EF {y})))"
+
+        # we want to use same model and bdd for all parts (formulas use same number of vars, etc)
+        m, _ = parse_all(path_to_bnet, fork_exist1)  # just to get model, we'll use it for all formulas
+
+        assert get_result(path_to_bnet, fork_exist1, m) == get_result(path_to_bnet, fork_exist2, m)
+        print(1)
+
+        forks = get_result(path_to_bnet, fork_exactly1, m)
+        assert forks == get_result(path_to_bnet, fork_exactly2, m)
+        print(2)
+        assert forks == get_result(path_to_bnet, fork_exactly3, m)
+        print(3)
+        assert forks == get_result(path_to_bnet, fork_exactly4, m)
+        print(4)
