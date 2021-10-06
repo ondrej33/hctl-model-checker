@@ -58,7 +58,6 @@ if __name__ == '__main__':
         # Existence of two sinks
         run_test(path_to_bnet, "3{x}: 3{y}: (@{x}: ~{y} && AX {x}) && (@{y}: AX {y})")
 
-
         # MAYBE: fork existence / fork states exactly
         fork_exist1 = "3{z}: 3{x}: 3{y}: (@{x}: (~{y} && AX {x})) && (@{y}: (AX {y})) && (@{z}: (EF {x}) && (EF {y}) && (AX (EF {x} ^ EF {y})))"
         fork_exist2 = "3{x}: 3{y}: (@{x}: (~{y} && AX {x})) && (@{y}: (AX {y})) && (3{z}: @{z}: (EF {x}) && (EF {y}) && (AX (EF {x} ^ EF {y})))"
@@ -69,26 +68,4 @@ if __name__ == '__main__':
         fork_exactly4 = "3{x}: 3{y}: (@{x}: (~{y} && AX {x})) && (@{y}: (AX {y})) && (3{z}: (EF {x}) && (EF {y}) && (AX (EF {x} ^ EF {y})))"
         """
 
-        # TESTING formula for fork state existence
-        fork_exist1 = "3{z}: 3{x}: 3{y}: (@{x}: (~{y} && AX {x})) && (@{y}: (AX {y})) && (@{z}: (EF {x}) && (EF {y}) && (AX (EF {x} ^ EF {y})))"
-        fork_exist2 = "3{x}: 3{y}: (@{x}: (~{y} && AX {x})) && (@{y}: (AX {y})) && (3{z}: @{z}: (EF {x}) && (EF {y}) && (AX (EF {x} ^ EF {y})))"
-
-        fork_exactly1 = "!{z}: 3{x}: 3{y}: (@{x}: (~{y} && AX {x})) && (@{y}: (AX {y})) && (@{z}: (EF {x}) && (EF {y}) && (AX (EF {x} ^ EF {y})))"
-        fork_exactly2 = "3{x}: 3{y}: (@{x}: (~{y} && AX {x})) && (@{y}: (AX {y})) && (!{z}: @{z}: (EF {x}) && (EF {y}) && (AX (EF {x} ^ EF {y})))"
-        fork_exactly3 = "3{x}: 3{y}: (@{x}: (~{y} && AX {x})) && (@{y}: (AX {y})) && (!{z}: (EF {x}) && (EF {y}) && (AX (EF {x} ^ EF {y})))"
-        fork_exactly4 = "3{x}: 3{y}: (@{x}: (~{y} && AX {x})) && (@{y}: (AX {y})) && (3{z}: (EF {x}) && (EF {y}) && (AX (EF {x} ^ EF {y})))"
-
-        # we want to use same model and bdd for all parts (formulas use same number of vars, etc)
-        m, _ = parse_all(path_to_bnet, fork_exist1)  # just to get model, we'll use it for all formulas
-
-        existence = get_result(path_to_bnet, fork_exist1, m)
-        print_results(existence, m, "existence", show_all=True)
-
-        forks = get_result(path_to_bnet, fork_exactly1, m)
-        print_results(forks, m, "forks", show_all=True)
-
-        assert existence == get_result(path_to_bnet, fork_exist2, m)
-
-        assert forks == get_result(path_to_bnet, fork_exactly2, m)
-        assert forks == get_result(path_to_bnet, fork_exactly3, m)
-        assert forks == get_result(path_to_bnet, fork_exactly4, m)
+        run_test(path_to_bnet, "!{x}: AG EF {x}")

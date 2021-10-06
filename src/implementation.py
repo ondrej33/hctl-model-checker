@@ -357,6 +357,20 @@ def eval_color(assignment, num_cols) -> float:
     return result_val
 
 
+# using projection gets rid of all parameters from BDD
+# bdd must support only props and params, no state-variables
+def get_states_only(phi: Function, model: Model):
+    vars_to_get_rid = [f"p__{i}" for i in range(model.num_params)]
+    return model.bdd.quantify(phi, vars_to_get_rid)
+
+
+# using projection gets rid of all propositions from BDD
+# bdd must support only props and params, no state-variables
+def get_colors_only(phi: Function, model: Model):
+    vars_to_get_rid = [f"s__{i}" for i in range(model.num_params)]
+    return model.bdd.quantify(phi, vars_to_get_rid)
+
+
 # Print number of computed results in the final BDD. That is, the number of state-color pairs.
 def print_results_fast(result: Function, model: Model, message: str = ""):
     if message:
@@ -365,6 +379,15 @@ def print_results_fast(result: Function, model: Model, message: str = ""):
     assignments = model.bdd.count(result, nvars=model.num_props + model.num_params)
     print(f"{assignments} RESULTS FOUND IN TOTAL")
 
+    result_colors = get_colors_only(result, model)
+    assignments = model.bdd.count(result_colors, nvars=model.num_params)
+    print(f"{assignments} COLORS FOUND IN TOTAL")
+
+    result_states = get_states_only(result, model)
+    assignments = model.bdd.count(result_states, nvars=model.num_props)
+    print(f"{assignments} STATES FOUND IN TOTAL")
+
+
 def print_results(result: Function, model: Model, message: str = "", show_all: bool = False) -> None:
     if message:
         print(message)
@@ -372,6 +395,7 @@ def print_results(result: Function, model: Model, message: str = "", show_all: b
     #vars_to_show = [f"s__{i}" for i in range(model.num_props)]+[f"p__{i}" for i in range(model.num_params)]
     #assignments = model.bdd.pick_iter(result, care_vars=vars_to_show)
     #print(f"{len(list(assignments))} RESULTS FOUND IN TOTAL")
+
     print("supports: ", model.bdd.support(result))
 
     if not show_all:
