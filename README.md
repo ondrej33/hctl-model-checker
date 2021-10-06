@@ -1,5 +1,7 @@
 # HCTL_stuff
 
+V model.py se dá vybrat zvolením importu jestli chci python verzi dd knihovny, nebo cudd verzi.
+
 Základní implementace komponent pro model checking (EX, binder...) je v implementation.py. 
 V implementation.py je pak i nafouklá funkce na různé printování výsledků.
 
@@ -13,7 +15,7 @@ V Parsing_update_fns/ je pak podobná gramatika, parser a evaluator, ale tentokr
 Soubor parse_all.py pak obsahuje velkou funkci, která zastřešuje parsování booleovské sítě i formule, a vytváří strukturu modelu.
 Navíc vrací už upravenou verzi stromu pro HCTL formuli (kanonizované formule apod).
 
-Soubory abstract_syntax_tree.py a model.py pak obsahují hlavní datové struktury. V model.py se dá vybrat jestli chci python verzi dd knihovny, nebo cudd verzi.
+Soubory abstract_syntax_tree.py a model.py pak obsahují hlavní datové struktury.
 
 Zbytek jsou různé testy, helper scripty apod., nic moc důležitého.
 
