@@ -30,7 +30,7 @@ $ pip download dd --no-deps
 $ tar xzf dd-\*.tar.gz  
 $ cd dd-\*/  
 $ python setup.py install --fetch --cudd  
-pak asi třeba změnit pythonpath: $ export PYTHONPATH="${PYTHONPATH}:/home/xhuvar/HCTL_stuff/venv/lib/python3.8/site-packages"
+pak asi třeba přidat do path/pythonpath, něco jako: $ export PYTHONPATH="${PYTHONPATH}:/home/xhuvar/HCTL_stuff/venv/lib/python3.8/site-packages"
 
 
 ANTLR  
@@ -40,7 +40,9 @@ $ export CLASSPATH=".:/usr/local/lib/antlr-4.9.2-complete.jar:$CLASSPATH"
 $ alias antlr4='java -jar /usr/local/lib/antlr-4.9.2-complete.jar'  
 $ alias grun='java org.antlr.v4.gui.TestRig'  
 
-$ pip install antlr4-python3-runtime  
+$ pip install antlr4-python3-runtime
+pak asi třeba přidat do pythonpath, něco jako: export PYTHONPATH="${PYTHONPATH}:/usr/local/lib/python3.8/dist-packages"
+
 pak z gramatiky generuju soubory pomocí: $ antlr4 -Dlanguage=Python3 -visitor update_fn.g4  
 
 
