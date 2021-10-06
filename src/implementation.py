@@ -367,11 +367,12 @@ def get_states_only(phi: Function, model: Model):
 # using projection gets rid of all propositions from BDD
 # bdd must support only props and params, no state-variables
 def get_colors_only(phi: Function, model: Model):
-    vars_to_get_rid = [f"s__{i}" for i in range(model.num_params)]
+    vars_to_get_rid = [f"s__{i}" for i in range(model.num_props)]
     return model.bdd.quantify(phi, vars_to_get_rid)
 
 
-# Print number of computed results in the final BDD. That is, the number of state-color pairs.
+# Print number of computed results in the final BDD (number of state-color pairs),
+# and then numbers of colors & states alone
 def print_results_fast(result: Function, model: Model, message: str = ""):
     if message:
         print(message)
@@ -386,6 +387,8 @@ def print_results_fast(result: Function, model: Model, message: str = ""):
     result_states = get_states_only(result, model)
     assignments = model.bdd.count(result_states, nvars=model.num_props)
     print(f"{assignments} STATES FOUND IN TOTAL")
+
+    print(f"props: {model.num_props}, params: {model.num_params}")
 
 
 def print_results(result: Function, model: Model, message: str = "", show_all: bool = False) -> None:
