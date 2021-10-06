@@ -1,5 +1,7 @@
 # HCTL_stuff
 
+V model.py se dá vybrat zvolením importu jestli chci python verzi dd knihovny, nebo cudd verzi.
+
 Základní implementace komponent pro model checking (EX, binder...) je v implementation.py. 
 V implementation.py je pak i nafouklá funkce na různé printování výsledků.
 
@@ -13,7 +15,7 @@ V Parsing_update_fns/ je pak podobná gramatika, parser a evaluator, ale tentokr
 Soubor parse_all.py pak obsahuje velkou funkci, která zastřešuje parsování booleovské sítě i formule, a vytváří strukturu modelu.
 Navíc vrací už upravenou verzi stromu pro HCTL formuli (kanonizované formule apod).
 
-Soubory abstract_syntax_tree.py a model.py pak obsahují hlavní datové struktury. V model.py se dá vybrat jestli chci python verzi dd knihovny, nebo cudd verzi.
+Soubory abstract_syntax_tree.py a model.py pak obsahují hlavní datové struktury.
 
 Zbytek jsou různé testy, helper scripty apod., nic moc důležitého.
 
@@ -30,7 +32,7 @@ $ pip download dd --no-deps
 $ tar xzf dd-\*.tar.gz  
 $ cd dd-\*/  
 $ python setup.py install --fetch --cudd  
-pak asi třeba změnit pythonpath: $ export PYTHONPATH="${PYTHONPATH}:/home/xhuvar/HCTL_stuff/venv/lib/python3.8/site-packages"
+pak asi třeba přidat do path/pythonpath, něco jako: $ export PYTHONPATH="${PYTHONPATH}:/home/xhuvar/HCTL_stuff/venv/lib/python3.8/site-packages"
 
 
 ANTLR  
@@ -40,7 +42,9 @@ $ export CLASSPATH=".:/usr/local/lib/antlr-4.9.2-complete.jar:$CLASSPATH"
 $ alias antlr4='java -jar /usr/local/lib/antlr-4.9.2-complete.jar'  
 $ alias grun='java org.antlr.v4.gui.TestRig'  
 
-$ pip install antlr4-python3-runtime  
+$ pip install antlr4-python3-runtime
+pak asi třeba přidat do pythonpath, něco jako: export PYTHONPATH="${PYTHONPATH}:/usr/local/lib/python3.8/dist-packages"
+
 pak z gramatiky generuju soubory pomocí: $ antlr4 -Dlanguage=Python3 -visitor update_fn.g4  
 
 
