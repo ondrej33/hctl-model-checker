@@ -23,7 +23,7 @@ def run_test(file_name, formula):
     end = time.time()
     res_time = end - start
 
-    print(formula, ": ", res_time, "\n")
+    print(formula, ": ", res_time)
     print_results_fast(res, model)
     # print_results_fast(res, model, f"model: {model.name}, formula: {formula}")
     # print_results(res, model, show_all=True)

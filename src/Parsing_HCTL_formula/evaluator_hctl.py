@@ -109,13 +109,9 @@ class EvaluateExpressionVisitor:
     # TODO: optimize also through the intersection ? and maybe even do something with AX ?
     # TODO: solve collisions of CACHE vs OPTIMISATIONS if there are some
 
-    # TODO: solve the possible problem with future (self-loops again, but in sources??)
-
     # TODO: maybe change all operators in the tree to just EX, EU, EG - so that we can use cache sometimes??
 
     # TODO: start to use safe ENUM instead of strings
-
-    # TODO: test xor
 
     # TODO: collect variables also from hybrid operators - we can have 3{z}: (EF (s1 & s2 & s3))
 
@@ -150,7 +146,7 @@ class EvaluateExpressionVisitor:
                     combined_renaming = {result_renaming[val] : key for key, val in renaming.items()}
                     renaming_vectors = {f"{key}__{i}": f"{val}__{i}" for key, val in combined_renaming.items() for i in range(model.num_props)}
                     renamed_res = model.bdd.let(renaming_vectors, result)
-                    # print_results(renamed_res, model, node.subform_string, show_all=True)
+                    print(f"finished : {node.subform_string} : total_nodes = {len(model.bdd)}")
                     return renamed_res
             else:
                 # we want to save the result of this subformula unless we are in the middle of optimizing
@@ -237,7 +233,7 @@ class EvaluateExpressionVisitor:
         if save_to_cache:
             cache[canonized_subform] = (result, renaming)
 
-        # print_results(result, model, node.subform_string, show_all=True)
+        print(f"finished : {node.subform_string} : total_nodes = {len(model.bdd)}")
         return result
 
     # gets the result of evaluated node, but applies hybrid op on it in the end
