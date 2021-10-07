@@ -13,6 +13,8 @@ import gc
 NODE_LIMIT_FOR_GARBAGE = 1_000_000
 
 
+# runs garbage collectors for both python and bdd.autoref implementation
+# CAN ONLY BE USED WITH PYTHON IMPLE, NOT CUDD
 def collect_garbage_if_needed(bdd: BDD) -> None:
     if len(bdd) > NODE_LIMIT_FOR_GARBAGE:
         gc.collect()
@@ -100,8 +102,7 @@ def EU(model: Model, phi1: Function, phi2: Function) -> Function:
     while old != new:
         new = old
         old = old | (phi1 & EX(model, old))
-        #print(len(old))
-        collect_garbage_if_needed(model.bdd)
+        # collect_garbage_if_needed(model.bdd)
     return old
 
 
@@ -119,8 +120,7 @@ def EF_v2(model: Model, phi: Function) -> Function:
     while old != new:
         new = old
         old = old | EX(model, old)
-        #print(len(old))
-        collect_garbage_if_needed(model.bdd)
+        # collect_garbage_if_needed(model.bdd)
     return old
 
 
@@ -130,8 +130,7 @@ def EG(model: Model, phi: Function) -> Function:
     while old != new:
         new = old
         old = old & EX(model, old)
-        #print(len(old))
-        collect_garbage_if_needed(model.bdd)
+        # collect_garbage_if_needed(model.bdd)
     return old
 
 
@@ -167,8 +166,7 @@ def AU_v2(model: Model, phi1: Function, phi2: Function) -> Function:
     while old != new:
         new = old
         old = old | (phi1 & AX(model, old))
-        #print(len(old))
-        collect_garbage_if_needed(model.bdd)
+        # collect_garbage_if_needed(model.bdd)
     return old
 
 
