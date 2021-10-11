@@ -108,8 +108,18 @@ def EU(model: Model, phi1: Function, phi2: Function) -> Function:
 
 # computed via EU
 def EF(model: Model, phi: Function) -> Function:
-    true_bdd = model.bdd.add_expr("True")
-    return EU(model, true_bdd, phi)
+    result = phi
+    done = False
+    while not done:
+        done = True
+        for i in range(model.num_props, 0, -1):
+            update = pre_E_one_var(model, result, f"s__{i-1}") & ~result
+            if update != model.bdd.false:
+                result = result | update
+                done = False
+                break
+    return result
+    #return EU(model, true_bdd, phi)
 
 
 # fixpoint version without excess computing
