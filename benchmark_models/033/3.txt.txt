@@ -1,0 +1,15 @@
+033 - 21 prop, 16 param (4in)
+
+AF !{x}: (AX (~{x} && AF {x})) :  4.8385820388793945
+10290688.0 RESULTS FOUND IN TOTAL
+
+AF !{x}: ((AX (~{x} && AF {x})) && (EF !{y}: EX EG ~{y})) :  8.598267078399658
+0.0 RESULTS FOUND IN TOTAL
+AF !{x}: ((AX (~{x} && AF {x})) && (EF !{y}: EX ~AF {y})) :  4.765428066253662
+0.0 RESULTS FOUND IN TOTAL
+
+3{x}: 3{y}: (@{x}: ~{y} && AX {x}) && (@{y}: AX {y}) :  0.5442593097686768
+103884521472.0 RESULTS FOUND IN TOTAL
+
+3{x}: 3{y}: (@{x}: (~{y} && AX {x})) && (@{y}: (AX {y})) && (3{z}: (EF {x}) && (EF {y}) && (AX (EF {x} ^ EF {y}))) :  131.5183174610138
+69965456.0 RESULTS FOUND IN TOTAL

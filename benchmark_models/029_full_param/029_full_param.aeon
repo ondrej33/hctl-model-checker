@@ -1,0 +1,22 @@
+#position:Toll:227.453162620297,187.01587749203725
+Spz -?? Toll
+#position:MyD88:333.2104255686039,272.81983518511254
+Toll -?? MyD88
+#position:Nec:22.5,27.5
+#position:Spz:124.4842335030861,105.79645916415416
+Nec -?? Spz
+#position:Tube:438.0919512625567,361.26718489572744
+MyD88 -?? Tube
+#position:Pelle:543.757349283238,453.48999073238946
+Tube -?? Pelle
+#position:Cactus:651.264670331866,549.3128211298385
+Pelle -?? Cactus
+Slmb -?? Cactus
+#position:Slmb:751.138852262556,459.6439553673937
+#position:Dif:595.117502356032,686.2776141686029
+Cactus -?? Dif
+#position:Dorsal:745.1025358209464,660.8774173638201
+Cactus -?? Dorsal
+#position:Targets:674.0141772665618,817.0249330943466
+Dorsal -?? Targets
+Dif -?? Targets

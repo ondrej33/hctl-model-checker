@@ -1,0 +1,10 @@
+targets,factors
+Cactus, ((!Pelle | ((!Slmb | Cactus_11) & (!!Slmb | Cactus_10))) & (!!Pelle | ((!Slmb | Cactus_01) & (!!Slmb | Cactus_00))))
+Dif, ((!Cactus | Dif_1) & (!!Cactus | Dif_0))
+Dorsal, ((!Cactus | Dorsal_1) & (!!Cactus | Dorsal_0))
+MyD88, ((!Toll | MyD88_1) & (!!Toll | MyD88_0))
+Pelle, ((!Tube | Pelle_1) & (!!Tube | Pelle_0))
+Spz, ((!Nec | Spz_1) & (!!Nec | Spz_0))
+Targets, ((!Dif | ((!Dorsal | Targets_11) & (!!Dorsal | Targets_10))) & (!!Dif | ((!Dorsal | Targets_01) & (!!Dorsal | Targets_00))))
+Toll, ((!Spz | Toll_1) & (!!Spz | Toll_0))
+Tube, ((!MyD88 | Tube_1) & (!!MyD88 | Tube_0))
