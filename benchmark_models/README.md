@@ -1,4 +1,4 @@
-Currently used models in Article - results obtainedusing saturation:
+Currently used models in Article - results obtained using saturation:
 
 089_v2
 
