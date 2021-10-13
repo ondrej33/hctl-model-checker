@@ -1,16 +1,4 @@
-Currently used models in Article:
-
-089_v2
-
-098_v1
-
-133_v3
-
-064_v1
-
-033_v6
-
-Models that will be used:
+Currently used models in Article - results obtainedusing saturation:
 
 089_v2
 
@@ -21,3 +9,15 @@ Models that will be used:
 064_v4
 
 033_v7
+
+Models that WERE used before:
+
+089_v2
+
+098_v1
+
+133_v3
+
+064_v1
+
+033_v6
