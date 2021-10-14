@@ -1,0 +1,27 @@
+targets,factors
+APC, !Dsh
+Arm, ((!Axin & (!Sgg & (!APC & (CK1alpha & (!Proteasome & Hipk))))) | (!Axin & (!Sgg & (!APC & (CK1alpha & (Proteasome & (Hipk & !Slmb)))))))
+Arr, Wg
+Axin, !Dsh
+Boca, ((!Boca | Boca_1) & (!!Boca | Boca_0))
+CK1alpha, 0
+Dally, ((!Ttv | ((!Wf | Dally_11) & (!!Wf | Dally_10))) & (!!Ttv | ((!Wf | Dally_01) & (!!Wf | Dally_00))))
+Dlp, ((!Ttv | ((!Wf | Dlp_11) & (!!Wf | Dlp_10))) & (!!Ttv | ((!Wf | Dlp_01) & (!!Wf | Dlp_00))))
+Dsh, ((!Fz & (Arr & !Nkd)) | (Fz & !Nkd))
+Fz, (Wg & Boca)
+Gro, ((!Gro | Gro_1) & (!!Gro | Gro_0))
+Hipk, ((!Hipk | Hipk_1) & (!!Hipk | Hipk_0))
+Hyx, ((!Hyx | Hyx_1) & (!!Hyx | Hyx_0))
+Lgs, ((!Lgs | Lgs_1) & (!!Lgs | Lgs_0))
+Nej, ((!Nej | Nej_1) & (!!Nej | Nej_0))
+Nemo, ((!Nemo | Nemo_1) & (!!Nemo | Nemo_0))
+Nkd, Nkd
+Pan, ((!Arm | ((!Nemo | Pan_11) & (!!Nemo | Pan_10))) & (!!Arm | ((!Nemo | Pan_01) & (!!Nemo | Pan_00))))
+Proteasome, ((!Proteasome | Proteasome_1) & (!!Proteasome | Proteasome_0))
+Pygo, ((!Pygo | Pygo_1) & (!!Pygo | Pygo_0))
+Sgg, !Dsh
+Slmb, ((!Slmb | Slmb_1) & (!!Slmb | Slmb_0))
+Targets, (Pan & (Lgs & (Nej & ((!Gro | ((!Hyx | ((!Pygo | fn_111) & (!!Pygo | fn_110))) & (!!Hyx | ((!Pygo | fn_101) & (!!Pygo | fn_100))))) & (!!Gro | ((!Hyx | ((!Pygo | fn_011) & (!!Pygo | fn_010))) & (!!Hyx | ((!Pygo | fn_001) & (!!Pygo | fn_000)))))))))
+Ttv, ((!Ttv | Ttv_1) & (!!Ttv | Ttv_0))
+Wf, ((!Wf | Wf_1) & (!!Wf | Wf_0))
+Wg, Wg
