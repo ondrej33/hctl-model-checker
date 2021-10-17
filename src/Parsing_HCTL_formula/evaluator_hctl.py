@@ -146,7 +146,7 @@ class EvaluateExpressionVisitor:
                     combined_renaming = {result_renaming[val] : key for key, val in renaming.items()}
                     renaming_vectors = {f"{key}__{i}": f"{val}__{i}" for key, val in combined_renaming.items() for i in range(model.num_props)}
                     renamed_res = model.bdd.let(renaming_vectors, result)
-                    print(f"finished : {node.subform_string} : total_nodes = {len(model.bdd)}")
+                    print(f"finished : {node.subform_string} : total_nodes = {len(model.bdd)} : this_bdd_nodes = {len(renamed_res)}")
                     return renamed_res
             else:
                 # we want to save the result of this subformula unless we are in the middle of optimizing
@@ -171,7 +171,7 @@ class EvaluateExpressionVisitor:
             elif node.value == 'AX':
                 result = AX(model, self.visit(node.child, model, dupl, cache))
             elif node.value == 'EF':
-                result = EF(model, self.visit(node.child, model, dupl, cache))
+                result = EF_saturated(model, self.visit(node.child, model, dupl, cache))
             elif node.value == 'AF':
                 result = AF(model, self.visit(node.child, model, dupl, cache))
             elif node.value == 'EG':
@@ -207,6 +207,7 @@ class EvaluateExpressionVisitor:
                 result = self.visit(node.left, model, dupl, cache).equiv(self.visit(node.right, model, dupl, cache))
             elif node.value == '^':
                 result = ~ self.visit(node.left, model, dupl, cache).equiv(self.visit(node.right, model, dupl, cache))
+                #reorder(model.bdd)
             elif node.value == 'EU':
                 result = EU(model, self.visit(node.left, model, dupl, cache), self.visit(node.right, model, dupl, cache))
             elif node.value == 'AU':
@@ -233,7 +234,7 @@ class EvaluateExpressionVisitor:
         if save_to_cache:
             cache[canonized_subform] = (result, renaming)
 
-        print(f"finished : {node.subform_string} : total_nodes = {len(model.bdd)}")
+        print(f"finished : {node.subform_string} : total_nodes = {len(model.bdd)}: this_bdd_nodes = {len(result)}")
         return result
 
     # gets the result of evaluated node, but applies hybrid op on it in the end

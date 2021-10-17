@@ -1,8 +1,8 @@
 from typing import List
 
 # change this depending on environment
-from dd.autoref import BDD, Function
-# from dd.cudd import BDD, Function
+#from dd.autoref import BDD, Function
+from dd.cudd import BDD, Function
 
 
 class Model:

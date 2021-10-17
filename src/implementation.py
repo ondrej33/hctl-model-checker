@@ -2,6 +2,7 @@ from collections import OrderedDict
 from termcolor import colored
 
 from src.model import *
+from dd.cudd import reorder
 import gc
 
 
@@ -122,6 +123,22 @@ def EF_v2(model: Model, phi: Function) -> Function:
         old = old | EX(model, old)
         # collect_garbage_if_needed(model.bdd)
     return old
+
+
+def EF_saturated(model: Model, phi: Function) -> Function:
+    result = phi
+    done = False
+    while not done:
+        done = True
+        for i in range(model.num_props, 0, -1):
+            update = pre_E_one_var(model, result, f"s__{i-1}") & ~result
+            if update != model.bdd.false:
+                result = result | update
+                done = False
+                break
+    #reorder(model.bdd)
+    return result
+
 
 
 def EG(model: Model, phi: Function) -> Function:

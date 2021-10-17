@@ -17,14 +17,16 @@ import time
 
 
 def run_test(file_name, formula):
-    model, as_tree_hctl = parse_all(file_name, formula)
     start = time.time()
+    model, as_tree_hctl = parse_all(file_name, formula)
+    #start = time.time()
     res = eval_tree(as_tree_hctl, model)
     end = time.time()
     res_time = end - start
 
     print(formula, ": ", res_time)
     print_results_fast(res, model)
+
     # print_results_fast(res, model, f"model: {model.name}, formula: {formula}")
     # print_results(res, model, show_all=True)
 
@@ -68,5 +70,19 @@ if __name__ == '__main__':
         fork_exactly3 = "3{x}: 3{y}: (@{x}: (~{y} && AX {x})) && (@{y}: (AX {y})) && (!{z}: (EF {x}) && (EF {y}) && (AX (EF {x} ^ EF {y})))"
         fork_exactly4 = "3{x}: 3{y}: (@{x}: (~{y} && AX {x})) && (@{y}: (AX {y})) && (3{z}: (EF {x}) && (EF {y}) && (AX (EF {x} ^ EF {y})))"
         """
+        names = "029 095 064 097 063 067 010 053 104 035 036 037 021 028 062 049 003 119 131 022 047 042 045 033 034 038 042 045 033 034 038 027 098".split(' ')
 
-        run_test(path_to_bnet, "!{x}: AG EF {x}")
+        for name in names:
+            print(name)
+            path_to_bnet = f"bnet_examples/{name}_free.bnet" 
+            run_test(path_to_bnet, "!{x}: 3{y}: (@{x}: ~{y} && AX {x}) && (@{y}: AX {y})")
+            """
+            from src.fixed_formulas_eval import *
+            model, as_tree_hctl = parse_all(path_to_bnet, "3{x}: 3{y}: (@{x}: (~{y} && AX {x})) && (@{y}: (AX {y})) && (!{z}: (EF {x}) && (EF {y}) && (AX (EF {x} ^ EF {y})))")
+
+            res1 = get_result(path_to_bnet, "3{x}: 3{y}: (@{x}: (~{y} && AX {x})) && (@{y}: (AX {y})) && (!{z}: (EF {x}) && (EF {y}) && (AX (EF {x} ^ EF {y})))", model)
+            res2 = get_result(path_to_bnet, "3{x}: 3{y}: (@{x}: (~{y} && AX {x})) && (@{y}: (AX {y})) && ((EF {x}) && (EF {y}) && (AX (EF {x} ^ EF {y})))", model)
+            res3 = get_result(path_to_bnet, "3{x}: 3{y}: (@{x}: (~{y} && AX {x})) && (@{y}: (AX {y})) && (EF {x}) && (EF {y}) && (AX (EF {x} ^ EF {y}))", model)
+            assert res1 == res2
+            assert res2 == res3
+            """

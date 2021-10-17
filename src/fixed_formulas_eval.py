@@ -101,6 +101,15 @@ def model_check_fixed4(model: Model) -> Function:
     return bind(model, ex, 'x')
 
 
+# formula: ↓x (EX (EF x))
+# states that are part of (unstable) cycles of any size with SATURATION
+def model_check_fixed4_v2(model: Model) -> Function:
+    x = create_comparator(model, 'x')
+    ef = EF_saturated(model, x)
+    ex = EX(model, ef)
+    return bind(model, ex, 'x')
+
+
 # formula: ↓x. ((EX (EF x)) & (EG s3))
 # cycles with a possible path going through only s3 states
 def model_check_fixed5(model: Model) -> Function:
@@ -136,6 +145,17 @@ def model_check_fixed7(model: Model) -> Function:
     return eg_s2 & ef
 
 
+# formula: (EG s2) & (EF ~s0)
+# states with some possible path through only s2 states + some path reaching ~s0 with SATURATION
+def model_check_fixed7_v2(model: Model) -> Function:
+    s2 = labeled_by(model, "s__2")
+    eg_s2 = EG(model, s2)
+
+    not_s0 = ~labeled_by(model, "s__0")
+    ef = EF_saturated(model, not_s0)
+    return eg_s2 & ef
+
+
 # ↓x. AX AF x
 # states that are part of periodic attractors - states that will always reach itself again
 def model_check_fixed8(model: Model) -> Function:
@@ -150,6 +170,15 @@ def model_check_fixed8(model: Model) -> Function:
 def model_check_fixed9(model: Model) -> Function:
     x = create_comparator(model, 'x')
     ef_x = EF_v2(model, x)
+    ag = AG(model, ef_x)
+    return bind(model, ag, 'x')
+
+
+# ↓x. AG EF x
+# states which are part of a sink SCC, using SATURATION
+def model_check_fixed9_v2(model: Model) -> Function:
+    x = create_comparator(model, 'x')
+    ef_x = EF_saturated(model, x)
     ag = AG(model, ef_x)
     return bind(model, ag, 'x')
 
