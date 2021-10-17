@@ -1,0 +1,35 @@
+SATURATED 
+
+props: 21, params: 50
+
+AF !{x}: (AX (~{x} && AF {x})) :  15.264403104782104
+7.859626942922752e+16 RESULTS FOUND IN TOTAL
+905644433571840.0 COLORS FOUND IN TOTAL
+6432.0 STATES FOUND IN TOTAL
+
+AF !{x}: ((AX (~{x} && AF {x})) && (EF !{y}: EX ~AF {y})) :  44.62869620323181
+0.0 RESULTS FOUND IN TOTAL
+0.0 COLORS FOUND IN TOTAL
+0.0 STATES FOUND IN TOTAL
+
+3{x}: 3{y}: (@{x}: ~{y} && AX {x}) && (@{y}: AX {y}) :  0.7954249382019043
+1.088915915487941e+21 RESULTS FOUND IN TOTAL
+519235570663424.0 COLORS FOUND IN TOTAL
+2097152.0 STATES FOUND IN TOTAL
+
+!{x}: 3{y}: (@{x}: ~{y} && AX {x}) && (@{y}: AX {y}) :  0.790001392364502
+2.961883841691648e+16 RESULTS FOUND IN TOTAL
+519235570663424.0 COLORS FOUND IN TOTAL
+1856.0 STATES FOUND IN TOTAL
+
+3{x}: 3{y}: (@{x}: (~{y} && AX {x})) && (@{y}: (AX {y})) && (EF {x}) && (EF {y}) && (AX (EF {x} ^ EF {y})) :  2280.757069349289
+2.240841957108613e+17 RESULTS FOUND IN TOTAL
+483314534154240.0 COLORS FOUND IN TOTAL
+108384.0 STATES FOUND IN TOTAL
+
+
+
+
+other test times for forks (also prev version of formula):
+3{x}: 3{y}: (@{x}: (~{y} && AX {x})) && (@{y}: (AX {y})) && (EF {x}) && (EF {y}) && (AX (EF {x} ^ EF {y})) :  3555.3318061828613
+3{x}: 3{y}: (@{x}: (~{y} && AX {x})) && (@{y}: (AX {y})) && (!{z}: (EF {x}) && (EF {y}) && (AX (EF {x} ^ EF {y}))) :  3360.914658308029

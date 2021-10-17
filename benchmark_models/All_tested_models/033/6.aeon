@@ -1,0 +1,113 @@
+#position:ERBB1:391.54548162578936,457.48074567295674
+$ERBB1:((ERBB1 & !(erlotinib | pertuzumab)) | (stimulus & !(erlotinib | pertuzumab)))
+ERBB1 -> ERBB1
+stimulus -> ERBB1
+erlotinib -| ERBB1
+pertuzumab -| ERBB1
+#position:CyclinB1:238.86551734550665,501.0919917169345
+$CyclinB1:(((CyclinB1 & !p53) | (ERBB1 & !p53)) | (ERBB3 & !p53))
+ERBB1 -> CyclinB1
+ERBB3 -> CyclinB1
+CyclinB1 -> CyclinB1
+p53 -| CyclinB1
+#position:ERBB3:360.1767803134037,415.6972676782062
+$ERBB3:(((stimulus & !((PTEN | erlotinib) | pertuzumab)) | (ERBB3 & !((PTEN | erlotinib) | pertuzumab))) | (RPS6 & !((PTEN | erlotinib) | pertuzumab)))
+stimulus -> ERBB3
+PTEN -| ERBB3
+ERBB3 -> ERBB3
+erlotinib -| ERBB3
+RPS6 -> ERBB3
+pertuzumab -| ERBB3
+#position:p53:159.6731318166536,409.3232817770042
+$p53:(((((p38 | PTEN) | CyclinB1) | RB) | p53) | stimulus)
+stimulus -> p53
+PTEN -> p53
+RB -> p53
+CyclinB1 -> p53
+p38 -> p53
+p53 -> p53
+#position:AKT:383.8287627222253,291.21994915572367
+$AKT:((((AKT & !PTEN) | (ERBB3 & !PTEN)) | (ERBB1 & !PTEN)) | (ERBB2 & !PTEN))
+ERBB1 -> AKT
+PTEN -| AKT
+ERBB3 -> AKT
+ERBB2 -> AKT
+AKT -> AKT
+#position:p38:242.9232389900959,313.05297264139944
+$p38:(p38 | AKT)
+AKT -> p38
+p38 -> p38
+#position:cRAF:474.5756414610479,328.11690591321184
+$cRAF:(((ERBB1 & !ERK1_2) | (ERBB2 & !ERK1_2)) | (cRAF & !ERK1_2))
+cRAF -> cRAF
+ERBB1 -> cRAF
+ERBB2 -> cRAF
+ERK1_2 -| cRAF
+#position:ERBB2:450.2259789607055,492.847516505323
+$ERBB2:((ERBB2 & !((trastuzumab | erlotinib) | pertuzumab)) | (stimulus & !((trastuzumab | erlotinib) | pertuzumab)))
+stimulus -> ERBB2
+ERBB2 -> ERBB2
+erlotinib -| ERBB2
+trastuzumab -| ERBB2
+pertuzumab -| ERBB2
+#position:ERK1_2:415.0952866549476,186.42113106093552
+$ERK1_2:(ERK1_2 | cRAF)
+cRAF -> ERK1_2
+ERK1_2 -> ERK1_2
+#position:GSK3a_b:20.949920504835614,307.44371663068176
+$GSK3a_b:((p53 | GSK3a_b) | CyclinD1)
+GSK3a_b -> GSK3a_b
+CyclinD1 -> GSK3a_b
+p53 -> GSK3a_b
+#position:CyclinD1:160.79412486167283,140.16653072433732
+$CyclinD1:((((ERK1_2 & !GSK3a_b) | (AKT & !GSK3a_b)) | (CyclinD1 & !GSK3a_b)) | (RPS6 & !GSK3a_b))
+AKT -> CyclinD1
+GSK3a_b -| CyclinD1
+CyclinD1 -> CyclinD1
+ERK1_2 -> CyclinD1
+RPS6 -> CyclinD1
+#position:PTEN:268.66865843165414,371.7881142091622
+$PTEN:(PTEN & !GSK3a_b)
+PTEN -> PTEN
+GSK3a_b -| PTEN
+#position:FoxO1_3a:517.6366436931746,175.3094077142777
+AKT -?? FoxO1_3a
+FoxO1_3a -?? FoxO1_3a
+#position:p70S6K:223.54001566778356,-15.355404013942252
+PRAS -?? p70S6K
+TSC2 -?? p70S6K
+Nfkb -?? p70S6K
+ERK1_2 -?? p70S6K
+p70S6K -?? p70S6K
+#position:RPS6:323.9742924460763,247.89743613202393
+$RPS6:(p70S6K | RPS6)
+p70S6K -> RPS6
+RPS6 -> RPS6
+#position:cJUN:263.054137928942,242.9788799498629
+GSK3a_b -?? cJUN
+cJUN -?? cJUN
+#position:stimulus:302.5944245689275,575.5239108589985
+#position:erlotinib:392.01839620249615,624.1103665910769
+#position:pertuzumab:538.9863944954536,428.88618954066527
+#position:Nfkb:163.7675743074641,40.81400309061905
+$Nfkb:Nfkb
+Nfkb -> Nfkb
+#position:PRAS:414.38625978506536,77.17501932852696
+$PRAS:(PRAS & !AKT)
+PRAS -> PRAS
+AKT -| PRAS
+#position:TSC2:323.176732330422,175.15263437440223
+$TSC2:(TSC2 & !((GSK3a_b | AKT) | ERK1_2))
+TSC2 -> TSC2
+GSK3a_b -| TSC2
+AKT -| TSC2
+ERK1_2 -| TSC2
+#position:BAX:624.4862641167352,27.5
+$BAX:BAX
+BAX -> BAX
+#position:trastuzumab:539.4862641167352,648.2011891027748
+#position:RB:25.491619039366867,172.5913895905914
+$RB:((RB & !CyclinD1) | (Nfkb & !CyclinD1))
+RB -> RB
+Nfkb -> RB
+CyclinD1 -| RB

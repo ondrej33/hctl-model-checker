@@ -1,0 +1,28 @@
+SATURATED
+
+props: 26, params: 39
+
+AF !{x}: (AX (~{x} && AF {x})) :  108.59021043777466
+53326313947136.0 RESULTS FOUND IN TOTAL
+98527007232.0 COLORS FOUND IN TOTAL
+294912.0 STATES FOUND IN TOTAL
+
+AF !{x}: ((AX (~{x} && AF {x})) && (EF !{y}: EX ~AF {y})) :  119.80954360961914
+0.0 RESULTS FOUND IN TOTAL
+0.0 COLORS FOUND IN TOTAL
+0.0 STATES FOUND IN TOTAL
+
+3{x}: 3{y}: (@{x}: ~{y} && AX {x}) && (@{y}: AX {y}) :  0.4585144519805908
+2.770135983297921e+18 RESULTS FOUND IN TOTAL
+41278242816.0 COLORS FOUND IN TOTAL
+67108864.0 STATES FOUND IN TOTAL
+
+3{x}: 3{y}: (@{x}: (~{y} && AX {x})) && (@{y}: (AX {y})) && (EF {x}) && (EF {y}) && (AX (EF {x} ^ EF {y})) :  117.01556897163391
+0.0 RESULTS FOUND IN TOTAL
+0.0 COLORS FOUND IN TOTAL
+0.0 STATES FOUND IN TOTAL
+
+
+
+other old versions and stuff:
+3{x}: 3{y}: (@{x}: (~{y} && AX {x})) && (@{y}: (AX {y})) && (!{z}: (EF {x}) && (EF {y}) && (AX (EF {x} ^ EF {y}))) :  396.1640131473541

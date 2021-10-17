@@ -1,0 +1,4 @@
+3{x}: 3{y}: (@{x}: (~{y} && AX {x})) && (@{y}: (AX {y})) && (EF {x}) && (EF {y}) && (AX (EF {x} ^ EF {y})) :  1694.12952709198
+0.0 RESULTS FOUND IN TOTAL
+0.0 COLORS FOUND IN TOTAL
+0.0 STATES FOUND IN TOTAL
