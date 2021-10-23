@@ -43,6 +43,7 @@ $ alias antlr4='java -jar /usr/local/lib/antlr-4.9.2-complete.jar'
 $ alias grun='java org.antlr.v4.gui.TestRig'  
 
 $ pip install antlr4-python3-runtime
+kroky wget a pip je někdy potřeba přes sudo
 pak asi třeba přidat do pythonpath, něco jako: export PYTHONPATH="${PYTHONPATH}:/usr/local/lib/python3.8/dist-packages"
 
 pak z gramatiky generuju soubory pomocí: $ antlr4 -Dlanguage=Python3 -visitor update_fn.g4  
