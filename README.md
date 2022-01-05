@@ -53,3 +53,7 @@ pak z gramatiky generuju soubory pomocí: $ antlr4 -Dlanguage=Python3 -visitor u
 
 TERMCOLOR  
 $ pip install termcolor  
+
+
+TIMEOUT DECORATOR  
+$ pip install timeout-decorator
