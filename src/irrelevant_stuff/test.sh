@@ -1,22 +1,31 @@
 #!/bin/bash
 
-model_numbers="029 095 064 097 063 067 010 053 104 035 036 037 021 028 062 049 003 024 119 096 131 022 069 040 047 068 042 045 033 034 038 042 045 033 034 038 027 098 135 136"
-# 068 044 134 took > 1-2hrs
+#formulas='AF(!{x}:(AX((~{x})&&(AF{x})))) AF(!{x}:((AX((~{x})&&(AF{x})))&&(EF(!{y}:(EX(~AF{y})))))) !{x}:3{y}:((@{x}:(~{y})&&(AX{x}))&&(@{y}:(AX{y})))'
 
-formulas="!{x}:(AX{x}) !{x}:(AG(EF{x})) !{x}:(EG(EF{x}))"
+project_dir="/home/ohuvar/HCTL_stuff"
+models_dir="${project_dir}/benchmark_models/non_parametrized"
 
-path_beginning='/home/xhuvar/HCTL_stuff/bnet_examples/'
 
-for m in $model_numbers
+for m in `ls ${models_dir}`
 do
     echo "-------------------------------"
     echo ${m}
     echo "-------------------------------"
+    echo ''
 
-    for f in $formulas
-    do
-	      # usage: testing_full_eval.py file_name formula
-	      python3 /home/xhuvar/HCTL_stuff/src/testing_full_eval.py "${path_beginning}${m}_free.bnet" "${f}"
-    done
+    # usage: testing_full_eval.py file_name formula
+
+    python3 "${project_dir}/src/testing_full_eval.py" "${models_dir}/${m}/model_inputs_false.bnet" 'AF !{x}: (AX (~{x} && AF {x}))'
+    python3 "${project_dir}/src/testing_full_eval.py" "${models_dir}/${m}/model_inputs_true.bnet"  'AF !{x}: (AX (~{x} && AF {x}))'
+
+    python3 "${project_dir}/src/testing_full_eval.py" "${models_dir}/${m}/model_inputs_false.bnet" 'AF !{x}: ((AX (~{x} && AF {x})) && (EF !{y}: EX ~AF {y}))'
+    python3 "${project_dir}/src/testing_full_eval.py" "${models_dir}/${m}/model_inputs_true.bnet" 'AF !{x}: ((AX (~{x} && AF {x})) && (EF !{y}: EX ~AF {y}))'
+
+    python3 "${project_dir}/src/testing_full_eval.py" "${models_dir}/${m}/model_inputs_false.bnet" '!{x}: 3{y}: (@{x}: ~{y} && AX {x}) && (@{y}: AX {y})'
+    python3 "${project_dir}/src/testing_full_eval.py" "${models_dir}/${m}/model_inputs_true.bnet" '!{x}: 3{y}: (@{x}: ~{y} && AX {x}) && (@{y}: AX {y})'
+
+    python3 "${project_dir}/src/testing_full_eval.py" "${models_dir}/${m}/model_inputs_false.bnet" '3{x}: 3{y}: (@{x}: (~{y} && AX {x})) && (@{y}: (AX {y})) && (!{z}: (EF {x}) && (EF {y}) && (AX (EF {x} ^ EF {y})))'
+    python3 "${project_dir}/src/testing_full_eval.py" "${models_dir}/${m}/model_inputs_true.bnet" '3{x}: 3{y}: (@{x}: (~{y} && AX {x})) && (@{y}: (AX {y})) && (!{z}: (EF {x}) && (EF {y}) && (AX (EF {x} ^ EF {y})))'
+
 done
 
