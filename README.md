@@ -1,9 +1,9 @@
 # HCTL_stuff
 
-V model.py se dá vybrat zvolením importu jestli chci python verzi dd knihovny, nebo cudd verzi.
+V model.py se dá vybrat zvolením importu jestli chci python verzi dd knihovny, nebo cudd verzi (cudd je default, musí být ale stáhnutá).
 
 Základní implementace komponent pro model checking (EX, binder...) je v implementation.py. 
-V implementation.py je pak i nafouklá funkce na různé printování výsledků.
+V implementation.py jsou pak i funkce pro různá printování výsledků.
 
 Parser, gramatika pro HCTL a vše okolo je v Parsing_HCTL_formula/. 
 V HCTLVisitor.py je převod na abstract syntax tree, se kterým se pak dále pracuje.
@@ -24,24 +24,23 @@ Knihovny: https://github.com/tulip-control/dd, https://github.com/antlr/antlr4/b
 
 ========== SETUP: ==========  
 DD + CUDD  
-$ pip install dd  
-
 $ pip install cython
 
 $ pip download dd --no-deps  
 $ tar xzf dd-\*.tar.gz  
 $ cd dd-\*/  
 $ python setup.py install --fetch --cudd  
-pak asi třeba přidat do path/pythonpath, něco jako: $ export PYTHONPATH="${PYTHONPATH}:/home/xhuvar/HCTL_stuff/venv/lib/python3.8/site-packages"
+pak může být potřeba přidat do path (pythonpath) něco jako: $ export PYTHONPATH="${PYTHONPATH}:~/HCTL_stuff/venv/lib/python3.8/site-packages"
 
 
-ANTLR  
+ANTLR pro generování z gramatiky (netřeba pro běžné používání)
 $ cd /usr/local/lib  
 $ wget https://www.antlr.org/download/antlr-4.9.2-complete.jar  
 $ export CLASSPATH=".:/usr/local/lib/antlr-4.9.2-complete.jar:$CLASSPATH"  
 $ alias antlr4='java -jar /usr/local/lib/antlr-4.9.2-complete.jar'  
 $ alias grun='java org.antlr.v4.gui.TestRig'  
 
+ANTLR pro runtime
 $ pip install antlr4-python3-runtime
 
 kroky wget a pip je někdy potřeba přes sudo
