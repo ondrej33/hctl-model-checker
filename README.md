@@ -1,4 +1,4 @@
-# HCTL_stuff
+# Fully symbolic HCTL model checker
 
 V model.py se dá vybrat zvolením importu jestli chci python verzi dd knihovny, nebo cudd verzi (cudd je default, musí být ale stáhnutá).
 
