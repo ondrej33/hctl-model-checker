@@ -18,7 +18,7 @@ from src.fixed_formulas_eval import *
 import time
 import timeout_decorator
 
-@timeout_decorator.timeout(2 * 3600)
+@timeout_decorator.timeout(1 * 3600)
 def run_test(file_name, formula):
     start = time.time()
     model, as_tree_hctl = parse_all(file_name, formula)
@@ -44,7 +44,9 @@ def compute_stable(file_name):
     model, as_tree_hctl = parse_all(file_name, formula)
 
     #res = eval_tree(as_tree_hctl, model)
-    stable = model_check_fixed2_v3(model)
+    #stable = model_check_fixed2_v3(model)
+
+    stable = model.stable
 
     end = time.time()
     res_time = end - start
@@ -58,6 +60,9 @@ if __name__ == '__main__':
     # we will have general 'if' branch and test-specific 'else' branch
     if len(sys.argv) == 3:
         run_test(sys.argv[1], sys.argv[2])
+    elif len(sys.argv) == 2:
+        compute_stable(sys.argv[1])
+
     else:
 
         """
