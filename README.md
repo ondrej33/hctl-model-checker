@@ -1,6 +1,10 @@
 # Symbolic HCTL model checker
 
 This is the implementation of the first fully symbolic Model Checker for the logic HCTL.
+As an input, it takes Boolean network with (possibly unknown) inputs and HCTL formula representing the property we want to check.
+It computes all the coloured-states that satisfy the formula.
+
+# Structure
 
 Implementation of the formula components evaluation (EX, binder...) is in the implementation.py. 
 The file also includes all kinds of result printing.
@@ -18,8 +22,8 @@ In the abstract_syntax_tree.py and model.py, the main data structures can be fou
 
 Libraries used: https://github.com/tulip-control/dd, https://github.com/antlr/antlr4/blob/master/doc/python-target.md
 
+# Setup
 
-========== SETUP: ==========  
 DD + CUDD  
 $ pip install cython
 
