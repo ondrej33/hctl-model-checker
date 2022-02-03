@@ -6,7 +6,9 @@ It computes all the coloured-states that satisfy the formula.
 
 # Structure
 
-Implementation of the formula components evaluation (EX, binder...) is in the implementation.py. 
+The main script to run is the model_check.py.
+
+Implementation of the formula components evaluation (EX, binder...) is located in the implementation.py. 
 The file also includes all kinds of result printing.
 
 In the Parsing_HCTL_formula/ directory, there is the grammar and parser for the HCTL. 
