@@ -1,25 +1,22 @@
-# Fully symbolic HCTL model checker
+# Symbolic HCTL model checker
 
-V model.py se dá vybrat zvolením importu jestli chci python verzi dd knihovny, nebo cudd verzi (cudd je default, musí být ale stáhnutá).
+This is the implementation of the first fully symbolic Model Checker for the logic HCTL.
 
-Základní implementace komponent pro model checking (EX, binder...) je v implementation.py. 
-V implementation.py jsou pak i funkce pro různá printování výsledků.
+Implementation of the formula components evaluation (EX, binder...) is in the implementation.py. 
+The file also includes all kinds of result printing.
 
-Parser, gramatika pro HCTL a vše okolo je v Parsing_HCTL_formula/. 
-V HCTLVisitor.py je převod na abstract syntax tree, se kterým se pak dále pracuje.
-V evaluator_hctl.py je pak pracovní verze celkového model checkeru (pár věcí dodělávám), včetně základních optimalizací.
-Většina ostatních souborů ve folderu je generovaná automaticky z gramatiky nebo jsou to testy.
+In the Parsing_HCTL_formula/ directory, there is the grammar and parser for the HCTL. 
+In the evaluator_hctl.py, there is the main algorithm for the model checker, which includes caching and optimizations.
+Most of the other files in the folder is generated automatically from the grammar by ANTLR.
 
-V Parsing_update_fns/ je pak podobná gramatika, parser a evaluator, ale tentokrát pro update funkce proměnných v booleovské síti.
+In the Parsing_update_fns/, there is similar grammar, parser and evaluator for the update functions of Boolean network' variables.
 
-Soubor parse_all.py pak obsahuje velkou funkci, která zastřešuje parsování booleovské sítě i formule, a vytváří strukturu modelu.
-Navíc vrací už upravenou verzi stromu pro HCTL formuli (kanonizované formule apod).
+The file parse_all.py handles the whole parsing process, of both the Boolean network model and HCTL formula.
+This includes the canonization procedure.
 
-Soubory abstract_syntax_tree.py a model.py pak obsahují hlavní datové struktury.
+In the abstract_syntax_tree.py and model.py, the main data structures can be found.
 
-Zbytek jsou různé testy, helper scripty apod., nic moc důležitého.
-
-Knihovny: https://github.com/tulip-control/dd, https://github.com/antlr/antlr4/blob/master/doc/python-target.md
+Libraries used: https://github.com/tulip-control/dd, https://github.com/antlr/antlr4/blob/master/doc/python-target.md
 
 
 ========== SETUP: ==========  
@@ -30,24 +27,23 @@ $ pip download dd --no-deps
 $ tar xzf dd-\*.tar.gz  
 $ cd dd-\*/  
 $ python setup.py install --fetch --cudd  
-pak může být potřeba přidat do path (pythonpath) něco jako: $ export PYTHONPATH="${PYTHONPATH}:~/HCTL_stuff/venv/lib/python3.8/site-packages"
 
 
-ANTLR pro generování z gramatiky (netřeba pro běžné používání)
+ANTLR for generating parser scripts from grammar (NOT needed for simple usage)
 $ cd /usr/local/lib  
 $ wget https://www.antlr.org/download/antlr-4.9.2-complete.jar  
 $ export CLASSPATH=".:/usr/local/lib/antlr-4.9.2-complete.jar:$CLASSPATH"  
 $ alias antlr4='java -jar /usr/local/lib/antlr-4.9.2-complete.jar'  
 $ alias grun='java org.antlr.v4.gui.TestRig'  
 
-ANTLR pro runtime
+ANTLR for runtime
 $ pip install antlr4-python3-runtime
 
-kroky wget a pip je někdy potřeba přes sudo
+sudo might be needed for the wget or pip
 
-pak asi třeba přidat do pythonpath, něco jako: export PYTHONPATH="${PYTHONPATH}:/usr/local/lib/python3.8/dist-packages"
+might be needed to include stuff into the pythonpath (or path), using something like: $ export PYTHONPATH="${PYTHONPATH}:~/HCTL_stuff/venv/lib/python3.8/site-packages"
 
-pak z gramatiky generuju soubory pomocí: $ antlr4 -Dlanguage=Python3 -visitor update_fn.g4  
+generating scripts from the grammar: $ antlr4 -Dlanguage=Python3 -visitor update_fn.g4  
 
 
 TERMCOLOR  
