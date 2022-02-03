@@ -10,16 +10,18 @@ sys.path.append(f'{SRC_DIR}')
 sys.path.append(f'{SRC_DIR}/Parsing_HCTL_formula')
 sys.path.append(f'{SRC_DIR}/Parsing_update_fns')
 
-from parse_all import parse_all
-from Parsing_HCTL_formula.evaluator_hctl import eval_tree
-from implementation import print_results
-from exceptions import *
+import time
+
+from src.exceptions import *
+from src.implementation import print_results
+from src.parse_all import parse_all
+from src.Parsing_HCTL_formula.evaluator_hctl import eval_tree
 
 
 def main(file_name: str, formula: str):
     # TODO: create some main body around the implementation
-    # TODO: make this something different than just copy of testing_full_eval
     try:
+        start = time.time()
         model, as_tree_hctl = parse_all(file_name, formula)
     except InvalidPropError as e:
         print("Formula includes non existing proposition:", e.bad_prop)
@@ -30,7 +32,12 @@ def main(file_name: str, formula: str):
 
     try:
         res = eval_tree(as_tree_hctl, model)
+        end = time.time()
+        res_time = end - start
+
         print_results(res, model, f"model: {model.name}, formula: {formula}", show_all=False)
+        print(res_time)
+        print()
     except Exception:
         print("Error during evaluation happened")
 

@@ -1,5 +1,4 @@
 from src.implementation import *
-from src.parse_all import parse_all
 
 
 # ============================================================================================= #

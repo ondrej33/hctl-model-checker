@@ -1,5 +1,6 @@
 from src.fixed_formulas_eval import *
 from src.Parsing_HCTL_formula.evaluator_hctl import parse_and_eval
+from src.parse_all import bnet_parser
 
 
 def run_tests(model: Model) -> None:
