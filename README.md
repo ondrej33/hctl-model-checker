@@ -4,6 +4,9 @@ This is the implementation of the first fully symbolic Model Checker for the log
 As an input, it takes Boolean network with (possibly unknown) inputs and HCTL formula representing the property we want to check.
 It computes all the coloured-states that satisfy the formula.
 
+It is a command line application, the usage is following:
+python3 model_check.py model_file hctl_formula
+
 # Inputs and models
 
 The tool takes models in the bnet format as input, with many examples present in bnet_examples/ directory. 
