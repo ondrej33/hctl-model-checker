@@ -5,6 +5,8 @@ from typing import List
 from dd.cudd import BDD, Function
 
 
+# the main structure representing combination of the Boolean network and HCTL formula
+# includes metadata, names of propositions and variables, update functions and more
 class Model:
     def __init__(self, name: str, bdd: BDD, names_props: List[str],
                  names_params: List[str], names_vars: List[str], update_fns, name_dict):

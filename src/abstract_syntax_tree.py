@@ -1,6 +1,8 @@
-# TODO: use some inheritance and merge some code
-
 from src.NodeTypeEnum import NodeType, OP_DICT
+
+"""
+This file includes essential classes used for the syntax tree of the HCTL formula
+"""
 
 # base class for syntax trees of HCTL formulas and also update functions in BN
 class Node:

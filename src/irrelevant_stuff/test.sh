@@ -15,17 +15,18 @@ do
 
     # usage: testing_full_eval.py file_name formula
 
-    python3 "${project_dir}/src/testing_full_eval.py" "${models_dir}/${m}/model_inputs_false.bnet" 'AF !{x}: (AX (~{x} && AF {x}))'
-    python3 "${project_dir}/src/testing_full_eval.py" "${models_dir}/${m}/model_inputs_true.bnet"  'AF !{x}: (AX (~{x} && AF {x}))'
+    #python3 "${project_dir}/src/testing_full_eval.py" "${models_dir}/${m}/model_inputs_false.bnet" 'AF !{x}: (AX (~{x} && AF {x}))'
+    #python3 "${project_dir}/src/testing_full_eval.py" "${models_dir}/${m}/model_inputs_true.bnet"  'AF !{x}: (AX (~{x} && AF {x}))'
 
-    python3 "${project_dir}/src/testing_full_eval.py" "${models_dir}/${m}/model_inputs_false.bnet" 'AF !{x}: ((AX (~{x} && AF {x})) && (EF !{y}: EX ~AF {y}))'
-    python3 "${project_dir}/src/testing_full_eval.py" "${models_dir}/${m}/model_inputs_true.bnet" 'AF !{x}: ((AX (~{x} && AF {x})) && (EF !{y}: EX ~AF {y}))'
+    #python3 "${project_dir}/src/testing_full_eval.py" "${models_dir}/${m}/model_inputs_false.bnet" 'AF !{x}: ((AX (~{x} && AF {x})) && (EF !{y}: EX ~AF {y}))'
+    #python3 "${project_dir}/src/testing_full_eval.py" "${models_dir}/${m}/model_inputs_true.bnet" 'AF !{x}: ((AX (~{x} && AF {x})) && (EF !{y}: EX ~AF {y}))'
 
-    python3 "${project_dir}/src/testing_full_eval.py" "${models_dir}/${m}/model_inputs_false.bnet" '!{x}: 3{y}: (@{x}: ~{y} && AX {x}) && (@{y}: AX {y})'
-    python3 "${project_dir}/src/testing_full_eval.py" "${models_dir}/${m}/model_inputs_true.bnet" '!{x}: 3{y}: (@{x}: ~{y} && AX {x}) && (@{y}: AX {y})'
+    #python3 "${project_dir}/src/testing_full_eval.py" "${models_dir}/${m}/model_inputs_false.bnet" '!{x}: 3{y}: (@{x}: ~{y} && AX {x}) && (@{y}: AX {y})'
+    #python3 "${project_dir}/src/testing_full_eval.py" "${models_dir}/${m}/model_inputs_true.bnet" '!{x}: 3{y}: (@{x}: ~{y} && AX {x}) && (@{y}: AX {y})'
 
-    python3 "${project_dir}/src/testing_full_eval.py" "${models_dir}/${m}/model_inputs_false.bnet" '3{x}: 3{y}: (@{x}: (~{y} && AX {x})) && (@{y}: (AX {y})) && (!{z}: (EF {x}) && (EF {y}) && (AX (EF {x} ^ EF {y})))'
-    python3 "${project_dir}/src/testing_full_eval.py" "${models_dir}/${m}/model_inputs_true.bnet" '3{x}: 3{y}: (@{x}: (~{y} && AX {x})) && (@{y}: (AX {y})) && (!{z}: (EF {x}) && (EF {y}) && (AX (EF {x} ^ EF {y})))'
+    #python3 "${project_dir}/src/testing_full_eval.py" "${models_dir}/${m}/model_inputs_false.bnet" '3{x}: 3{y}: (@{x}: ~{y} && AX {x}) && (@{y}: AX {y}) && EF ({x} && !{z}: AX {z}) && EF ({y} && !{z}: AX {z}) && AX (EF ({x} && !{z}: AX {z}) ^ EF ({y} && !{z}: AX {z}))'
+    #python3 "${project_dir}/src/testing_full_eval.py" "${models_dir}/${m}/model_inputs_true.bnet" '3{x}: 3{y}: (@{x}: ~{y} && AX {x}) && (@{y}: AX {y}) && EF ({x} && !{z}: AX {z}) && EF ({y} && !{z}: AX {z}) && AX (EF ({x} && !{z}: AX {z}) ^ EF ({y} && !{z}: AX {z}))'
 
+    python3 "${project_dir}/src/testing_full_eval.py" "${models_dir}/${m}/model.bnet" 'AF !{x}: ((AX (~{x} && AF {x})) && (EF !{y}: EX ~AF {y}))'
 done
 

@@ -3,6 +3,12 @@ from termcolor import colored
 from src.model import *
 import gc
 
+"""
+This file includes the implementation of evaluator for all components of HCTL formula
+It is build so that we can combine them into the bottom-up algorithm
+
+Also has the functions for result printing
+"""
 
 # ============================================================================================= #
 # ============================= SUBFORMULAS EVALUATION PART =================================== #
@@ -13,7 +19,7 @@ NODE_LIMIT_FOR_GARBAGE = 1_000_000
 
 
 # runs garbage collectors for both python and bdd.autoref implementation
-# CAN ONLY BE USED WITH PYTHON IMPLE, NOT CUDD
+# CAN NOT BE USED WHEN CUDD VERSION OF DD LIBRARY IS USED
 def collect_garbage_if_needed(bdd: BDD) -> None:
     if len(bdd) > NODE_LIMIT_FOR_GARBAGE:
         gc.collect()
@@ -85,9 +91,6 @@ def pre_E_all_vars(model: Model, initial: Function) -> Function:
     current_set = model.bdd.add_expr("False")
     for i in range(model.num_props):
         current_set = current_set | pre_E_one_var(model, initial, f"s__{i}")
-
-    # TODO: change back?? - now it artificially creates self-loops for stable states with no successor
-    # return current_set
     return current_set | (initial & model.stable)
 
 

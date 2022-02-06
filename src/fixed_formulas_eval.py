@@ -1,5 +1,10 @@
 from src.implementation import *
 
+"""
+This file includes functions for manual evaluation of the HCTL formulas
+This can be later used to test the parser or evaluator
+"""
+
 
 # ============================================================================================= #
 # ================================= FIXED FORMULAE EVALUATION ================================= #

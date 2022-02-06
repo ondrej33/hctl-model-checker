@@ -18,6 +18,11 @@ from src.parse_all import parse_all
 from src.Parsing_HCTL_formula.evaluator_hctl import eval_tree
 
 
+"""
+Main function which runs the whole model checker
+"""
+
+
 def main(file_name: str, formula: str):
     # TODO: create some main body around the implementation
     try:
