@@ -4,7 +4,13 @@ This is the implementation of the first fully symbolic Model Checker for the log
 As an input, it takes Boolean network with (possibly unknown) inputs and HCTL formula representing the property we want to check.
 It computes all the coloured-states that satisfy the formula.
 
-# Structure
+# Inputs and models
+
+The tool takes models in the bnet format as input, with many examples present in bnet_examples/ directory. 
+
+The grammar for HCTL is specified in file src/Parsing_HCTL_formula/HCTL.g4
+
+# Code structure
 
 The main script to run is the model_check.py.
 
@@ -22,9 +28,9 @@ This includes the canonization procedure.
 
 In the abstract_syntax_tree.py and model.py, the main data structures can be found.
 
-Libraries used: https://github.com/tulip-control/dd, https://github.com/antlr/antlr4/blob/master/doc/python-target.md
-
 # Setup
+
+Libraries used: https://github.com/tulip-control/dd, https://github.com/antlr/antlr4/blob/master/doc/python-target.md
 
 DD + CUDD  
 $ pip install cython
