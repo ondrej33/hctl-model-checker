@@ -98,6 +98,7 @@ def EX(model: Model, phi: Function) -> Function:
     return pre_E_all_vars(model, phi)
 
 
+# fixpoint version
 def EU(model: Model, phi1: Function, phi2: Function) -> Function:
     old = phi2
     new = model.bdd.add_expr("False")
@@ -106,6 +107,22 @@ def EU(model: Model, phi1: Function, phi2: Function) -> Function:
         old = old | (phi1 & EX(model, old))
         # collect_garbage_if_needed(model.bdd)
     return old
+
+
+# version based on saturation
+def EU_saturated(model: Model, phi1: Function, phi2: Function) -> Function:
+    result = phi2
+    done = False
+    while not done:
+        done = True
+        for i in range(model.num_props, 0, -1):
+            update = (phi1 & pre_E_one_var(model, result, f"s__{i-1}")) & ~result
+            if update != model.bdd.false:
+                result = result | update
+                done = False
+                break
+    #reorder(model.bdd)
+    return result
 
 
 # computed via EU
@@ -126,6 +143,7 @@ def EF_v2(model: Model, phi: Function) -> Function:
     return old
 
 
+# version based on saturation
 def EF_saturated(model: Model, phi: Function) -> Function:
     result = phi
     done = False

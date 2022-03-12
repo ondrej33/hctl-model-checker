@@ -209,7 +209,7 @@ class EvaluateExpressionVisitor:
                 result = ~ self.visit(node.left, model, dupl, cache).equiv(self.visit(node.right, model, dupl, cache))
                 #reorder(model.bdd)
             elif node.value == 'EU':
-                result = EU(model, self.visit(node.left, model, dupl, cache), self.visit(node.right, model, dupl, cache))
+                result = EU_saturated(model, self.visit(node.left, model, dupl, cache), self.visit(node.right, model, dupl, cache))
             elif node.value == 'AU':
                 result = AU_v2(model, self.visit(node.left, model, dupl, cache), self.visit(node.right, model, dupl, cache))
             elif node.value == 'EW':

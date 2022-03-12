@@ -1,10 +1,21 @@
+import os
+# Change the current working directory
+SRC_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_DIR = os.path.dirname(SRC_DIR)
+os.chdir(PROJECT_DIR)
+
+import sys
+sys.path.append(PROJECT_DIR)
+sys.path.append(f'{SRC_DIR}')
+sys.path.append(f'{SRC_DIR}/Parsing_HCTL_formula')
+sys.path.append(f'{SRC_DIR}/Parsing_update_fns')
+
 import random
 import time
-import sys
 from random import randint
 
 from src.implementation import *
-from src.fixed_formulas_eval import model_check_fixed2_v3
+from src.fixed_formulas_eval import *
 from parse_all import bnet_parser
 
 # ============================================================================================= #
@@ -216,11 +227,11 @@ def test_run_2_sets(model: Model, seq_num: int, func, message: str) -> None:
         message_cont = "set1= s2, set2= x"
         set1 = labeled_by(model, 's__2')
         set2 = create_comparator(model, 'x')
+    """
     elif seq_num == 9:
         message_cont = "set1= x, set2= EF x"
         set1 = create_comparator(model, 'x')
         set2 = EF(model, create_comparator(model, 'x'))
-    """
     elif seq_num == 10:
         message_cont = "set1= EF x, set2= x"
         set1 = EF(model, create_comparator(model, 'x'))
@@ -277,6 +288,76 @@ def run_test_sets(file_name: str, test_name: str, test_num: int, test_type: str)
         test_exist_EX(model, test_num, optimized)
     elif test_name == "union_both":
         test_union_both(model, test_num, optimized)
+
+
+# ============================================================================================= #
+# ==================================== SATURATION TEST ======================================== #
+# ============================================================================================= #
+
+def saturation_eu_test(model: Model) -> None:
+    for seq_num in range(150):
+        if seq_num == 0:
+            set1 = labeled_by(model, 's__1')
+            set2 = labeled_by(model, 's__1')
+        elif seq_num == 1:
+            set1 = labeled_by(model, 's__2')
+            set2 = labeled_by(model, 's__3')
+        elif seq_num == 2:
+            set1 = labeled_by(model, 's__1') & labeled_by(model, 's__2')
+            set2 = labeled_by(model, 's__3') & labeled_by(model, 's__4')
+        elif seq_num == 3:
+            set1 = labeled_by(model, 's__1') | labeled_by(model, 's__2')
+            set2 = labeled_by(model, 's__3') | labeled_by(model, 's__4')
+        elif seq_num == 4:
+            set1 = model_check_fixed2_v3(model)
+            set2 = EX(model, model_check_fixed2_v3(model))
+        elif seq_num == 5:
+            set1 = create_comparator(model, 'x')
+            set2 = EX(model, create_comparator(model, 'x'))
+        elif seq_num == 6:
+            set1 = AX(model, create_comparator(model, 'x'))
+            set2 = create_comparator(model, 'x')
+        elif seq_num == 7:
+            set1 = create_comparator(model, 'x')
+            set2 = labeled_by(model, 's__1')
+        elif seq_num == 8:
+            set1 = labeled_by(model, 's__2')
+            set2 = create_comparator(model, 'x')
+        else:
+            test_functions = [
+                model_check_fixed1,
+                model_check_fixed2,
+                model_check_fixed3,
+                model_check_fixed4,
+                model_check_fixed5,
+                model_check_fixed6,
+                model_check_fixed7,
+                model_check_fixed8,
+                model_check_fixed9,
+                model_check_fixed10,
+                model_check_fixed11,
+                model_check_fixed12,
+                model_check_fixed13,
+                model_check_fixed14,
+                model_check_fixed15,
+                model_check_fixed16,
+                model_check_fixed17,
+                model_check_fixed18,
+                model_check_fixed19,
+                model_check_fixed20,
+                model_check_fixed21,
+                model_check_fixed22,
+                model_check_fixed23
+            ]
+            i = randint(0, 22)
+            i2 = randint(0, 22)
+            set1 = test_functions[i](model)
+            set2 = test_functions[i2](model)
+            print(i, i2)
+
+        res1 = EU(model, set1, set2)
+        res2 = EU_saturated(model, set1, set2)
+        assert(res1 == res2)
 
 
 # ============================================================================================= #
@@ -413,25 +494,22 @@ def new_test3(file_name: str, seq_num, seq_num2) -> None:
     assert res1 == res2
 
 
-# we use 4 command line args (not counting script name): name of file + type of test + number of test + version of test
 if __name__ == '__main__':
     if len(sys.argv) == 5:
+        # we use 4 command line args (not counting script name): name of file + type of test + number of test + version of test
         run_test_sets(sys.argv[1], sys.argv[2], int(sys.argv[3]), sys.argv[4])
     else:
+        file_name = "bnet_examples/029a.bnet"
+        saturation_eu_test(bnet_parser(file_name))
+
+        """
         # incorrect num of arguments provided, lets print error message + do PREDEF model
         print("INCORRECT NUM OF ARGS")
         # lets go with predefined model and formula
         # TODO change path
         path_to_bnet = "bnet_examples/095a.bnet"
 
-        """
-        print("==================================")
-        print("Model name: " + path_to_bnet.split('/')[-1])
-        print("==================================\n")
-        run_test_sets(path_to_bnet, "binder", 0, "o")
-        print()
-        """
-
         for ii in range(6):
             for jj in range(6):
                 new_test3(path_to_bnet, seq_num=ii, seq_num2=jj)
+        """
