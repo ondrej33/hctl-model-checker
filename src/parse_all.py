@@ -218,7 +218,7 @@ def parse_all(file_name: str, formula: str) -> Tuple[Model, Node]:
 """
 version of bnet files that is used:
     all lines except first one are in the form: "variable_name, update_fn"
-    BUT to handle params, we will add lines in form: "param_name," (there is no update fn) - those will be params
+    BUT to handle params, we MUST add lines in form: "param_name," (there is no update fn) - those will be params
 """
 
 # this is an obsolete function, use parse_all() instead
