@@ -6,6 +6,7 @@ from src.abstract_syntax_tree import *
 from src.exceptions import *
 
 from collections import OrderedDict
+from pathlib import Path
 from typing import Set, Dict, Tuple
 
 
@@ -128,11 +129,10 @@ def parse_all(file_name: str, formula: str) -> Tuple[Model, Node]:
     # TODO: GO THROUGH THE TREES ONLY ONCE (collect terminal names while building the trees, later just rename them)
     
     # first preprocess the file content
-    file = open(file_name, "r")
-    content = file.read()
+    content = Path(file_name).read_text()
     # TODO: maybe clean the content (no need atm, because test examples are clean)
 
-    lines = content.split("\n")[1:]           # first line does not contain data
+    lines = content.splitlines()[1:]           # first line does not contain data
     lines = [line for line in lines if line]  # remove empty lines
     lines_ordered = sorted(lines, key=lambda x: x.split(",")[0])
 

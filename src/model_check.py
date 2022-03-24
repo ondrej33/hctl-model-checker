@@ -11,6 +11,7 @@ sys.path.append(f'{SRC_DIR}/Parsing_HCTL_formula')
 sys.path.append(f'{SRC_DIR}/Parsing_update_fns')
 
 import time
+from pathlib import Path
 
 from src.exceptions import *
 from src.implementation import print_results
@@ -50,7 +51,10 @@ def main(file_name: str, formula: str):
 # usage: testing_full_eval.py path_to_bnet formula
 if __name__ == '__main__':
     if len(sys.argv) == 3:
-        main(sys.argv[1], sys.argv[2])
+        if Path(sys.argv[1]).exists() and Path(sys.argv[1]).is_file():
+            main(sys.argv[1], sys.argv[2])
+        else:
+            print("File does not exist")
     else:
         print("Wrong number of arguments")
 
