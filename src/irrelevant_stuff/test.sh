@@ -1,10 +1,7 @@
 #!/bin/bash
 
-#formulas='AF(!{x}:(AX((~{x})&&(AF{x})))) AF(!{x}:((AX((~{x})&&(AF{x})))&&(EF(!{y}:(EX(~AF{y})))))) !{x}:3{y}:((@{x}:(~{y})&&(AX{x}))&&(@{y}:(AX{y})))'
-
 project_dir="/home/ohuvar/HCTL_stuff"
-models_dir="${project_dir}/benchmark_models/non_parametrized"
-
+models_dir="/home/ohuvar/sysbio/biodivine-boolean-models/models/"
 
 for m in `ls ${models_dir}`
 do
@@ -13,20 +10,20 @@ do
     echo "-------------------------------"
     echo ''
 
-    # usage: testing_full_eval.py file_name formula
+    # usage: model_check.py file_name formula
 
-    #python3 "${project_dir}/src/testing_full_eval.py" "${models_dir}/${m}/model_inputs_false.bnet" 'AF !{x}: (AX (~{x} && AF {x}))'
-    #python3 "${project_dir}/src/testing_full_eval.py" "${models_dir}/${m}/model_inputs_true.bnet"  'AF !{x}: (AX (~{x} && AF {x}))'
+    timeout -v 1h python3 "${project_dir}/src/model_check.py" "${models_dir}/${m}/model_inputs_false.bnet" 'AF !{x}: (AX (~{x} && AF {x}))'
+    timeout -v 1h python3 "${project_dir}/src/model_check.py" "${models_dir}/${m}/model_inputs_true.bnet"  'AF !{x}: (AX (~{x} && AF {x}))'
 
-    #python3 "${project_dir}/src/testing_full_eval.py" "${models_dir}/${m}/model_inputs_false.bnet" 'AF !{x}: ((AX (~{x} && AF {x})) && (EF !{y}: EX ~AF {y}))'
-    #python3 "${project_dir}/src/testing_full_eval.py" "${models_dir}/${m}/model_inputs_true.bnet" 'AF !{x}: ((AX (~{x} && AF {x})) && (EF !{y}: EX ~AF {y}))'
+    timeout -v 1h python3 "${project_dir}/src/model_check.py" "${models_dir}/${m}/model_inputs_false.bnet" 'AF !{x}: ((AX (~{x} && AF {x})) && (EF !{y}: EX ~AF {y}))'
+    timeout -v 1h python3 "${project_dir}/src/model_check.py" "${models_dir}/${m}/model_inputs_true.bnet" 'AF !{x}: ((AX (~{x} && AF {x})) && (EF !{y}: EX ~AF {y}))'
 
-    #python3 "${project_dir}/src/testing_full_eval.py" "${models_dir}/${m}/model_inputs_false.bnet" '!{x}: 3{y}: (@{x}: ~{y} && AX {x}) && (@{y}: AX {y})'
-    #python3 "${project_dir}/src/testing_full_eval.py" "${models_dir}/${m}/model_inputs_true.bnet" '!{x}: 3{y}: (@{x}: ~{y} && AX {x}) && (@{y}: AX {y})'
+    timeout -v 1h python3 "${project_dir}/src/model_check.py" "${models_dir}/${m}/model_inputs_false.bnet" '!{x}: 3{y}: (@{x}: ~{y} && AX {x}) && (@{y}: AX {y})'
+    timeout -v 1h python3 "${project_dir}/src/model_check.py" "${models_dir}/${m}/model_inputs_true.bnet" '!{x}: 3{y}: (@{x}: ~{y} && AX {x}) && (@{y}: AX {y})'
 
-    #python3 "${project_dir}/src/testing_full_eval.py" "${models_dir}/${m}/model_inputs_false.bnet" '3{x}: 3{y}: (@{x}: ~{y} && AX {x}) && (@{y}: AX {y}) && EF ({x} && !{z}: AX {z}) && EF ({y} && !{z}: AX {z}) && AX (EF ({x} && !{z}: AX {z}) ^ EF ({y} && !{z}: AX {z}))'
-    #python3 "${project_dir}/src/testing_full_eval.py" "${models_dir}/${m}/model_inputs_true.bnet" '3{x}: 3{y}: (@{x}: ~{y} && AX {x}) && (@{y}: AX {y}) && EF ({x} && !{z}: AX {z}) && EF ({y} && !{z}: AX {z}) && AX (EF ({x} && !{z}: AX {z}) ^ EF ({y} && !{z}: AX {z}))'
+    timeout -v 1h python3 "${project_dir}/src/model_check.py" "${models_dir}/${m}/model_inputs_false.bnet" '3{x}: 3{y}: (@{x}: ~{y} && AX {x}) && (@{y}: AX {y}) && EF ({x} && !{z}: AX {z}) && EF ({y} && !{z}: AX {z}) && AX (EF ({x} && !{z}: AX {z}) ^ EF ({y} && !{z}: AX {z}))'
+    timeout -v 1h python3 "${project_dir}/src/model_check.py" "${models_dir}/${m}/model_inputs_true.bnet" '3{x}: 3{y}: (@{x}: ~{y} && AX {x}) && (@{y}: AX {y}) && EF ({x} && !{z}: AX {z}) && EF ({y} && !{z}: AX {z}) && AX (EF ({x} && !{z}: AX {z}) ^ EF ({y} && !{z}: AX {z}))'
 
-    python3 "${project_dir}/src/testing_full_eval.py" "${models_dir}/${m}/model.bnet" 'AF !{x}: ((AX (~{x} && AF {x})) && (EF !{y}: EX ~AF {y}))'
+    # timeout  -v 1h python3 "${project_dir}/src/model_check.py" "${models_dir}/${m}/model.bnet" 'AF !{x}: ((AX (~{x} && AF {x})) && (EF !{y}: EX ~AF {y}))'
 done
 
