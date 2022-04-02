@@ -48,13 +48,14 @@ def main(file_name: str, formula: str):
         print("Error during evaluation happened")
 
 
-# usage: testing_full_eval.py path_to_bnet formula
+# usage: model_check.py path_to_bnet formula
 if __name__ == '__main__':
     if len(sys.argv) == 3:
         if Path(sys.argv[1]).exists() and Path(sys.argv[1]).is_file():
             main(sys.argv[1], sys.argv[2])
         else:
-            print("File does not exist")
+            print(f"File {sys.argv[1]} does not exist")
+            print("Usage: model_check.py path_to_bnet formula")
     else:
         print("Wrong number of arguments")
-
+        print("Usage: model_check.py path_to_bnet formula")
