@@ -1,4 +1,4 @@
-from src.NodeTypeEnum import NodeType, OP_DICT
+from src.node_type_enum import NodeType, OP_DICT
 
 """
 This file includes essential classes used for the syntax tree of the HCTL formula
