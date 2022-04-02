@@ -2,7 +2,6 @@ from antlr4 import *
 from src.abstract_syntax_tree import *
 from src.implementation import *
 from src.Parsing_HCTL_formula.parser_hctl import parse_to_tree
-from src.parse_all import parse_all
 
 from heapq import heappush, heappop
 from typing import Dict, Tuple

@@ -1,5 +1,10 @@
 from src.implementation import *
 
+"""
+Functionality that was excluded from the main project.
+    - either it was redundant, not needed, or obsolete
+"""
+
 
 # computes the set of states which can make transition ONLY into the initial set and nowhere else
 # applying the update function of the given `var`
