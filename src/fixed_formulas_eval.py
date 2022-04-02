@@ -21,15 +21,15 @@ List of formulas includes (current version, might be changed):
     model_check_fixed7 == "(EG s__2) && (EF ~s__0)"
     model_check_fixed8 == "!{x}: AX AF {x}"
     model_check_fixed9 == "!{x}: AG EF {x}"
-    model_check_fixed10 == "!{x}: EX (~{x} && (!{y}: AX {y}))"
-    model_check_fixed11 == "!{x}: EX (!{y}: AX ({y} && ~{x}))"
-    model_check_fixed12 == "!{x}: (3{y}: {x} && EX {y})"
-    model_check_fixed13 == "!{x}: 3{y}: ({x} && AX ({y} && AX {y}))"
-    model_check_fixed14 == "!{x}: 3{y}: ({x} && EX (~{x} && {y} && AX {y}))"
-    model_check_fixed15 == "3{x}: 3{y}: (@{x}: ~{y} && AX {x}) && (@{y}: AX {y})"
+    model_check_fixed10 == "!{x}: EX (~{x} && (!{xx}: AX {xx}))"
+    model_check_fixed11 == "!{x}: EX (!{xx}: AX ({xx} && ~{x}))"
+    model_check_fixed12 == "!{x}: (3{xx}: {x} && EX {xx})"
+    model_check_fixed13 == "!{x}: 3{xx}: ({x} && AX ({xx} && AX {xx}))"
+    model_check_fixed14 == "!{x}: 3{xx}: ({x} && EX (~{x} && {xx} && AX {xx}))"
+    model_check_fixed15 == "3{x}: 3{xx}: (@{x}: ~{xx} && AX {x}) && (@{xx}: AX {xx})"
     model_check_fixed16 == "!{x}: EG EF {x}"
-    model_check_fixed17 == "3{x}: 3{y}: (@{x}: AG~{y} && AG EF {x}) && (@{y}: AG EF {y})"
-    model_check_fixed18 == "3{x}: 3{y}: (@{x}: ~{y} && AX{x}) && (@{y}: AX{y}) && EF{x} && EF{y}"
+    model_check_fixed17 == "3{x}: 3{xx}: (@{x}: AG~{xx} && AG EF {x}) && (@{xx}: AG EF {xx})"
+    model_check_fixed18 == "3{x}: 3{xx}: (@{x}: ~{xx} && AX{x}) && (@{xx}: AX{xx}) && EF{x} && EF{xx}"
     model_check_fixed19 == "EX ({x} || EX {x})"
     model_check_fixed20 == "AX ({x} && EX {x})"
     model_check_fixed21 == "!{x}: (EX {x} || ({x} && s__1))"
@@ -62,36 +62,19 @@ def model_check_fixed2(model: Model) -> Function:
     return bind(model, ax, 'x')
 
 
-# TODO: maybe update "bind AX" and use it next fn
-"""
-# formula: ↓x (AX x), stable steady states (self loop only, sink)
-# faster version, uses binder already during computing the AX, with smaller BDDs
-def model_check_fixed2_v2(model: Model) -> Function:
-    # TODO: change, do not use pre_A_one_var
-    x = create_comparator(model, 'x')
-
-    current_set = model.bdd.add_expr("True")
-    for i in range(model.num_props):
-        current_set = current_set & bind(model, 'x', pre_A_one_var(model, f"s__{i}", x))
-    return current_set
-"""
-
-
 # formula: ↓x (AX x), stable steady states (self loop only, sink)
 # FASTEST probably, uses "equational fixed point", big conjunction of all (s_i <=> F_s_i) formulas
-def model_check_fixed2_v3(model: Model) -> Function:
-    current_set = model.bdd.add_expr("True")
-    for i in range(model.num_props):
-        current_set = current_set & model.bdd.apply("<=>", labeled_by(model, f"s__{i}"), model.update_fns[f"s__{i}"])
-    return current_set
+def model_check_fixed2_v2(model: Model) -> Function:
+    return model.stable
 
 
 # formula: ↓x (EX (~x & (EX x)))
 # states that are part of (unstable) cycles of size 2  (those might be part of bigger cycles)
 def model_check_fixed3(model: Model) -> Function:
     x = create_comparator(model, 'x')
+    not_x = negate(model, x)
     ex_x = EX(model, x)
-    and_inner = ~x & ex_x
+    and_inner = not_x & ex_x
     ex_outer = EX(model, and_inner)
     return bind(model, ex_outer, 'x')
 
@@ -100,7 +83,7 @@ def model_check_fixed3(model: Model) -> Function:
 # states that are part of (unstable) cycles of any size
 def model_check_fixed4(model: Model) -> Function:
     x = create_comparator(model, 'x')
-    ef = EF(model, x)
+    ef = EF_saturated(model, x)
     ex = EX(model, ef)
     return bind(model, ex, 'x')
 
@@ -118,7 +101,7 @@ def model_check_fixed4_v2(model: Model) -> Function:
 # cycles with a possible path going through only s3 states
 def model_check_fixed5(model: Model) -> Function:
     x = create_comparator(model, 'x')
-    ef_x = EF(model, x)
+    ef_x = EF_saturated(model, x)
     s3 = labeled_by(model, "s__3")
 
     and_inner = EX(model, ef_x) & EG(model, s3)
@@ -130,12 +113,12 @@ def model_check_fixed5(model: Model) -> Function:
 def model_check_fixed6(model: Model) -> Function:
     x = create_comparator(model, 'x')
     s0 = labeled_by(model, "s__0")
-    ef_inner_inner = EF_v2(model, x & s0)
+    ef_inner_inner = EF_saturated(model, x & s0)
 
-    and_outer = ~s0 & ef_inner_inner
-    ef_inner = EF_v2(model, and_outer)
+    and_outer = negate(model, s0) & ef_inner_inner
+    ef_inner = EF_saturated(model, and_outer)
     binder = bind(model, ef_inner, 'x')
-    return EF_v2(model, binder)
+    return EF_saturated(model, binder)
 
 
 # formula: (EG s2) & (EF ~s0)
@@ -144,8 +127,8 @@ def model_check_fixed7(model: Model) -> Function:
     s2 = labeled_by(model, "s__2")
     eg_s2 = EG(model, s2)
 
-    not_s0 = ~labeled_by(model, "s__0")
-    ef = EF(model, not_s0)
+    not_s0 = negate(model, labeled_by(model, "s__0"))
+    ef = EF_saturated(model, not_s0)
     return eg_s2 & ef
 
 
@@ -155,7 +138,7 @@ def model_check_fixed7_v2(model: Model) -> Function:
     s2 = labeled_by(model, "s__2")
     eg_s2 = EG(model, s2)
 
-    not_s0 = ~labeled_by(model, "s__0")
+    not_s0 = negate(model, labeled_by(model, "s__0"))
     ef = EF_saturated(model, not_s0)
     return eg_s2 & ef
 
@@ -173,7 +156,7 @@ def model_check_fixed8(model: Model) -> Function:
 # states which are part of a sink SCC
 def model_check_fixed9(model: Model) -> Function:
     x = create_comparator(model, 'x')
-    ef_x = EF_v2(model, x)
+    ef_x = EF_saturated(model, x)
     ag = AG(model, ef_x)
     return bind(model, ag, 'x')
 
@@ -190,8 +173,8 @@ def model_check_fixed9_v2(model: Model) -> Function:
 # ↓x. EX ( ~x & (↓y. AX y) )
 # states which have transition to a different state which is a sink state
 def model_check_fixed10(model: Model) -> Function:
-    binder_y = model_check_fixed2_v3(model)
-    not_x = ~create_comparator(model, 'x')
+    binder_y = model_check_fixed2_v2(model)
+    not_x = negate(model, create_comparator(model, 'x'))
     and_inner = not_x & binder_y
 
     ex_outer = EX(model, and_inner)
@@ -200,8 +183,8 @@ def model_check_fixed10(model: Model) -> Function:
 
 # ↓x. EX ( ~x & (↓y. AX y) ), with optimized version of "bind EX"
 def model_check_fixed10_v2(model: Model) -> Function:
-    binder_y = model_check_fixed2_v3(model)
-    not_x = ~create_comparator(model, 'x')
+    binder_y = model_check_fixed2_v2(model)
+    not_x = negate(model, create_comparator(model, 'x'))
     and_inner = not_x & binder_y
     return optimized_bind_EX(model, and_inner, 'x')
 
@@ -209,24 +192,24 @@ def model_check_fixed10_v2(model: Model) -> Function:
 # ↓x. EX ( ↓y. AX (y & ~x)) )
 # states which have transition to a different state which is a sink state, NESTED BINDER VERSION of prev
 def model_check_fixed11(model: Model) -> Function:
-    y = create_comparator(model, 'y')
-    not_x = ~create_comparator(model, 'x')
+    y = create_comparator(model, 'xx')
+    not_x = negate(model, create_comparator(model, 'x'))
     and_inner = not_x & y
 
     # TODO: maybe update and use better version for "bind AX"
-    binder_y = bind(model, AX(model, and_inner), 'y')
+    binder_y = bind(model, AX(model, and_inner), 'xx')
     return optimized_bind_EX(model, binder_y, 'x')
 
 
 # ↓x. ( ∃y. ( x & EX y ) )
 # states which have some successor, nested operators version
-# should give the same results as "pre_E_all_vars(model, model.bdd.add_expr("TRUE")) & ~model.stable"
+# should give the same results as "pre_E_all_vars(model, model.unit_colored_set) & ~model.stable"
 def model_check_fixed12(model: Model) -> Function:
     x = create_comparator(model, 'x')
-    y = create_comparator(model, 'y')
+    y = create_comparator(model, 'xx')
     ex_y = EX(model, y)
     intersection = x & ex_y
-    exists_y = existential(model, intersection, 'y')
+    exists_y = existential(model, intersection, 'xx')
     return bind(model, exists_y, 'x')
 
 
@@ -234,14 +217,14 @@ def model_check_fixed12(model: Model) -> Function:
 # states which have all their transitions (includes none) to some SINK state (could be itself)
 # should give the same results as "sinks | pre_A(sinks)"
 def model_check_fixed13(model: Model) -> Function:
-    y = create_comparator(model, 'y')
+    y = create_comparator(model, 'xx')
     ax_y = AX(model, y)
     intersection_inner = y & ax_y
     ax_outer = AX(model, intersection_inner)
     x = create_comparator(model, 'x')
     intersection_outer = x & ax_outer
 
-    exists_y = existential(model, intersection_outer, 'y')
+    exists_y = existential(model, intersection_outer, 'xx')
     return bind(model, exists_y, 'x')
 
 
@@ -249,15 +232,15 @@ def model_check_fixed13(model: Model) -> Function:
 # states which have transition to a different state, which is a SINK state
 # should give the same results as "model_check_fixed10"
 def model_check_fixed14(model: Model) -> Function:
-    y = create_comparator(model, 'y')
+    y = create_comparator(model, 'xx')
     ax_y = AX(model, y)
-    not_x = ~create_comparator(model, 'x')
+    not_x = negate(model, create_comparator(model, 'x'))
     intersection_inner = y & ax_y & not_x
     ex = EX(model, intersection_inner)
     x = create_comparator(model, 'x')
     intersection_outer = x & ex
 
-    exists_y = existential(model, intersection_outer, 'y')
+    exists_y = existential(model, intersection_outer, 'xx')
     return bind(model, exists_y, 'x')
 
 
@@ -265,13 +248,14 @@ def model_check_fixed14(model: Model) -> Function:
 # all colored states where "there exist at least 2 sinks"
 def model_check_fixed15(model: Model) -> Function:
     x = create_comparator(model, 'x')
-    y = create_comparator(model, 'y')
+    y = create_comparator(model, 'xx')
+    not_y = negate(model, y)
 
-    jump_y = jump(model, AX(model, y), 'y')
-    jump_x = jump(model, ~y & AX(model, x), 'x')
+    jump_y = jump(model, AX(model, y), 'xx')
+    jump_x = jump(model, not_y & AX(model, x), 'x')
 
     and_inner = jump_x & jump_y
-    exist_y = existential(model, and_inner, 'y')
+    exist_y = existential(model, and_inner, 'xx')
     return existential(model, exist_y, 'x')
 
 
@@ -279,26 +263,27 @@ def model_check_fixed15(model: Model) -> Function:
 # states which are part of any SCC
 def model_check_fixed16(model: Model) -> Function:
     x = create_comparator(model, 'x')
-    ef_x = EF_v2(model, x)
+    ef_x = EF_saturated(model, x)
     eg = EG(model, ef_x)
     return bind(model, eg, 'x')
 
 
-# ∃x.∃y.(@x. AG¬y & AG EFx) & (@y. AG EFy)
+# ∃x.∃y.(@x. AG¬y & AG EF x) & (@y. AG EF y)
 # at least two final SCCs in the whole system
 def model_check_fixed17(model: Model) -> Function:
     x = create_comparator(model, 'x')
-    y = create_comparator(model, 'y')
+    y = create_comparator(model, 'xx')
+    not_y = negate(model, y)
 
-    ag_ef_y = AG(model, EF_v2(model, y))
-    jump_y = jump(model, ag_ef_y, 'y')
+    ag_ef_y = AG(model, EF_saturated(model, y))
+    jump_y = jump(model, ag_ef_y, 'xx')
 
-    ag_ef_x = AG(model, EF_v2(model, x))
-    ag_not_y = AG(model, ~y)
+    ag_ef_x = AG(model, EF_saturated(model, x))
+    ag_not_y = AG(model, not_y)
     jump_x = jump(model, ag_not_y & ag_ef_x, 'x')
 
     and_inner = jump_x & jump_y
-    exist_y = existential(model, and_inner, 'y')
+    exist_y = existential(model, and_inner, 'xx')
     return existential(model, exist_y, 'x')
 
 
@@ -307,13 +292,14 @@ def model_check_fixed17(model: Model) -> Function:
 # (intersection of basins of attraction of two different sinks)
 def model_check_fixed18(model: Model) -> Function:
     x = create_comparator(model, 'x')
-    y = create_comparator(model, 'y')
+    y = create_comparator(model, 'xx')
+    not_y = negate(model, y)
 
-    jump_x = jump(model, ~y & AX(model, x), 'x')
-    jump_y = jump(model, AX(model, y), 'y')
+    jump_x = jump(model, not_y & AX(model, x), 'x')
+    jump_y = jump(model, AX(model, y), 'xx')
 
-    and_inner = jump_x & jump_y & EF(model, x) & EF(model, y)
-    exist_y = existential(model, and_inner, 'y')
+    and_inner = jump_x & jump_y & EF_saturated(model, x) & EF_saturated(model, y)
+    exist_y = existential(model, and_inner, 'xx')
     return existential(model, exist_y, 'x')
 
 
@@ -357,38 +343,25 @@ def model_check_fixed23(model: Model) -> Function:
 # Strong basin of an oscillating attractor
 def model_check_fixed24(model: Model) -> Function:
     x = create_comparator(model, 'x')
-    ax = AX(model, ~x & AF(model, x))
+    not_x = negate(model, x)
+
+    ax = AX(model, not_x & AF(model, x))
     binder = bind(model, ax, 'x')
     return AF(model, binder)
 
 
-# AF !{x}: ((AX (~{x} && AF {x})) && (EF !{y}: EX EG ~{y}))
+# AF !{x}: ((AX (~{x} && AF {x})) && (EF !{xx}: EX EG ~{xx}))
 # Strong basin of an oscillating attractor which is not a cycle
 def model_check_fixed25(model: Model) -> Function:
     x = create_comparator(model, 'x')
-    y = create_comparator(model, 'y')
-    ax = AX(model, ~x & AF(model, x))
+    y = create_comparator(model, 'xx')
+    not_x = negate(model, x)
+    not_y = negate(model, y)
 
-    inner_binder = bind(model, EX(model, EG(model, ~y)), 'y')
-    ef = EF(model, inner_binder)
+    ax = AX(model, not_x & AF(model, x))
+
+    inner_binder = bind(model, EX(model, EG(model, not_y)), 'xx')
+    ef = EF_saturated(model, inner_binder)
 
     outer_binder = bind(model, ax & ef, 'x')
     return AF(model, outer_binder)
-
-
-# Existence of a "fork" state
-# TODO: remake this
-"""
-# 3{x}: 3{y}: (@{x}: (~{y} && AX {x})) && (@{y}: (AX {y})) && (!{z}: AX (EF {x} ^ EF {y}))
-def model_check_fixed26(model: Model) -> Function:
-    x = create_comparator(model, 'x')
-    y = create_comparator(model, 'y')
-
-    jump_x = jump(model, ~y & AX(model, x), 'x')
-    jump_y = jump(model, AX(model, y), 'y')
-    bind_z = bind(model, AX(model, ~ EF(model, x).equiv(EF(model, y))), 'z')
-
-    and_inner = jump_x & jump_y & bind_z
-    exist_y = existential(model, and_inner, 'y')
-    return existential(model, exist_y, 'x')
-"""
