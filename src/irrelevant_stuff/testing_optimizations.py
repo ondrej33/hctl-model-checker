@@ -16,7 +16,7 @@ from random import randint
 
 from src.implementation import *
 from src.fixed_formulas_eval import *
-from src.parse_all import bnet_parser
+from src.irrelevant_stuff.removed_stuff import bnet_parser
 
 # ============================================================================================= #
 # ================================= FIXED FORMULAE TEST CASES ================================= #
