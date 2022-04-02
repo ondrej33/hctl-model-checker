@@ -164,67 +164,68 @@ class EvaluateExpressionVisitor:
             else:
                 result = labeled_by(model, node.value)
         elif type(node) == UnaryNode:
+            child_result = self.visit(node.child, model, dupl, cache)
             if node.value == '~':
-                result = negate(model, self.visit(node.child, model, dupl, cache))
+                result = negate(model, child_result)
             elif node.value == 'EX':
                 if optim:
-                    result = optimized_hybrid_EX(model, self.visit(node.child, model, dupl, cache), optim_var, optim_op)
+                    result = optimized_hybrid_EX(model, child_result, optim_var, optim_op)
                 else:
-                    result = EX(model, self.visit(node.child, model, dupl, cache))
+                    result = EX(model, child_result)
             elif node.value == 'AX':
-                result = AX(model, self.visit(node.child, model, dupl, cache))
+                result = AX(model, child_result)
             elif node.value == 'EF':
-                result = EF_saturated(model, self.visit(node.child, model, dupl, cache))
+                result = EF_saturated(model, child_result)
             elif node.value == 'AF':
-                result = AF(model, self.visit(node.child, model, dupl, cache))
+                result = AF(model, child_result)
             elif node.value == 'EG':
-                result = EG(model, self.visit(node.child, model, dupl, cache))
+                result = EG(model, child_result)
             elif node.value == 'AG':
-                result = AG(model, self.visit(node.child, model, dupl, cache))
+                result = AG(model, child_result)
         elif type(node) == BinaryNode:
-            if node.value == '||':
+            # first lets focus on the optimised part (currently only for the OR operation)
+            if optim and node.value == '||':
                 # if we have enabled optim, procedure depends what types of children we have
-                if optim:
-                    optim_left = is_node_ex_to_optimize(node.left, optim_var) or is_node_union(node.left)
-                    optim_right = is_node_ex_to_optimize(node.right, optim_var) or is_node_union(node.right)
-                    if optim_left:
-                        if optim_right:
-                            result = self.visit(node.left, model, dupl, cache, optim, optim_op, optim_var) | \
-                                     self.visit(node.right, model, dupl, cache, optim, optim_op, optim_var)
-                        else:
-                            result = self.visit(node.left, model, dupl, cache, optim, optim_op, optim_var) | \
-                                     self.visit_with_hybrid_op(optim_var, optim_op, node.right, model, dupl, cache)
+                optim_left = is_node_ex_to_optimize(node.left, optim_var) or is_node_union(node.left)
+                optim_right = is_node_ex_to_optimize(node.right, optim_var) or is_node_union(node.right)
+                if optim_left:
+                    if optim_right:
+                        result = self.visit(node.left, model, dupl, cache, optim, optim_op, optim_var) | \
+                                 self.visit(node.right, model, dupl, cache, optim, optim_op, optim_var)
                     else:
-                        if optim_right:
-                            result = self.visit_with_hybrid_op(optim_var, optim_op, node.left, model, dupl, cache) | \
-                                     self.visit(node.right, model, dupl, cache, optim, optim_op, optim_var)
-                        else:
-                            result = self.visit_with_hybrid_op(optim_var, optim_op, node, model, dupl, cache)
+                        result = self.visit(node.left, model, dupl, cache, optim, optim_op, optim_var) | \
+                                 self.visit_with_hybrid_op(optim_var, optim_op, node.right, model, dupl, cache)
                 else:
-                    result = self.visit(node.left, model, dupl, cache) | self.visit(node.right, model, dupl, cache)
-            elif node.value == '&&':
-                result = self.visit(node.left, model, dupl, cache) & self.visit(node.right, model, dupl, cache)
-            elif node.value == '->':
-                # P -> Q == ~P | Q
-                result = negate(model, self.visit(node.left, model, dupl, cache)) | self.visit(node.right, model, dupl, cache)
-            elif node.value == '<->':
-                # P <=> Q == (P & Q) | (~P & ~Q)
-                left = self.visit(node.left, model, dupl, cache)
-                right = self.visit(node.right, model, dupl, cache)
-                result = (left & right) | (negate(model, left) & negate(model, right))
-            elif node.value == '^':
-                # P ^ Q == (P & ~Q) | (~P & Q)
-                left = self.visit(node.left, model, dupl, cache)
-                right = self.visit(node.right, model, dupl, cache)
-                result = (left & negate(model, right)) | (negate(model, left) & right)
-            elif node.value == 'EU':
-                result = EU_saturated(model, self.visit(node.left, model, dupl, cache), self.visit(node.right, model, dupl, cache))
-            elif node.value == 'AU':
-                result = AU_v2(model, self.visit(node.left, model, dupl, cache), self.visit(node.right, model, dupl, cache))
-            elif node.value == 'EW':
-                result = EW(model, self.visit(node.left, model, dupl, cache), self.visit(node.right, model, dupl, cache))
-            elif node.value == 'AW':
-                result = AW(model, self.visit(node.left, model, dupl, cache), self.visit(node.right, model, dupl, cache))
+                    if optim_right:
+                        result = self.visit_with_hybrid_op(optim_var, optim_op, node.left, model, dupl, cache) | \
+                                 self.visit(node.right, model, dupl, cache, optim, optim_op, optim_var)
+                    else:
+                        result = self.visit_with_hybrid_op(optim_var, optim_op, node, model, dupl, cache)
+            else:
+                left_result = self.visit(node.left, model, dupl, cache)
+                right_result = self.visit(node.right, model, dupl, cache)
+                if node.value == '||':
+                    result = left_result | right_result
+                elif node.value == '&&':
+                    result = left_result & right_result
+                elif node.value == '->':
+                    # P -> Q == ~P | Q
+                    result = negate(model, left_result) | right_result
+                elif node.value == '<->':
+                    # P <=> Q == (P & Q) | (~P & ~Q)
+                    result = (left_result & right_result) | (negate(model, left_result) & negate(model, right_result))
+                elif node.value == '^':
+                    # P ^ Q == (P & ~Q) | (~P & Q)
+                    result = (left_result & negate(model, right_result)) | (negate(model, left_result) & right_result)
+                elif node.value == 'EU':
+                    result = EU_saturated(model, left_result, right_result)
+                elif node.value == 'AU':
+                    result = AU_v2(model, left_result, right_result)
+                elif node.value == 'EW':
+                    result = EW(model, left_result, right_result)
+                elif node.value == 'AW':
+                    result = AW(model, left_result, right_result)
+
         elif type(node) == HybridNode:
             """
             # Decide if there is a chance to optimize something - our goal is to optimize EX in some descendant node,
@@ -233,12 +234,14 @@ class EvaluateExpressionVisitor:
             """
             if model.num_props > MIN_NUM_PROPS_TO_OPTIMIZE and check_descendants_for_ex(node.child, node.var):
                 result = self.visit(node.child, model, dupl, cache, optim=True, optim_op=node.value, optim_var=node.var[1:-1])
-            elif node.value == '!':
-                result = bind(model, self.visit(node.child, model, dupl, cache), node.var[1:-1])
-            elif node.value == '@':
-                result = jump(model, self.visit(node.child, model, dupl, cache), node.var[1:-1])
-            elif node.value == '3':
-                result = existential(model, self.visit(node.child, model, dupl, cache), node.var[1:-1])
+            else:
+                child_result = self.visit(node.child, model, dupl, cache)
+                if node.value == '!':
+                    result = bind(model, child_result, node.var[1:-1])
+                elif node.value == '@':
+                    result = jump(model, child_result, node.var[1:-1])
+                elif node.value == '3':
+                    result = existential(model, child_result, node.var[1:-1])
 
         if save_to_cache:
             cache[canonized_subform] = (result, renaming)
@@ -247,14 +250,15 @@ class EvaluateExpressionVisitor:
         return result
 
     # gets the result of evaluated node, but applies hybrid op on it in the end
-    def visit_with_hybrid_op(self, var: str, op: str, node,
-                             model: Model, dupl: Dict[str, int], cache: Dict[str, Function]) -> Function:
+    def visit_with_hybrid_op(self, var: str, op: str, node, model: Model,
+                             dupl: Dict[str, int], cache: Dict[str, Function]) -> Function:
+        child_result = self.visit(node, model, dupl, cache)
         if op == "!":
-            return bind(model, self.visit(node, model, dupl, cache), var)
+            return bind(model, child_result, var)
         elif op == "@":
-            return jump(model, self.visit(node, model, dupl, cache), var)
+            return jump(model, child_result, var)
         elif op == "3":
-            return existential(model, self.visit(node, model, dupl, cache), var)
+            return existential(model, child_result, var)
 
 
 # find out if we have some duplicate nodes in our parse tree
