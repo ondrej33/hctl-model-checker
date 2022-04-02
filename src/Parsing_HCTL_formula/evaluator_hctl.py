@@ -152,17 +152,21 @@ class EvaluateExpressionVisitor:
                 # we want to save the result of this subformula unless we are in the middle of optimizing
                 save_to_cache = not optim
 
-        result = model.bdd.add_expr("False")
+        result = model.empty_colored_set
         if type(node) == TerminalNode:
-            # we must differentiate between atomic props VS state-variables
+            # we must differentiate between atomic props VS state-variables VS constants
             # if we have a state-variable, node.value has form of {var_name}
             if '{' in node.value:
                 result = create_comparator(model, node.value[1:-1])
+            elif node.value == "True":
+                result = model.unit_colored_set
+            elif node.value == "False":
+                result = model.empty_colored_set
             else:
-                result = model.bdd.add_expr(node.value)
+                result = labeled_by(model, node.value)
         elif type(node) == UnaryNode:
             if node.value == '~':
-                result = ~self.visit(node.child, model, dupl, cache)
+                result = negate(model, self.visit(node.child, model, dupl, cache))
             elif node.value == 'EX':
                 if optim:
                     result = optimized_hybrid_EX(model, self.visit(node.child, model, dupl, cache), optim_var, optim_op)
@@ -202,12 +206,18 @@ class EvaluateExpressionVisitor:
             elif node.value == '&&':
                 result = self.visit(node.left, model, dupl, cache) & self.visit(node.right, model, dupl, cache)
             elif node.value == '->':
-                result = self.visit(node.left, model, dupl, cache).implies(self.visit(node.right, model, dupl, cache))
+                # P -> Q == ~P | Q
+                result = negate(model, self.visit(node.left, model, dupl, cache)) | self.visit(node.right, model, dupl, cache)
             elif node.value == '<->':
-                result = self.visit(node.left, model, dupl, cache).equiv(self.visit(node.right, model, dupl, cache))
+                # P <=> Q == (P & Q) | (~P & ~Q)
+                left = self.visit(node.left, model, dupl, cache)
+                right = self.visit(node.right, model, dupl, cache)
+                result = (left & right) | (negate(model, left) & negate(model, right))
             elif node.value == '^':
-                result = ~ self.visit(node.left, model, dupl, cache).equiv(self.visit(node.right, model, dupl, cache))
-                #reorder(model.bdd)
+                # P ^ Q == (P & ~Q) | (~P & Q)
+                left = self.visit(node.left, model, dupl, cache)
+                right = self.visit(node.right, model, dupl, cache)
+                result = (left & negate(model, right)) | (negate(model, left) & right)
             elif node.value == 'EU':
                 result = EU_saturated(model, self.visit(node.left, model, dupl, cache), self.visit(node.right, model, dupl, cache))
             elif node.value == 'AU':

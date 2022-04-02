@@ -28,7 +28,11 @@ def collect_garbage_if_needed(bdd: BDD) -> None:
 
 # creates a bdd representing all states labeled by proposition given
 def labeled_by(model: Model, prop: str) -> Function:
-    return model.bdd.add_expr(prop)
+    return model.bdd.add_expr(prop) & model.unit_colored_set
+
+
+def negate(model: Model, phi: Function) -> Function:
+    return ~phi & model.unit_colored_set
 
 
 # creates comparator for variables s1, s2,... and var1, var2,...
@@ -36,7 +40,7 @@ def labeled_by(model: Model, prop: str) -> Function:
 def create_comparator(model: Model, var: str) -> Function:
     expr_parts = [f"(s__{i} <=> {var}__{i})" for i in range(model.num_props)]
     expr = " & ".join(expr_parts)
-    comparator = model.bdd.add_expr(expr)
+    comparator = model.bdd.add_expr(expr) & model.unit_colored_set
     return comparator
 
 
@@ -78,17 +82,17 @@ def pre_E_one_var(model: Model, initial: Function, var: str) -> Function:
     POSITIVE_PREDECESSOR = X & Exists(SET & !X, 'X') & !B_X
     PREDECESSORS_IN_X = NEGATIVE_PREDECESSOR | POSITIVE_PREDECESSOR
     """
-
     var_bdd = labeled_by(model, var)
-    neg_pred = ~var_bdd & model.bdd.quantify(initial & var_bdd, [var]) & model.update_fns[var]
-    pos_pred = var_bdd & model.bdd.quantify(initial & ~var_bdd, [var]) & ~model.update_fns[var]
+    not_var_bdd = negate(model, var_bdd)
+    neg_pred = not_var_bdd & model.bdd.quantify(initial & var_bdd, [var]) & model.update_fns[var]
+    pos_pred = var_bdd & model.bdd.quantify(initial & not_var_bdd, [var]) & negate(model, model.update_fns[var])
     return neg_pred | pos_pred
 
 
 # computes the set of states which can make transition into the initial set
 # applying ALL of the update functions
 def pre_E_all_vars(model: Model, initial: Function) -> Function:
-    current_set = model.bdd.add_expr("False")
+    current_set = model.empty_colored_set
     for i in range(model.num_props):
         current_set = current_set | pre_E_one_var(model, initial, f"s__{i}")
     return current_set | (initial & model.stable)
@@ -98,16 +102,17 @@ def EX(model: Model, phi: Function) -> Function:
     return pre_E_all_vars(model, phi)
 
 
+"""
 # fixpoint version
 def EU(model: Model, phi1: Function, phi2: Function) -> Function:
     old = phi2
-    new = model.bdd.add_expr("False")
+    new = model.empty_colored_set
     while old != new:
         new = old
         old = old | (phi1 & EX(model, old))
         # collect_garbage_if_needed(model.bdd)
     return old
-
+"""
 
 # version based on saturation
 def EU_saturated(model: Model, phi1: Function, phi2: Function) -> Function:
@@ -116,7 +121,7 @@ def EU_saturated(model: Model, phi1: Function, phi2: Function) -> Function:
     while not done:
         done = True
         for i in range(model.num_props, 0, -1):
-            update = (phi1 & pre_E_one_var(model, result, f"s__{i-1}")) & ~result
+            update = (phi1 & pre_E_one_var(model, result, f"s__{i-1}")) & negate(model, result)
             if update != model.bdd.false:
                 result = result | update
                 done = False
@@ -124,18 +129,12 @@ def EU_saturated(model: Model, phi1: Function, phi2: Function) -> Function:
     #reorder(model.bdd)
     return result
 
-
-# computed via EU
-def EF(model: Model, phi: Function) -> Function:
-    true_bdd = model.bdd.add_expr("True")
-    return EU(model, true_bdd, phi)
-
-
+"""
 # fixpoint version without excess computing
 def EF_v2(model: Model, phi: Function) -> Function:
     # lfpZ. ( phi OR EX Z )
     old = phi
-    new = model.bdd.add_expr("False")
+    new = model.empty_colored_set
     while old != new:
         new = old
         old = old | EX(model, old)
@@ -150,19 +149,23 @@ def EF_saturated(model: Model, phi: Function) -> Function:
     while not done:
         done = True
         for i in range(model.num_props, 0, -1):
-            update = pre_E_one_var(model, result, f"s__{i-1}") & ~result
+            update = pre_E_one_var(model, result, f"s__{i-1}") & negate(model, result)
             if update != model.bdd.false:
                 result = result | update
                 done = False
                 break
     #reorder(model.bdd)
     return result
+"""
 
+# computed via EU with saturation
+def EF_saturated(model: Model, phi: Function) -> Function:
+    return EU_saturated(model, model.unit_colored_set, phi)
 
 
 def EG(model: Model, phi: Function) -> Function:
     old = phi
-    new = model.bdd.add_expr("False")
+    new = model.empty_colored_set
     while old != new:
         new = old
         old = old & EX(model, old)
@@ -173,32 +176,34 @@ def EG(model: Model, phi: Function) -> Function:
 # computed through pure EX
 def AX(model: Model, phi: Function) -> Function:
     # AX f = ~EX (~f)
-    return ~EX(model, ~phi)
+    return negate(model, EX(model, negate(model, phi)))
 
 
 def AF(model: Model, phi1: Function) -> Function:
     # AF f = ~EG (~f)
-    return ~EG(model, ~phi1)
+    return negate(model, EG(model, negate(model, phi1)))
 
 
 # computed through EF
 def AG(model: Model, phi1: Function) -> Function:
     # AG f = ~EF (~f)
-    return ~EF(model, ~phi1)
+    return negate(model, EF_saturated(model, negate(model,phi1)))
 
 
 def AU(model: Model, phi1: Function, phi2: Function) -> Function:
     # A[f U g] = ~E[~g U (~f & ~g)] & ~EG ~g
-    and_inner = ~phi1 & ~phi2
-    not_eu = ~EU(model, ~phi2, and_inner)
-    not_eg = ~EG(model, ~phi1)
+    not_phi1 = negate(model, phi1)
+    not_phi2 = negate(model, phi2)
+    and_inner = not_phi1 & not_phi2
+    not_eu = negate(model, EU_saturated(model, not_phi2, and_inner))
+    not_eg = negate(model, EG(model, not_phi1))
     return not_eu & not_eg
 
 
 # fixpoint version for AU, should be faster
 def AU_v2(model: Model, phi1: Function, phi2: Function) -> Function:
     old = phi2
-    new = model.bdd.add_expr("False")
+    new = model.empty_colored_set
     while old != new:
         new = old
         old = old | (phi1 & AX(model, old))
@@ -208,12 +213,16 @@ def AU_v2(model: Model, phi1: Function, phi2: Function) -> Function:
 
 def EW(model: Model, phi1: Function, phi2: Function):
     # E[f R g] = ¬A[¬f U ¬g]
-    return ~AU(model, ~phi1, ~phi2)
+    not_phi1 = negate(model, phi1)
+    not_phi2 = negate(model, phi2)
+    return negate(model, AU(model, not_phi1, not_phi2))
 
 
 def AW(model: Model, phi1: Function, phi2: Function):
     # A[f R g] = ¬E[¬f U ¬g]
-    return ~EU(model, ~phi1, ~phi2)
+    not_phi1 = negate(model, phi1)
+    not_phi2 = negate(model, phi2)
+    return negate(model, EU_saturated(model, not_phi1, not_phi2))
 
 
 # ============================================================================================= #
@@ -224,7 +233,7 @@ def AW(model: Model, phi1: Function, phi2: Function):
 # binder EX:   ↓var. (EX PHI)
 # var should be something like "x"
 def optimized_bind_EX(model: Model, phi: Function, var: str) -> Function:
-    current_set = model.bdd.add_expr("False")
+    current_set = model.empty_colored_set
     comparator = create_comparator(model, var)
     vars_to_get_rid = [f"{var}__{i}" for i in range(model.num_props)]
 
@@ -240,7 +249,7 @@ def optimized_bind_EX(model: Model, phi: Function, var: str) -> Function:
 # jump EX:   @x. (EX PHI)
 # var should be something like "x"
 def optimized_jump_EX(model: Model, phi: Function, var: str) -> Function:
-    current_set = model.bdd.add_expr("False")
+    current_set = model.empty_colored_set
     comparator = create_comparator(model, var)
     vars_to_get_rid = [f"s__{i}" for i in range(model.num_props)]
 
@@ -255,7 +264,7 @@ def optimized_jump_EX(model: Model, phi: Function, var: str) -> Function:
 
 # existential EX:   ∃x. (EX SET1)
 def optimized_exist_EX(model: Model, phi: Function, var: str) -> Function:
-    current_set = model.bdd.add_expr("False")
+    current_set = model.empty_colored_set
     vars_to_get_rid = [f"{var}__{i}" for i in range(model.num_props)]
 
     for i in range(model.num_props):
@@ -284,7 +293,7 @@ def optimized_hybrid_EX(model: Model, phi: Function, var: str, operation: str) -
 
 # returns decimal value of binary vector s0,s1,s2...
 # is used for sorting assignments
-def eval_assignment(assignment, num_props) -> int:
+def encode_assignment(assignment, num_props) -> int:
     result_val = 0
     for i in range(num_props):
         result_val += assignment[len(assignment) - 1 - i][1] * 2 ** i
@@ -293,7 +302,7 @@ def eval_assignment(assignment, num_props) -> int:
 
 # returns decimal value of binary vector p0,p1,p2... - BUT uses inverted values
 # is used for sorting as a addition to previous function
-def eval_color(assignment, num_cols) -> float:
+def encode_color(assignment, num_cols) -> float:
     result_val = 0
     for i in range(num_cols):
         result_val += assignment[len(assignment) - 1 - i][1] * (1 / 2 ** i)
@@ -345,7 +354,7 @@ def print_results(result: Function, model: Model, message: str = "", show_all: b
     # sorting vars in individual outputs (dict has random order, even though bdd has the right one)
     sorted_inside = [sorted(assignment.items(), key=lambda x: (x[0][0], len(x[0]), x[0])) for assignment in assignments]
     # now sorting the outputs by its binary values (using s0,s1...) as main part + by its color as second part
-    assignments_sorted = sorted(sorted_inside, key=lambda x: (eval_assignment(x, model.num_props) + eval_color(x, model.num_params)))
+    assignments_sorted = sorted(sorted_inside, key=lambda x: (encode_assignment(x, model.num_props) + encode_color(x, model.num_params)))
 
     # we will print params first, then proposition values
     for assignment in assignments_sorted:
@@ -365,7 +374,7 @@ def print_results(result: Function, model: Model, message: str = "", show_all: b
     # sorting vars in individual outputs (dict has random order, even though bdd has the right one)
     sorted_inside = [sorted(assignment.items(), key=lambda x: (model.name_dict[x[0]])) for assignment in assignments]
     # now sorting the outputs by its binary values (using s0,s1...) as main part + by its color as second part
-    assignments_sorted = sorted(sorted_inside, key=lambda x: (eval_assignment(x, model.num_props + model.num_params)))
+    assignments_sorted = sorted(sorted_inside, key=lambda x: (encode_assignment(x, model.num_props + model.num_params)))
 
     assignments = model.bdd.pick_iter(result, care_vars=vars_to_show)
     for assignment in assignments_sorted:
