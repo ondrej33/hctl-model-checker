@@ -9,10 +9,10 @@ class NodeType(Enum):
     FALSE = auto()
 
     NEG = auto()
-    DIS = auto()
-    CON = auto()
-    IMPL = auto()
-    EQIV = auto()
+    OR = auto()
+    AND = auto()
+    IMP = auto()
+    IFF = auto()
     XOR = auto()
 
     EX = auto()
@@ -33,12 +33,12 @@ class NodeType(Enum):
 
 OP_DICT = {
     "~": NodeType.NEG,
-    "||": NodeType.DIS,
-    "|": NodeType.DIS,
-    "&&": NodeType.CON,
-    "&": NodeType.CON,
-    "->": NodeType.IMPL,
-    "<->": NodeType.EQIV,
+    "||": NodeType.OR,
+    "|": NodeType.OR,
+    "&&": NodeType.AND,
+    "&": NodeType.AND,
+    "->": NodeType.IMP,
+    "<->": NodeType.IFF,
     "^": NodeType.XOR,
 
     "EX": NodeType.EX,
@@ -56,3 +56,5 @@ OP_DICT = {
     "@": NodeType.JUMP,
     "3": NodeType.EXIST,
 }
+
+OP_TO_STRING = {op: op_string for (op_string, op) in OP_DICT.items()}

@@ -14,7 +14,7 @@ from typing import Set, Dict, Tuple
 def get_prop_names_from_hctl_ast(node, props_collected: Set[str]) -> None:
     if type(node) == TerminalNode:
         # DO not add any of true/false or vars, only proposition nodes
-        if node.value == "True" or node.value == "False" or "{" in node.value:
+        if node.category == NodeType.TRUE or node.category == NodeType.FALSE or node.category == NodeType.VAR:
             return
         props_collected.add(node.value)
     elif type(node) == UnaryNode or type(node) == HybridNode:
@@ -28,7 +28,7 @@ def get_prop_names_from_hctl_ast(node, props_collected: Set[str]) -> None:
 def get_names_from_update_fn_ast(node, props_and_params: Set[str]) -> None:
     if type(node) == TerminalNode:
         # DO not add any of true/false nodes, only proposition (param) nodes
-        if node.value == "True" or node.value == "False":
+        if node.category == NodeType.TRUE or node.category == NodeType.FALSE:
             return
         props_and_params.add(node.value)
     elif type(node) == UnaryNode:
@@ -42,38 +42,38 @@ def get_names_from_update_fn_ast(node, props_and_params: Set[str]) -> None:
 def rename_terminals_update_fn_ast(node, rename_dict: Dict[str, str]) -> None:
     if type(node) == TerminalNode:
         # rename proposition (param) nodes
-        if node.value == "True" or node.value == "False":
+        if node.category == NodeType.TRUE or node.category == NodeType.FALSE:
             return
         node.value = rename_dict[node.value]
         node.subform_string = node.value
     elif type(node) == UnaryNode:
         rename_terminals_update_fn_ast(node.child, rename_dict)
-        node.subform_string = "(" + node.value + node.child.subform_string + ")"
+        node.subform_string = "(" + OP_TO_STRING[node.category] + node.child.subform_string + ")"
     elif type(node) == BinaryNode:
         rename_terminals_update_fn_ast(node.left, rename_dict)
         rename_terminals_update_fn_ast(node.right, rename_dict)
-        node.subform_string = "(" + node.left.subform_string + node.value + node.right.subform_string + ")"
+        node.subform_string = "(" + node.left.subform_string + OP_TO_STRING[node.category] + node.right.subform_string + ")"
 
 
 # this renames all propositions in terminal nodes in HCTL formula (does not touch vars)
 def rename_props_in_hctl_ast(node, rename_dict: Dict[str, str]) -> None:
     if type(node) == TerminalNode:
         # DO NOT rename state-variable nodes, ONLY proposition nodes (and unify true/false)
-        if '{' in node.value or node.value == "True" or node.value == "False":
+        if node.category == NodeType.VAR or node.category == NodeType.TRUE or node.category == NodeType.FALSE:
             return
         node.value = rename_dict[node.value]
         node.subform_string = node.value
     elif type(node) == UnaryNode:
         rename_props_in_hctl_ast(node.child, rename_dict)
-        node.subform_string = "(" + node.value + node.child.subform_string + ")"
+        node.subform_string = "(" + OP_TO_STRING[node.category] + node.child.subform_string + ")"
     elif type(node) == BinaryNode:
         rename_props_in_hctl_ast(node.left, rename_dict)
         rename_props_in_hctl_ast(node.right, rename_dict)
-        node.subform_string = "(" + node.left.subform_string + node.value + node.right.subform_string + ")"
+        node.subform_string = "(" + node.left.subform_string + OP_TO_STRING[node.category] + node.right.subform_string + ")"
     elif type(node) == HybridNode:
         # first rename the "var" field of the node, then move to child
         rename_props_in_hctl_ast(node.child, rename_dict)
-        node.subform_string = "(" + node.value + node.var + ":" + node.child.subform_string + ")"
+        node.subform_string = "(" + OP_TO_STRING[node.category] + node.var + ":" + node.child.subform_string + ")"
 
 
 # renames as many state-variables as possible to the identical names, without changing the formula itself
@@ -89,23 +89,23 @@ def minimize_number_of_state_vars(node, rename_dict: Dict[str, str], last_used_n
 
     if type(node) == TerminalNode:
         # DO NOT change names of any true/false or proposition nodes, only state-variables
-        if '{' not in node.value:
+        if node.category != NodeType.VAR:
             return 0
         node.value = '{' + rename_dict[node.value[1:-1]] + '}'
         node.subform_string = node.value
     elif type(node) == UnaryNode:
         # just dive deeper and then rename string
         num_vars = minimize_number_of_state_vars(node.child, rename_dict, last_used_name, num_vars)
-        node.subform_string = "(" + node.value + node.child.subform_string + ")"
+        node.subform_string = "(" + OP_TO_STRING[node.category] + node.child.subform_string + ")"
     elif type(node) == BinaryNode:
         # just dive deeper and then rename string
         num_vars1 = minimize_number_of_state_vars(node.left, rename_dict, last_used_name, num_vars)
         num_vars2 = minimize_number_of_state_vars(node.right, rename_dict, last_used_name, num_vars)
         num_vars = max(num_vars1, num_vars2)
-        node.subform_string = "(" + node.left.subform_string + node.value + node.right.subform_string + ")"
+        node.subform_string = "(" + node.left.subform_string + OP_TO_STRING[node.category] + node.right.subform_string + ")"
     elif type(node) == HybridNode:
         # if we hit binder or exist, we are adding its new var name to dict & stack
-        if node.value == "!" or node.value == "3":
+        if node.category == NodeType.BIND or node.category == NodeType.EXIST:
             last_used_name = last_used_name + 'x'
             rename_dict[node.var[1:-1]] = last_used_name
             num_vars = max(num_vars, len(last_used_name))
@@ -115,10 +115,10 @@ def minimize_number_of_state_vars(node, rename_dict: Dict[str, str], last_used_n
         node.var = '{' + rename_dict[node.var[1:-1]] + '}'
         # and we dive deeper in the tree
         num_vars = minimize_number_of_state_vars(node.child, rename_dict, last_used_name, num_vars)
-        node.subform_string = "(" + node.value + node.var + ":" + node.child.subform_string + ")"
+        node.subform_string = "(" + OP_TO_STRING[node.category] + node.var + ":" + node.child.subform_string + ")"
 
         # and at last, when we leave binder/exist, we delete the added var from dict and stack
-        if node.value == "!" or node.value == "3":
+        if node.category == NodeType.BIND or node.category == NodeType.EXIST:
             # last_used_name = last_used_name[0:-1]
             rename_dict.pop(var_before)
     return num_vars

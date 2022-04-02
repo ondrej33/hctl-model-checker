@@ -11,11 +11,11 @@ MIN_NUM_PROPS_TO_OPTIMIZE = 25
 
 
 def is_node_ex_to_optimize(node, var: str) -> bool:
-    return type(node) == UnaryNode and node.value == "EX" and var in node.subform_string
+    return type(node) == UnaryNode and node.category == NodeType.EX and var in node.subform_string
 
 
 def is_node_union(node) -> bool:
-    return type(node) == BinaryNode and node.value == "||"
+    return type(node) == BinaryNode and node.category == NodeType.OR
 
 
 """
@@ -154,37 +154,37 @@ class EvaluateExpressionVisitor:
         result = model.mk_empty_colored_set()
         if type(node) == TerminalNode:
             # we must differentiate between atomic props VS state-variables VS constants
-            # if we have a state-variable, node.value has form of {var_name}
-            if '{' in node.value:
+            if node.category == NodeType.VAR:
+                # if we have a state-variable, node.value has form of {var_name}
                 result = create_comparator(model, node.value[1:-1])
-            elif node.value == "True":
+            elif node.category == NodeType.TRUE:
                 result = model.mk_unit_colored_set()
-            elif node.value == "False":
+            elif node.category == NodeType.FALSE:
                 result = model.mk_empty_colored_set()
             else:
                 result = labeled_by(model, node.value)
         elif type(node) == UnaryNode:
             child_result = self.visit(node.child, model, dupl, cache)
-            if node.value == '~':
+            if node.category == NodeType.NEG:
                 result = negate(model, child_result)
-            elif node.value == 'EX':
+            elif node.category == NodeType.EX:
                 if optim_h:
                     result = optimized_hybrid_EX(model, child_result, optim_var, optim_op)
                 else:
                     result = EX(model, child_result)
-            elif node.value == 'AX':
+            elif node.category == NodeType.AX:
                 result = AX(model, child_result)
-            elif node.value == 'EF':
+            elif node.category == NodeType.EF:
                 result = EF_saturated(model, child_result)
-            elif node.value == 'AF':
+            elif node.category == NodeType.AF:
                 result = AF(model, child_result)
-            elif node.value == 'EG':
+            elif node.category == NodeType.EG:
                 result = EG(model, child_result)
-            elif node.value == 'AG':
+            elif node.category == NodeType.AG:
                 result = AG(model, child_result)
         elif type(node) == BinaryNode:
             # first lets focus on the optimised part (currently only for the OR operation)
-            if optim_h and node.value == '||':
+            if optim_h and node.category == NodeType.OR:
                 # if we have enabled optim, procedure depends what types of children we have
                 optim_left = is_node_ex_to_optimize(node.left, optim_var) or is_node_union(node.left)
                 optim_right = is_node_ex_to_optimize(node.right, optim_var) or is_node_union(node.right)
@@ -207,26 +207,26 @@ class EvaluateExpressionVisitor:
             else:
                 left_result = self.visit(node.left, model, dupl, cache)
                 right_result = self.visit(node.right, model, dupl, cache)
-                if node.value == '&&':
+                if node.category == NodeType.AND:
                     result = left_result & right_result
-                if node.value == '||':
+                if node.category == NodeType.OR:
                     result = left_result | right_result
-                elif node.value == '->':
+                elif node.category == NodeType.IMP:
                     # P -> Q == ~P | Q
                     result = negate(model, left_result) | right_result
-                elif node.value == '<->':
+                elif node.category == NodeType.IFF:
                     # P <=> Q == (P & Q) | (~P & ~Q)
                     result = (left_result & right_result) | (negate(model, left_result) & negate(model, right_result))
-                elif node.value == '^':
+                elif node.category == NodeType.XOR:
                     # P ^ Q == (P & ~Q) | (~P & Q)
                     result = (left_result & negate(model, right_result)) | (negate(model, left_result) & right_result)
-                elif node.value == 'EU':
+                elif node.category == NodeType.EU:
                     result = EU_saturated(model, left_result, right_result)
-                elif node.value == 'AU':
+                elif node.category == NodeType.AU:
                     result = AU_v2(model, left_result, right_result)
-                elif node.value == 'EW':
+                elif node.category == NodeType.EW:
                     result = EW(model, left_result, right_result)
-                elif node.value == 'AW':
+                elif node.category == NodeType.AW:
                     result = AW(model, left_result, right_result)
 
         elif type(node) == HybridNode:
@@ -236,15 +236,15 @@ class EvaluateExpressionVisitor:
             # We optimize only for bigger models - for smaller there is not much difference.
             """
             if model.num_props > MIN_NUM_PROPS_TO_OPTIMIZE and check_descendants_for_ex(node.child, node.var):
-                result = self.visit(node.child, model, dupl, cache, optim_h=True, optim_op=node.value,
+                result = self.visit(node.child, model, dupl, cache, optim_h=True, optim_op=node.category,
                                     optim_var=node.var[1:-1])
             else:
                 child_result = self.visit(node.child, model, dupl, cache)
-                if node.value == '!':
+                if node.category == NodeType.BIND:
                     result = bind(model, child_result, node.var[1:-1])
-                elif node.value == '@':
+                elif node.category == NodeType.JUMP:
                     result = jump(model, child_result, node.var[1:-1])
-                elif node.value == '3':
+                elif node.category == NodeType.EXIST:
                     result = existential(model, child_result, node.var[1:-1])
 
         if save_to_cache:
@@ -254,14 +254,14 @@ class EvaluateExpressionVisitor:
         return result
 
     # gets the result of evaluated node, but applies hybrid op on it in the end
-    def visit_with_hybrid_op(self, var: str, op: str, node, model: Model,
+    def visit_with_hybrid_op(self, var: str, op: NodeType, node, model: Model,
                              dupl: Dict[str, int], cache: Dict[str, Function]) -> Function:
         child_result = self.visit(node, model, dupl, cache)
-        if op == "!":
+        if op == NodeType.BIND:
             return bind(model, child_result, var)
-        elif op == "@":
+        elif op == NodeType.JUMP:
             return jump(model, child_result, var)
-        elif op == "3":
+        elif op == NodeType.EXIST:
             return existential(model, child_result, var)
 
 
