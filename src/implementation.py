@@ -28,11 +28,11 @@ def collect_garbage_if_needed(bdd: BDD) -> None:
 
 # creates a bdd representing all states labeled by proposition given
 def labeled_by(model: Model, prop: str) -> Function:
-    return model.bdd.add_expr(prop) & model.unit_colored_set
+    return model.bdd.add_expr(prop) & model.mk_unit_colored_set()
 
 
 def negate(model: Model, phi: Function) -> Function:
-    return ~phi & model.unit_colored_set
+    return ~phi & model.mk_unit_colored_set()
 
 
 # creates comparator for variables s1, s2,... and var1, var2,...
@@ -40,7 +40,7 @@ def negate(model: Model, phi: Function) -> Function:
 def create_comparator(model: Model, var: str) -> Function:
     expr_parts = [f"(s__{i} <=> {var}__{i})" for i in range(model.num_props)]
     expr = " & ".join(expr_parts)
-    comparator = model.bdd.add_expr(expr) & model.unit_colored_set
+    comparator = model.bdd.add_expr(expr) & model.mk_unit_colored_set()
     return comparator
 
 
@@ -92,7 +92,7 @@ def pre_E_one_var(model: Model, initial: Function, var: str) -> Function:
 # computes the set of states which can make transition into the initial set
 # applying ALL of the update functions
 def pre_E_all_vars(model: Model, initial: Function) -> Function:
-    current_set = model.empty_colored_set
+    current_set = model.mk_empty_colored_set()
     for i in range(model.num_props):
         current_set = current_set | pre_E_one_var(model, initial, f"s__{i}")
     return current_set | (initial & model.stable)
@@ -106,7 +106,7 @@ def EX(model: Model, phi: Function) -> Function:
 # fixpoint version
 def EU(model: Model, phi1: Function, phi2: Function) -> Function:
     old = phi2
-    new = model.empty_colored_set
+    new = model.mk_empty_colored_set()
     while old != new:
         new = old
         old = old | (phi1 & EX(model, old))
@@ -134,7 +134,7 @@ def EU_saturated(model: Model, phi1: Function, phi2: Function) -> Function:
 def EF_v2(model: Model, phi: Function) -> Function:
     # lfpZ. ( phi OR EX Z )
     old = phi
-    new = model.empty_colored_set
+    new = model.mk_empty_colored_set()
     while old != new:
         new = old
         old = old | EX(model, old)
@@ -160,12 +160,12 @@ def EF_saturated(model: Model, phi: Function) -> Function:
 
 # computed via EU with saturation
 def EF_saturated(model: Model, phi: Function) -> Function:
-    return EU_saturated(model, model.unit_colored_set, phi)
+    return EU_saturated(model, model.mk_unit_colored_set(), phi)
 
 
 def EG(model: Model, phi: Function) -> Function:
     old = phi
-    new = model.empty_colored_set
+    new = model.mk_empty_colored_set()
     while old != new:
         new = old
         old = old & EX(model, old)
@@ -203,7 +203,7 @@ def AU(model: Model, phi1: Function, phi2: Function) -> Function:
 # fixpoint version for AU, should be faster
 def AU_v2(model: Model, phi1: Function, phi2: Function) -> Function:
     old = phi2
-    new = model.empty_colored_set
+    new = model.mk_empty_colored_set()
     while old != new:
         new = old
         old = old | (phi1 & AX(model, old))
@@ -233,7 +233,7 @@ def AW(model: Model, phi1: Function, phi2: Function):
 # binder EX:   ↓var. (EX PHI)
 # var should be something like "x"
 def optimized_bind_EX(model: Model, phi: Function, var: str) -> Function:
-    current_set = model.empty_colored_set
+    current_set = model.mk_empty_colored_set()
     comparator = create_comparator(model, var)
     vars_to_get_rid = [f"{var}__{i}" for i in range(model.num_props)]
 
@@ -249,7 +249,7 @@ def optimized_bind_EX(model: Model, phi: Function, var: str) -> Function:
 # jump EX:   @x. (EX PHI)
 # var should be something like "x"
 def optimized_jump_EX(model: Model, phi: Function, var: str) -> Function:
-    current_set = model.empty_colored_set
+    current_set = model.mk_empty_colored_set()
     comparator = create_comparator(model, var)
     vars_to_get_rid = [f"s__{i}" for i in range(model.num_props)]
 
@@ -264,7 +264,7 @@ def optimized_jump_EX(model: Model, phi: Function, var: str) -> Function:
 
 # existential EX:   ∃x. (EX SET1)
 def optimized_exist_EX(model: Model, phi: Function, var: str) -> Function:
-    current_set = model.empty_colored_set
+    current_set = model.mk_empty_colored_set()
     vars_to_get_rid = [f"{var}__{i}" for i in range(model.num_props)]
 
     for i in range(model.num_props):

@@ -1,8 +1,8 @@
 from src.implementation import *
 
 """
-This file includes functions for manual evaluation of the HCTL formulas
-This can be later used to test the parser or evaluator
+This file contains functions for manual evaluation of the HCTL formulae.
+This can be later used to test the parser or evaluator.
 """
 
 
@@ -11,7 +11,7 @@ This can be later used to test the parser or evaluator
 # ============================================================================================= #
 
 """
-List of formulas includes (current version, might be changed):
+List of formulas included (current version, might be updated):
     model_check_fixed1 == "!{x}: EX {x}"
     model_check_fixed2 == "!{x}: AX {x}"
     model_check_fixed3 == "!{x}: (EX (~{x} && EX {x}))"
@@ -203,7 +203,7 @@ def model_check_fixed11(model: Model) -> Function:
 
 # ↓x. ( ∃y. ( x & EX y ) )
 # states which have some successor, nested operators version
-# should give the same results as "pre_E_all_vars(model, model.unit_colored_set) & ~model.stable"
+# should give the same results as "pre_E_all_vars(model, model.mk_unit_colored_set()) & ~model.stable"
 def model_check_fixed12(model: Model) -> Function:
     x = create_comparator(model, 'x')
     y = create_comparator(model, 'xx')

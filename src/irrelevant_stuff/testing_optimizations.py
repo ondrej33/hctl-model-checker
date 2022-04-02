@@ -110,7 +110,7 @@ X_COMBINATIONS = [X_COMBINATIONS1, X_COMBINATIONS2, X_COMBINATIONS3, X_COMBINATI
 
 def test_run_1_set(model: Model, seq_num: int, func, message: str) -> None:
     message_cont = ""
-    set1 = model.unit_colored_set
+    set1 = model.mk_unit_colored_set()
 
     # FOLLOWS version 1:
     """
@@ -187,8 +187,8 @@ def test_run_1_set(model: Model, seq_num: int, func, message: str) -> None:
 
 def test_run_2_sets(model: Model, seq_num: int, func, message: str) -> None:
     message_cont = ""
-    set1 = model.unit_colored_set
-    set2 = model.unit_colored_set
+    set1 = model.mk_unit_colored_set()
+    set2 = model.mk_unit_colored_set()
 
     # first lets determine what the testing sets will be based on the seq num
     if seq_num == 0:
@@ -420,8 +420,8 @@ def new_test3(file_name: str, seq_num, seq_num2) -> None:
     # first we parse the input and create the model object
     model = bnet_parser(file_name)
 
-    set1 = model.unit_colored_set
-    set2 = model.unit_colored_set
+    set1 = model.mk_unit_colored_set()
+    set2 = model.mk_unit_colored_set()
     x_content = X_COMBINATIONS[random.randint(0, 4)][model.num_props]
     message_cont=""
 

@@ -152,16 +152,16 @@ class EvaluateExpressionVisitor:
                 # we want to save the result of this subformula unless we are in the middle of optimizing
                 save_to_cache = not optim
 
-        result = model.empty_colored_set
+        result = model.mk_empty_colored_set()
         if type(node) == TerminalNode:
             # we must differentiate between atomic props VS state-variables VS constants
             # if we have a state-variable, node.value has form of {var_name}
             if '{' in node.value:
                 result = create_comparator(model, node.value[1:-1])
             elif node.value == "True":
-                result = model.unit_colored_set
+                result = model.mk_unit_colored_set()
             elif node.value == "False":
-                result = model.empty_colored_set
+                result = model.mk_empty_colored_set()
             else:
                 result = labeled_by(model, node.value)
         elif type(node) == UnaryNode:

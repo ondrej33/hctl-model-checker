@@ -28,12 +28,18 @@ class Model:
         self.unit_colored_set = self.bdd.add_expr("True")
         self.empty_colored_set = self.bdd.add_expr("False")
 
-        self.stable = self.get_stable()
+        self.stable = self.compute_stable()
 
     # computes stable states in network using "equational fixed point" - big conjunction all (s_i <=> F_s_i) formulas
     # this is later used as a way to artificially generate self loops on stable states
-    def get_stable(self) -> Function:
+    def compute_stable(self) -> Function:
         current_set = self.unit_colored_set
         for i in range(self.num_props):
             current_set = current_set & self.bdd.apply("<=>", self.bdd.add_expr(f"s__{i}"), self.update_fns[f"s__{i}"])
         return current_set
+
+    def mk_unit_colored_set(self):
+        return self.unit_colored_set
+
+    def mk_empty_colored_set(self):
+        return self.empty_colored_set
