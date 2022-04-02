@@ -1,7 +1,7 @@
 import os
 # Change the current working directory
 SRC_DIR = os.path.dirname(os.path.abspath(__file__))
-PROJECT_DIR = os.path.dirname(SRC_DIR)
+PROJECT_DIR = os.path.dirname(os.path.dirname(SRC_DIR))
 os.chdir(PROJECT_DIR)
 
 import sys
@@ -16,7 +16,7 @@ from random import randint
 
 from src.implementation import *
 from src.fixed_formulas_eval import *
-from parse_all import bnet_parser
+from src.parse_all import bnet_parser
 
 # ============================================================================================= #
 # ================================= FIXED FORMULAE TEST CASES ================================= #
@@ -209,8 +209,8 @@ def test_run_2_sets(model: Model, seq_num: int, func, message: str) -> None:
         set2 = labeled_by(model, 's__3') | labeled_by(model, 's__4')
     elif seq_num == 4:
         message_cont = "set1= SINKS, set2= EX SINKS"
-        set1 = model_check_fixed2_v3(model)
-        set2 = EX(model, model_check_fixed2_v3(model))
+        set1 = model_check_fixed2_v2(model)
+        set2 = EX(model, model_check_fixed2_v2(model))
     elif seq_num == 5:
         message_cont = "set1= x, set2= EX x"
         set1 = create_comparator(model, 'x')
@@ -309,8 +309,8 @@ def saturation_eu_test(model: Model) -> None:
             set1 = labeled_by(model, 's__1') | labeled_by(model, 's__2')
             set2 = labeled_by(model, 's__3') | labeled_by(model, 's__4')
         elif seq_num == 4:
-            set1 = model_check_fixed2_v3(model)
-            set2 = EX(model, model_check_fixed2_v3(model))
+            set1 = model_check_fixed2_v2(model)
+            set2 = EX(model, model_check_fixed2_v2(model))
         elif seq_num == 5:
             set1 = create_comparator(model, 'x')
             set2 = EX(model, create_comparator(model, 'x'))

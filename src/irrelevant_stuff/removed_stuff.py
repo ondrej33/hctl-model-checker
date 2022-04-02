@@ -114,7 +114,10 @@ def bdd_dumper(file_name: str):
     # sorting vars in individual outputs (dict has random order, even though bdd has the right one)
     sorted_inside = [sorted(assignment.items(), key=lambda x: (x[0][0], len(x[0]), x[0])) for assignment in assignments]
     # now sorting the outputs by its binary values (using s0,s1...) as main part + by its color as second part
-    assignments_sorted = sorted(sorted_inside, key=lambda x: (eval_assignment(x, model.num_props) + eval_color(x, model.num_params)))
+    assignments_sorted = sorted(
+        sorted_inside,
+        key=lambda x: (encode_assignment(x, model.num_props) + encode_color(x, model.num_params))
+    )
 
     # we will print params first, then proposition values
     for assignment in assignments_sorted:
