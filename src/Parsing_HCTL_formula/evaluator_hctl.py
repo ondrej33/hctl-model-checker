@@ -120,11 +120,11 @@ class EvaluateExpressionVisitor:
     @:param model: model containing var/param/prop names, bdds for update fns and so on
     @:param dupl:  dict of CANONIZED subformulas present more times in the formula (val is how many are left)
     @:param cache: dict of solved CANONIZED subformulas from dupl and <their results, renaming vars>
-    @:param optim: if optim=True, then parent was some hybrid operation and we can push it inside for example EX...
+    @:param optim_h: if optim=True, then parent was some hybrid operation and we can push it inside for example EX...
     @:param optim_op and @:param optim_var holds info about what hybrid op we are optimizing
     """
     def visit(self, node, model: Model, dupl: Dict[str, int], cache,
-              optim=False, optim_op=None, optim_var=None) -> Function:
+              optim_h=False, optim_op=None, optim_var=None) -> Function:
         # TODO : subform_string problem
         # first check for if this node does not belong in the duplicates
         save_to_cache = False
@@ -139,7 +139,7 @@ class EvaluateExpressionVisitor:
                     cache.pop(canonized_subform)
 
                 # we can only return cached value if we are not in the middle of optimizing
-                if not optim:
+                if not optim_h:
                     # since we are working with canonical cache, we must rename vars in result bdd
                     result_renaming = {val: key for key, val in result_renaming.items()}
                     combined_renaming = {result_renaming[val] : key for key, val in renaming.items()}
@@ -149,7 +149,7 @@ class EvaluateExpressionVisitor:
                     return renamed_res
             else:
                 # we want to save the result of this subformula unless we are in the middle of optimizing
-                save_to_cache = not optim
+                save_to_cache = not optim_h
 
         result = model.mk_empty_colored_set()
         if type(node) == TerminalNode:
@@ -168,7 +168,7 @@ class EvaluateExpressionVisitor:
             if node.value == '~':
                 result = negate(model, child_result)
             elif node.value == 'EX':
-                if optim:
+                if optim_h:
                     result = optimized_hybrid_EX(model, child_result, optim_var, optim_op)
                 else:
                     result = EX(model, child_result)
@@ -184,30 +184,33 @@ class EvaluateExpressionVisitor:
                 result = AG(model, child_result)
         elif type(node) == BinaryNode:
             # first lets focus on the optimised part (currently only for the OR operation)
-            if optim and node.value == '||':
+            if optim_h and node.value == '||':
                 # if we have enabled optim, procedure depends what types of children we have
                 optim_left = is_node_ex_to_optimize(node.left, optim_var) or is_node_union(node.left)
                 optim_right = is_node_ex_to_optimize(node.right, optim_var) or is_node_union(node.right)
                 if optim_left:
                     if optim_right:
-                        result = self.visit(node.left, model, dupl, cache, optim, optim_op, optim_var) | \
-                                 self.visit(node.right, model, dupl, cache, optim, optim_op, optim_var)
+                        result = self.visit(node.left, model, dupl, cache, optim_h, optim_op, optim_var) | \
+                                 self.visit(node.right, model, dupl, cache, optim_h, optim_op, optim_var)
                     else:
-                        result = self.visit(node.left, model, dupl, cache, optim, optim_op, optim_var) | \
+                        result = self.visit(node.left, model, dupl, cache, optim_h, optim_op, optim_var) | \
                                  self.visit_with_hybrid_op(optim_var, optim_op, node.right, model, dupl, cache)
                 else:
                     if optim_right:
                         result = self.visit_with_hybrid_op(optim_var, optim_op, node.left, model, dupl, cache) | \
-                                 self.visit(node.right, model, dupl, cache, optim, optim_op, optim_var)
+                                 self.visit(node.right, model, dupl, cache, optim_h, optim_op, optim_var)
                     else:
                         result = self.visit_with_hybrid_op(optim_var, optim_op, node, model, dupl, cache)
+
+            # we can do operators AND, XOR, IFF in a optimised way - we do it only for AND now
+            # TODO: optimise at least AND - right side is evaluated only on the colors from the result of left side
             else:
                 left_result = self.visit(node.left, model, dupl, cache)
                 right_result = self.visit(node.right, model, dupl, cache)
+                if node.value == '&&':
+                    result = left_result & right_result
                 if node.value == '||':
                     result = left_result | right_result
-                elif node.value == '&&':
-                    result = left_result & right_result
                 elif node.value == '->':
                     # P -> Q == ~P | Q
                     result = negate(model, left_result) | right_result
@@ -233,7 +236,8 @@ class EvaluateExpressionVisitor:
             # We optimize only for bigger models - for smaller there is not much difference.
             """
             if model.num_props > MIN_NUM_PROPS_TO_OPTIMIZE and check_descendants_for_ex(node.child, node.var):
-                result = self.visit(node.child, model, dupl, cache, optim=True, optim_op=node.value, optim_var=node.var[1:-1])
+                result = self.visit(node.child, model, dupl, cache, optim_h=True, optim_op=node.value,
+                                    optim_var=node.var[1:-1])
             else:
                 child_result = self.visit(node.child, model, dupl, cache)
                 if node.value == '!':
