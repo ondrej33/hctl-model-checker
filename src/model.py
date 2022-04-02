@@ -1,6 +1,6 @@
 from typing import List
 
-# change this depending on environment
+# change this depending on the environment
 #from dd.autoref import BDD, Function
 from dd.cudd import BDD, Function
 
@@ -24,12 +24,16 @@ class Model:
         self.num_params = len(names_params)
         self.num_vars = len(names_vars)
 
+        # unit set initially includes whole colored state space, but can be later restricted to only some colors
+        self.unit_colored_set = self.bdd.add_expr("True")
+        self.empty_colored_set = self.bdd.add_expr("False")
+
         self.stable = self.get_stable()
 
     # computes stable states in network using "equational fixed point" - big conjunction all (s_i <=> F_s_i) formulas
     # this is later used as a way to artificially generate self loops on stable states
     def get_stable(self) -> Function:
-        current_set = self.bdd.add_expr("True")
+        current_set = self.unit_colored_set
         for i in range(self.num_props):
             current_set = current_set & self.bdd.apply("<=>", self.bdd.add_expr(f"s__{i}"), self.update_fns[f"s__{i}"])
         return current_set
