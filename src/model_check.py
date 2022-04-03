@@ -32,8 +32,12 @@ def main(file_name: str, formula: str):
     except InvalidPropError as e:
         print("Formula includes non existing proposition:", e.bad_prop)
         return
-    except Exception:
+    except InvalidUpdateFnOperationError as e:
+        print("Invalid operation found in update function:", e.invalid_op)
+        return
+    except Exception as e:
         print("Error during parsing happened")
+        print(str(e))
         return
 
     try:

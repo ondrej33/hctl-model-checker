@@ -26,17 +26,23 @@ class update_fnVisitor(ParseTreeVisitor):
     def visitTerminalNode(self, ctx: update_fnParser.TerminalNodeContext):
         # unify all possibilities for true/false nodes into one option
         if ctx.value.text in {"True", "true", "tt"}:
-            return TerminalNode(value="True")
+            return TerminalNode(value="True", category=NodeType.TRUE)
         elif ctx.value.text in {"False", "false", "ff"}:
-            return TerminalNode(value="False")
+            return TerminalNode(value="False", category=NodeType.FALSE)
 
-        return TerminalNode(value=ctx.value.text)
+        # only other possible way for item in update fn is a proposition
+        return TerminalNode(value=ctx.value.text, category=NodeType.PROP)
 
     def visitUnary(self, ctx: update_fnParser.UnaryContext):
-        return UnaryNode(value=ctx.value.text, child=self.visit(ctx.child))
+        # we have slight inconsistency here - "!" means negation in context of update functions,
+        # but it is considered as binder otherwise
+        # this is caused due to the compatibility with AEON or BNET format
+        if ctx.value.text == "!":
+            ctx.value.text = "~"
+        return UnaryNode(child=self.visit(ctx.child), category=OP_DICT[ctx.value.text])
 
     def visitBinary(self, ctx: update_fnParser.BinaryContext):
-        return BinaryNode(value=ctx.value.text, left=self.visit(ctx.left), right=self.visit(ctx.right))
+        return BinaryNode(left=self.visit(ctx.left), right=self.visit(ctx.right), category=OP_DICT[ctx.value.text])
 
 
 
