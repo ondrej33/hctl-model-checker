@@ -1,0 +1,6 @@
+wheel==0.37.1
+Cython==0.29.28
+dd==0.5.7
+antlr4-python3-runtime==4.9.3
+timeout-decorator==0.5.0
+termcolor==1.1.0
