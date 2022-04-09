@@ -22,10 +22,10 @@ Example formulae can be found in the file `formulae_examples.txt`
 
 The main script to run is the model_check.py.
 
-The implementation for the formula components evaluation (EX, binder...) is located in the implementation.py. 
-The file also includes all kinds of result printing.
+The implementation for evaluating of the individual HCTL operators (EX, binder, ...) is located in the implementation.py. 
+There are also all kinds of result printing.
 
-In the Parsing_HCTL_formula/ directory, there is the grammar and parser for the HCTL logic. 
+In the Parsing_HCTL_formula directory, there is the grammar and parser for the HCTL logic. 
 There is also the script evaluator_hctl.py, with the main algorithm for the model checker, including caching and optimizations.
 Most of the other files in the folder is generated automatically from the grammar by ANTLR.
 
