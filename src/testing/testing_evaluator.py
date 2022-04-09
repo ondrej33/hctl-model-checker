@@ -1,7 +1,7 @@
 import os
 # Change the current working directory
 SRC_DIR = os.path.dirname(os.path.abspath(__file__))
-PROJECT_DIR = os.path.dirname(SRC_DIR)
+PROJECT_DIR = os.path.dirname(os.path.dirname(SRC_DIR))
 os.chdir(PROJECT_DIR)
 
 import sys
@@ -11,7 +11,7 @@ sys.path.append(f'{SRC_DIR}/Parsing_HCTL_formula')
 sys.path.append(f'{SRC_DIR}/Parsing_update_fns')
 
 from src.parse_all import parse_all
-from Parsing_HCTL_formula.evaluator_hctl import eval_tree
+from parse_hctl_formula.evaluator_hctl import eval_tree
 from src.implementation import print_results_fast, print_results
 from src.fixed_formulas_eval import *
 

@@ -1,7 +1,7 @@
 from src.model import *
-from src.Parsing_HCTL_formula import parser_hctl
-from src.Parsing_update_fns import parser_update_fn
-from src.Parsing_update_fns import evaluator_update_fn
+from src.parse_hctl_formula import parser_hctl
+from src.parse_update_function import parser_update_fn
+from src.parse_update_function import evaluator_update_fn
 from src.abstract_syntax_tree import *
 from src.exceptions import *
 

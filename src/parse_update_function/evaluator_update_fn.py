@@ -1,6 +1,6 @@
 from antlr4 import *
 from src.abstract_syntax_tree import *
-from src.Parsing_update_fns.parser_update_fn import parse_to_tree
+from src.parse_update_function.parser_update_fn import parse_to_tree
 from src.exceptions import InvalidUpdateFnOperationError
 
 

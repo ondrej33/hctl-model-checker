@@ -1,6 +1,6 @@
-from src.Parsing_HCTL_formula.HCTLLexer import HCTLLexer
-from src.Parsing_HCTL_formula.HCTLParser import HCTLParser
-from src.Parsing_HCTL_formula.HCTLVisitor import HCTLVisitor
+from src.parse_hctl_formula.HCTLLexer import HCTLLexer
+from src.parse_hctl_formula.HCTLParser import HCTLParser
+from src.parse_hctl_formula.HCTLVisitor import HCTLVisitor
 
 from antlr4 import *
 from src.abstract_syntax_tree import *
