@@ -1,0 +1,6 @@
+url: https://doi.org/10.1371/journal.pbio.0040312
+variables: 44
+inputs: 4
+outputs: 2
+regulations: 78
+largest scc: 17
