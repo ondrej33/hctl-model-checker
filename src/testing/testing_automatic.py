@@ -13,7 +13,7 @@ sys.path.append(f'{SRC_DIR}/Parsing_update_fns')
 from pathlib import Path
 
 from src.testing.fixed_formulas_eval import *
-from src.parse_hctl_formula.evaluator_hctl import parse_and_eval
+from src.evaluator_hctl import parse_and_eval
 from src.parse_all import parse_all
 
 

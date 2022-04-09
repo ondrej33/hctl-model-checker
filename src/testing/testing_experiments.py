@@ -25,11 +25,10 @@ def run_test(file_name, formula):
 
     res = eval_tree(as_tree_hctl, model)
     end = time.time()
-    res_time = end - start
 
     # print_results(res, model, show_all=True)
     print_results_fast(res, model, f"model: {model.name}, formula: {formula}")
-    print(res_time)
+    print(end - start)
     print()
 
 
@@ -49,9 +48,7 @@ def compute_stable(file_name):
     stable = model.stable
 
     end = time.time()
-    res_time = end - start
-
-    print(formula, ": ", res_time)
+    print(formula, ": ", end - start)
     print_results_fast(stable, model)
 
 

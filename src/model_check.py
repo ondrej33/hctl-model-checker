@@ -16,7 +16,7 @@ from pathlib import Path
 from src.exceptions import *
 from src.implementation import print_results
 from src.parse_all import parse_all
-from src.parse_hctl_formula.evaluator_hctl import eval_tree
+from src.evaluator_hctl import eval_tree
 
 
 """

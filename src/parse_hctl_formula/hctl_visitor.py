@@ -2,9 +2,9 @@
 from antlr4 import *
 from src.abstract_syntax_tree import *
 if __name__ is not None and "." in __name__:
-    from .HCTLParser import HCTLParser
+    from .hctl_parser import HCTLParser
 else:
-    from HCTLParser import HCTLParser
+    from hctl_parser import HCTLParser
 
 
 # This class defines a complete generic visitor for a parse tree produced by HCTLParser.

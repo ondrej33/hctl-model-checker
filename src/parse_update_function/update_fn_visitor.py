@@ -2,9 +2,9 @@
 from antlr4 import *
 from src.abstract_syntax_tree import *
 if __name__ is not None and "." in __name__:
-    from .update_fnParser import update_fnParser
+    from .update_fn_parser import update_fnParser
 else:
-    from update_fnParser import update_fnParser
+    from update_fn_parser import update_fnParser
 
 # This class defines a complete generic visitor for a parse tree produced by update_fnParser.
 

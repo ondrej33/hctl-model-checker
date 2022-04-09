@@ -1,7 +1,7 @@
 from src.model import *
-from src.parse_hctl_formula import parser_hctl
-from src.parse_update_function import parser_update_fn
-from src.parse_update_function import evaluator_update_fn
+from src.parse_hctl_formula import parser_wrapper_hctl
+from src.parse_update_function import parser_wrapper_update_fn
+from src import evaluator_update_fn
 from src.abstract_syntax_tree import *
 from src.exceptions import *
 
@@ -141,7 +141,7 @@ def parse_all(file_name: str, formula: str) -> Tuple[Model, Node]:
     update_fn_strings = [line.split(",")[1] for line in lines_ordered]
 
     # collect prop names from parse tree of a HCTL formula
-    as_tree_hctl = parser_hctl.parse_to_tree(formula)
+    as_tree_hctl = parser_wrapper_hctl.parse_to_tree(formula)
     props_in_hctl = set()
     get_prop_names_from_hctl_ast(as_tree_hctl, props_in_hctl)
 
@@ -156,7 +156,7 @@ def parse_all(file_name: str, formula: str) -> Tuple[Model, Node]:
     # TODO: check that binders and free variables correspond to each other, no free vars
 
     # create as_trees for update functions and collect their terminals (props or params)
-    update_fn_trees = [parser_update_fn.parse_to_tree(update_str) for update_str in update_fn_strings]
+    update_fn_trees = [parser_wrapper_update_fn.parse_to_tree(update_str) for update_str in update_fn_strings]
     props_and_params_set = set()
     for as_tree in update_fn_trees:
         get_names_from_update_fn_ast(as_tree, props_and_params_set)

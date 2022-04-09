@@ -1,6 +1,6 @@
-from src.parse_update_function.update_fnLexer import update_fnLexer
-from src.parse_update_function.update_fnParser import update_fnParser
-from src.parse_update_function.update_fnVisitor import update_fnVisitor
+from src.parse_update_function.update_fn_lexer import update_fnLexer
+from src.parse_update_function.update_fn_parser import update_fnParser
+from src.parse_update_function.update_fn_visitor import update_fnVisitor
 
 from antlr4 import *
 from src.abstract_syntax_tree import *
