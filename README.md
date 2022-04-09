@@ -14,9 +14,7 @@ python3 model_check.py model_file hctl_formula
 
 The tool takes BN models in the `bnet` format as its input, with many example models present in the `benchmark_models` directory. The models are also present in the the aeon (and often even sbml) formats.
 
-The grammar for HCTL is specified in the file `src/Parsing_HCTL_formula/HCTL.g4`
-
-Example formulae can be found in the file `formulae_examples.txt`
+The grammar for HCTL is specified in the readable format in the file `src/Parsing_HCTL_formula/HCTL.g4`. Example formulae can be found in the file `formulae_examples.txt`.
 
 # Code structure
 
