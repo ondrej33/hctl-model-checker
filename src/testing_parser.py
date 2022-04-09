@@ -1,7 +1,7 @@
 import os
 # Change the current working directory
 SRC_DIR = os.path.dirname(os.path.abspath(__file__))
-PROJECT_DIR = os.path.dirname(os.path.dirname(SRC_DIR))
+PROJECT_DIR = os.path.dirname(SRC_DIR)
 os.chdir(PROJECT_DIR)
 
 import sys
@@ -56,6 +56,7 @@ def run_tests(model: Model) -> None:
 
 
 if __name__ == '__main__':
+    # runs the whole set of tests on the given model
     if len(sys.argv) == 2:
         if Path(sys.argv[1]).exists() and Path(sys.argv[1]).is_file():
             # first use some placeholder formula (with the maximal number of HCTL vars that any formula uses (2 atm))

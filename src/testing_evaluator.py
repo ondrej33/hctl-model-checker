@@ -67,6 +67,7 @@ if __name__ == '__main__':
 
         """
         # pre-defined formulas to choose from:
+        
         run_test(path_to_bnet, "!{x}: AX {x}")
         run_test(path_to_bnet, "!{x}: AX AF {x}")
         run_test(path_to_bnet, "!{x}: AG EF {x}")
@@ -82,16 +83,10 @@ if __name__ == '__main__':
         run_test(path_to_bnet, "AF !{x}: ((AX (~{x} && AF {x})) && (EF !{y}: EX EG ~{y}))")
 
         # Existence of two sinks
-        run_test(path_to_bnet, "3{x}: 3{y}: (@{x}: ~{y} && AX {x}) && (@{y}: AX {y})")
+        run_test(path_to_bnet, "!{x}: 3{y}: (@{x}: ~{y} && AX {x}) && (@{y}: AX {y})")
 
-        # MAYBE: fork existence / fork states exactly
-        fork_exist1 = "3{z}: 3{x}: 3{y}: (@{x}: (~{y} && AX {x})) && (@{y}: (AX {y})) && (@{z}: (EF {x}) && (EF {y}) && (AX (EF {x} ^ EF {y})))"
-        fork_exist2 = "3{x}: 3{y}: (@{x}: (~{y} && AX {x})) && (@{y}: (AX {y})) && (3{z}: @{z}: (EF {x}) && (EF {y}) && (AX (EF {x} ^ EF {y})))"
-
-        fork_exactly1 = "!{z}: 3{x}: 3{y}: (@{x}: (~{y} && AX {x})) && (@{y}: (AX {y})) && (@{z}: (EF {x}) && (EF {y}) && (AX (EF {x} ^ EF {y})))"
-        fork_exactly2 = "3{x}: 3{y}: (@{x}: (~{y} && AX {x})) && (@{y}: (AX {y})) && (!{z}: @{z}: (EF {x}) && (EF {y}) && (AX (EF {x} ^ EF {y})))"
-        fork_exactly3 = "3{x}: 3{y}: (@{x}: (~{y} && AX {x})) && (@{y}: (AX {y})) && (!{z}: (EF {x}) && (EF {y}) && (AX (EF {x} ^ EF {y})))"
-        fork_exactly4 = "3{x}: 3{y}: (@{x}: (~{y} && AX {x})) && (@{y}: (AX {y})) && (3{z}: (EF {x}) && (EF {y}) && (AX (EF {x} ^ EF {y})))"
+        # Fork states existence
+        run_test(path_to_bnet, "3{x}: 3{y}: (@{x}: ~{y} && AX {x}) && (@{y}: AX {y}) && EF ({x} && !{z}: AX {z}) && EF ({y} && !{z}: AX {z}) && AX (EF ({x} && !{z}: AX {z}) ^ EF ({y} && !{z}: AX {z}))")
         """
         names = "029 095 064 097 063 067 010 053 104 035 036 037 021 028 062 049 003 119 131 022 047 042 045 033 034 038 042 045 033 034 038 027 098".split(' ')
 
