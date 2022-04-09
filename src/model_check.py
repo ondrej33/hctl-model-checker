@@ -14,7 +14,7 @@ import time
 from pathlib import Path
 
 from src.exceptions import *
-from src.implementation import print_results
+from src.implementation_components import print_results
 from src.parse_all import parse_all
 from src.evaluator_hctl import eval_tree
 

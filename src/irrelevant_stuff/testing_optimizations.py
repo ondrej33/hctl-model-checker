@@ -14,7 +14,7 @@ import random
 import time
 from random import randint
 
-from src.implementation import *
+from src.implementation_components import *
 from src.fixed_formulas_eval import *
 from src.irrelevant_stuff.removed_stuff import bnet_parser
 

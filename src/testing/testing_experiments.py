@@ -12,7 +12,7 @@ sys.path.append(f'{SRC_DIR}/Parsing_update_fns')
 
 from src.parse_all import parse_all
 from parse_hctl_formula.evaluator_hctl import eval_tree
-from src.implementation import print_results_fast, print_results
+from src.implementation_components import print_results_fast, print_results
 from src.fixed_formulas_eval import *
 
 import time

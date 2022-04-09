@@ -1,4 +1,4 @@
-from src.implementation import *
+from src.implementation_components import *
 
 """
 Functionality that was excluded from the main project.

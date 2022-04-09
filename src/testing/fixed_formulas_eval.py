@@ -1,4 +1,4 @@
-from src.implementation import *
+from src.implementation_components import *
 
 """
 This file contains functions for manual evaluation of the HCTL formulae.

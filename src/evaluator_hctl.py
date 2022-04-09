@@ -1,6 +1,6 @@
 from antlr4 import *
 from src.abstract_syntax_tree import *
-from src.implementation import *
+from src.implementation_components import *
 from src.parse_hctl_formula.parser_wrapper_hctl import parse_to_tree
 
 from heapq import heappush, heappop
