@@ -20,17 +20,16 @@ The grammar for HCTL is specified in the readable format in the file `src/Parsin
 
 The main script to run is the model_check.py.
 
-The implementation for evaluating of the individual HCTL operators (EX, binder, ...) is located in the implementation.py. 
-There are also all kinds of result printing.
+The model-checking algorithm, together with the caching and optimizations, is implemented in the evaluator_hctl.py.
+The evaluation of individual HCTL operators (EX, binder, ...) can be found in the implementation_components.py. 
+Evaluation of the update functions of BN variables is handled by evaluator_update_fn.py
 
-In the parse_hctl_formula directory, there is the grammar and parser for the HCTL logic. 
-There is also the script evaluator_hctl.py, with the main algorithm for the model checker, including caching and optimizations.
+In the parse_hctl_formula directory, there is a grammar and parser for the HCTL logic. 
 Most of the other files in the folder is generated automatically from the grammar by ANTLR.
+Similarly, in the parse_update_function directory, there is a grammar, parser and other things for the update functions of BN variables.
 
-In the parse_update_function directory, there is a similar grammar, parser and evaluator for the update functions of Boolean network' variables.
-
-The file parse_all.py handles the whole parsing process, of both the Boolean network model and HCTL formula.
-This includes the canonization procedure.
+The file parse_all.py handles the whole parsing process, of both the Boolean network model and the HCTL formula.
+That includes the canonization procedure of state variables.
 
 In the abstract_syntax_tree.py and model.py, the main data structures can be found.
 
