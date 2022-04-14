@@ -10,36 +10,43 @@ from pathlib import Path
 from typing import Set, Dict, Tuple
 
 
-# this collects names of all propositions from HCTL formula into param props_collected
-def get_prop_names_from_hctl_ast(node, props_collected: Set[str]) -> None:
+# collects names of all propositions from HCTL formula tree into param props_collected
+def get_prop_names_from_hctl(node, props_collected: Set[str]) -> None:
     if type(node) == TerminalNode:
         # DO not add any of true/false or vars, only proposition nodes
         if node.category == NodeType.TRUE or node.category == NodeType.FALSE or node.category == NodeType.VAR:
             return
         props_collected.add(node.value)
     elif type(node) == UnaryNode or type(node) == HybridNode:
-        get_prop_names_from_hctl_ast(node.child, props_collected)
+        get_prop_names_from_hctl(node.child, props_collected)
     elif type(node) == BinaryNode:
-        get_prop_names_from_hctl_ast(node.left, props_collected)
-        get_prop_names_from_hctl_ast(node.right, props_collected)
+        get_prop_names_from_hctl(node.left, props_collected)
+        get_prop_names_from_hctl(node.right, props_collected)
 
 
-# this collects names of all propositions and params in update function's tree into props_and_params
-def get_names_from_update_fn_ast(node, props_and_params: Set[str]) -> None:
+# wrapper for collecting names of all propositions and params from the update function's tree
+def get_names_from_update_fn(node) -> Set[str]:
+    props_and_params = set()
+    get_names_from_update_fn_rec(node, props_and_params)
+    return props_and_params
+
+
+# recursively collects names of all propositions and params from the update function's tree into props_and_params
+def get_names_from_update_fn_rec(node, props_and_params: Set[str]) -> None:
     if type(node) == TerminalNode:
         # DO not add any of true/false nodes, only proposition (param) nodes
         if node.category == NodeType.TRUE or node.category == NodeType.FALSE:
             return
         props_and_params.add(node.value)
     elif type(node) == UnaryNode:
-        get_names_from_update_fn_ast(node.child, props_and_params)
+        get_names_from_update_fn_rec(node.child, props_and_params)
     elif type(node) == BinaryNode:
-        get_names_from_update_fn_ast(node.left, props_and_params)
-        get_names_from_update_fn_ast(node.right, props_and_params)
+        get_names_from_update_fn_rec(node.left, props_and_params)
+        get_names_from_update_fn_rec(node.right, props_and_params)
 
 
-# this renames all terminal nodes in update function's tree
-def rename_terminals_update_fn_ast(node, rename_dict: Dict[str, str]) -> None:
+# renames all terminal nodes in update function's tree
+def rename_terminals_update_fn(node, rename_dict: Dict[str, str]) -> None:
     if type(node) == TerminalNode:
         # rename proposition (param) nodes
         if node.category == NodeType.TRUE or node.category == NodeType.FALSE:
@@ -47,16 +54,16 @@ def rename_terminals_update_fn_ast(node, rename_dict: Dict[str, str]) -> None:
         node.value = rename_dict[node.value]
         node.subform_string = node.value
     elif type(node) == UnaryNode:
-        rename_terminals_update_fn_ast(node.child, rename_dict)
+        rename_terminals_update_fn(node.child, rename_dict)
         node.subform_string = "(" + OP_TO_STRING[node.category] + node.child.subform_string + ")"
     elif type(node) == BinaryNode:
-        rename_terminals_update_fn_ast(node.left, rename_dict)
-        rename_terminals_update_fn_ast(node.right, rename_dict)
+        rename_terminals_update_fn(node.left, rename_dict)
+        rename_terminals_update_fn(node.right, rename_dict)
         node.subform_string = "(" + node.left.subform_string + OP_TO_STRING[node.category] + node.right.subform_string + ")"
 
 
-# this renames all propositions in terminal nodes in HCTL formula (does not touch vars)
-def rename_props_in_hctl_ast(node, rename_dict: Dict[str, str]) -> None:
+# renames all propositions in terminal nodes in HCTL formula (does not touch vars)
+def rename_props_in_hctl(node, rename_dict: Dict[str, str]) -> None:
     if type(node) == TerminalNode:
         # DO NOT rename state-variable nodes, ONLY proposition nodes (and unify true/false)
         if node.category == NodeType.VAR or node.category == NodeType.TRUE or node.category == NodeType.FALSE:
@@ -64,15 +71,15 @@ def rename_props_in_hctl_ast(node, rename_dict: Dict[str, str]) -> None:
         node.value = rename_dict[node.value]
         node.subform_string = node.value
     elif type(node) == UnaryNode:
-        rename_props_in_hctl_ast(node.child, rename_dict)
+        rename_props_in_hctl(node.child, rename_dict)
         node.subform_string = "(" + OP_TO_STRING[node.category] + node.child.subform_string + ")"
     elif type(node) == BinaryNode:
-        rename_props_in_hctl_ast(node.left, rename_dict)
-        rename_props_in_hctl_ast(node.right, rename_dict)
+        rename_props_in_hctl(node.left, rename_dict)
+        rename_props_in_hctl(node.right, rename_dict)
         node.subform_string = "(" + node.left.subform_string + OP_TO_STRING[node.category] + node.right.subform_string + ")"
     elif type(node) == HybridNode:
         # first rename the "var" field of the node, then move to child
-        rename_props_in_hctl_ast(node.child, rename_dict)
+        rename_props_in_hctl(node.child, rename_dict)
         node.subform_string = "(" + OP_TO_STRING[node.category] + node.var + ":" + node.child.subform_string + ")"
 
 
@@ -126,8 +133,6 @@ def minimize_number_of_state_vars(node, rename_dict: Dict[str, str], last_used_n
 
 # parses boolean network file and formula into a Model structure and formula tree
 def parse_all(file_name: str, formula: str) -> Tuple[Model, Node]:
-    # TODO: GO THROUGH THE TREES ONLY ONCE (collect terminal names while building the trees, later just rename them)
-    
     # first preprocess the file content
     content = Path(file_name).read_text()
     # TODO: maybe clean the content (no need atm, because test examples are clean)
@@ -143,7 +148,7 @@ def parse_all(file_name: str, formula: str) -> Tuple[Model, Node]:
     # collect prop names from parse tree of a HCTL formula
     as_tree_hctl = parser_wrapper_hctl.parse_to_tree(formula)
     props_in_hctl = set()
-    get_prop_names_from_hctl_ast(as_tree_hctl, props_in_hctl)
+    get_prop_names_from_hctl(as_tree_hctl, props_in_hctl)
 
     # check that props_in_hctl includes only props from prop_names
     invalid_props = props_in_hctl.difference(prop_names)
@@ -153,16 +158,20 @@ def parse_all(file_name: str, formula: str) -> Tuple[Model, Node]:
     # rename state-vars in hctl tree so that we have minimum vars needed, add new names to list
     num_vars = minimize_number_of_state_vars(as_tree_hctl, dict(), "", 0)
     var_names = ["x" * i for i in range(1, num_vars + 1)]
-    # TODO: check that binders and free variables correspond to each other, no free vars
+    # TODO: check that binders and formula variables correspond to each other, no free vars
 
-    # create as_trees for update functions and collect their terminals (props or params)
+    # create syntax trees for update functions and collect their parameters (inputs)
     update_fn_trees = [parser_wrapper_update_fn.parse_to_tree(update_str) for update_str in update_fn_strings]
-    props_and_params_set = set()
-    for as_tree in update_fn_trees:
-        get_names_from_update_fn_ast(as_tree, props_and_params_set)
+    param_names = set()
+    params_per_fn = dict()
+    for prop, tree in zip(prop_names, update_fn_trees):
+        new_props_params = get_names_from_update_fn(tree)
+        new_params = new_props_params.difference(prop_names)
+        params_per_fn[prop] = new_params
+        param_names = param_names.union(new_params)
 
-    # from set collected above choose those terminals that are not props -> they are PARAMS
-    param_names = sorted(props_and_params_set.difference(prop_names))
+    # sort the parameters
+    param_names = sorted(param_names)
 
     # now we have all building elements, lets create rename dictionary
     # we will rename props to s0, s1... and params to p0, p1...
@@ -171,11 +180,13 @@ def parse_all(file_name: str, formula: str) -> Tuple[Model, Node]:
         name_dict[prop_names[i]] = f"s__{i}"
     for i in range(len(param_names)):
         name_dict[param_names[i]] = f"p__{i}"
+    params_per_fn = {name_dict[prop]: list(map(lambda p: name_dict[p], param_set)) for (prop,param_set) in params_per_fn.items()}
+    #print(params_per_fn.items())
 
     # rename props in hctl formula tree, rename props/params in update trees
-    rename_props_in_hctl_ast(as_tree_hctl, name_dict)
-    for as_tree in update_fn_trees:
-        rename_terminals_update_fn_ast(as_tree, name_dict)
+    rename_props_in_hctl(as_tree_hctl, name_dict)
+    for tree in update_fn_trees:
+        rename_terminals_update_fn(tree, name_dict)
 
     # create a BDD
     bdd = BDD()
@@ -184,6 +195,23 @@ def parse_all(file_name: str, formula: str) -> Tuple[Model, Node]:
     for var_name in var_names:
         vrs.extend(f"{var_name}__{i}" for i in range(len(prop_names)))  # HCTL variables
     bdd.declare(*vrs)
+
+    """
+    # reordering to some desired order
+    # we use ordering:  prop_1, {vars_prop_1}, {params_prop_1}, prop_2, {vars_prop_2}, {params_prop_2}...
+    # for example: s__1, x__1, y__1, p__A, p__B, s__2, x__2, y__2, p__C,...
+    my_order = dict()
+    index = 0
+    for j in range((len(prop_names))):
+        my_order[f"s__{j}"] = index
+        index += 1
+        for var_name in var_names:
+            my_order[f"{var_name}__{j}"] = index
+            index += 1
+        for param in params_per_fn[f"s__{j}"]:
+            my_order[param] = index
+            index += 1
+    """
 
     # reordering to some desired order (now it is s0,x0,y0,s1...,p0,p1...)
     my_order = dict()
@@ -195,7 +223,6 @@ def parse_all(file_name: str, formula: str) -> Tuple[Model, Node]:
     for i in range((len(param_names))):
         my_order[f"p__{i}"] = i + (len(var_names) + 1) * len(prop_names)
     bdd.reorder(my_order)
-    # bdd.configure(reordering=False)  # auto reorder disabled (probably)? - it is slower when disabled
 
     # create bdd functions from update trees via evaluator_update_fn.eval_tree
     list_update_fns = [evaluator_update_fn.eval_tree(as_tree, bdd) for as_tree in update_fn_trees]
