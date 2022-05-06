@@ -31,6 +31,7 @@ class NodeType(Enum):
     EXIST = auto()
 
 
+# mapping from string representation of operators to the enum representation
 OP_DICT = {
     "~": NodeType.NEG,
     "||": NodeType.OR,
@@ -57,4 +58,5 @@ OP_DICT = {
     "3": NodeType.EXIST,
 }
 
+# mapping from enum representation of operators to the string
 OP_TO_STRING = {op: op_string for (op_string, op) in OP_DICT.items()}

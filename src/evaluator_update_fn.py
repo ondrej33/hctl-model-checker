@@ -1,7 +1,7 @@
 from antlr4 import *
 from src.abstract_syntax_tree import *
-from src.parse_update_function.parser_wrapper_update_fn import parse_to_tree
 from src.exceptions import InvalidUpdateFnOperationError
+from src.parse_update_function.parser_wrapper_update_fn import parse_to_tree
 
 
 class EvaluateExpressionVisitor:

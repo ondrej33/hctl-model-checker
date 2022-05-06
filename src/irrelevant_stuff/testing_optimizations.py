@@ -7,16 +7,15 @@ os.chdir(PROJECT_DIR)
 import sys
 sys.path.append(PROJECT_DIR)
 sys.path.append(f'{SRC_DIR}')
-sys.path.append(f'{SRC_DIR}/Parsing_HCTL_formula')
-sys.path.append(f'{SRC_DIR}/Parsing_update_fns')
 
 import random
 import time
 from random import randint
 
-from src.implementation_components import *
 from src.fixed_formulas_eval import *
+from src.implementation_components import *
 from src.irrelevant_stuff.removed_stuff import bnet_parser
+from src.printing import print_results
 
 # ============================================================================================= #
 # ================================= FIXED FORMULAE TEST CASES ================================= #

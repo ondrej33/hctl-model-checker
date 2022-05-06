@@ -1,12 +1,9 @@
+from dd.cudd import BDD, Function
 from typing import List
 
-# change this depending on the environment
-#from dd.autoref import BDD, Function
-from dd.cudd import BDD, Function
 
-
-# the main structure representing combination of the Boolean network and HCTL formula
-# includes metadata, names of propositions and variables, update functions and more
+# the main structure representing the combination of the Boolean network and HCTL formula
+# contains update functions, metadata (numbers and names of propositions, variables,...), and more
 class Model:
     def __init__(self, name: str, bdd: BDD, names_props: List[str],
                  names_params: List[str], names_vars: List[str], update_fns, name_dict):
@@ -30,8 +27,8 @@ class Model:
 
         self.stable = self.compute_stable()
 
-    # computes stable states in network using "equational fixed point" - big conjunction all (s_i <=> F_s_i) formulas
-    # this is later used as a way to artificially generate self loops on stable states
+    # computes stable states in network using a big conjunction of all (s_i <=> F_s_i) formulas
+    # this is later used as a way to artificially introduce self loops on stable states
     def compute_stable(self) -> Function:
         current_set = self.unit_colored_set
         for i in range(self.num_props):

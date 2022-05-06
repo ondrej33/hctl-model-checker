@@ -7,8 +7,6 @@ os.chdir(PROJECT_DIR)
 import sys
 sys.path.append(PROJECT_DIR)
 sys.path.append(f'{SRC_DIR}')
-sys.path.append(f'{SRC_DIR}/Parsing_HCTL_formula')
-sys.path.append(f'{SRC_DIR}/Parsing_update_fns')
 
 from pathlib import Path
 

@@ -7,20 +7,18 @@ os.chdir(PROJECT_DIR)
 import sys
 sys.path.append(PROJECT_DIR)
 sys.path.append(f'{SRC_DIR}')
-sys.path.append(f'{SRC_DIR}/Parsing_HCTL_formula')
-sys.path.append(f'{SRC_DIR}/Parsing_update_fns')
 
 import time
 from pathlib import Path
 
-from src.exceptions import *
-from src.implementation_components import print_results
-from src.parse_all import parse_all
 from src.evaluator_hctl import eval_tree
+from src.exceptions import *
+from src.printing import print_results
+from src.parse_all import parse_all
 
 
 """
-Main function which runs the whole model checker
+Main function which runs the whole model checking process
 """
 
 
@@ -52,7 +50,6 @@ def main(file_name: str, formula: str):
         print("Error during evaluation happened")
 
 
-# usage: model_check.py path_to_bnet formula
 if __name__ == '__main__':
     if len(sys.argv) == 3:
         if Path(sys.argv[1]).exists() and Path(sys.argv[1]).is_file():
