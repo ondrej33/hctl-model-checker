@@ -6,7 +6,6 @@ os.chdir(PROJECT_DIR)
 
 import sys
 sys.path.append(PROJECT_DIR)
-sys.path.append(f'{SRC_DIR}')
 
 from src.fixed_formulas_eval import *
 from src.parse_all import parse_all

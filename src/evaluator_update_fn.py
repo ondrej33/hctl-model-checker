@@ -5,6 +5,8 @@ from src.parse_update_function.parser_wrapper_update_fn import parse_to_tree
 
 
 class EvaluateExpressionVisitor:
+    def __init__(self):
+        pass
 
     # Visits node and depending on its type and operation, evaluates the subformula which it represents
     # Uses results from children, combines them until whole thing is done

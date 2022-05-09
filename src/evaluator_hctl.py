@@ -102,6 +102,9 @@ def get_canonical_and_dict(subform) -> Tuple[str, Dict[str, str]]:
 
 
 class EvaluateExpressionVisitor:
+    def __init__(self):
+        pass
+
     """
     Visits node and depending on its type and operation, evaluates the subformula which it represents
     @:param node:  node in abstract syntax tree of HCTL formula, it represents a subformula

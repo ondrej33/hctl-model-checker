@@ -6,7 +6,6 @@ os.chdir(PROJECT_DIR)
 
 import sys
 sys.path.append(PROJECT_DIR)
-sys.path.append(f'{SRC_DIR}')
 
 from pathlib import Path
 
@@ -92,7 +91,7 @@ if __name__ == '__main__':
     # runs the whole set of tests on the given model
     if len(sys.argv) == 2:
         if Path(sys.argv[1]).exists() and Path(sys.argv[1]).is_file():
-            print("Running the tests for \"sys.argv[1]\".")
+            print(f"Running the tests for \"{sys.argv[1]}\".")
             # use some placeholder formula (with the maximal number of HCTL vars that any formula uses (2 atm))
             m, _ = parse_all(sys.argv[1], "3{x}: 3{xx}: (@{x}: ~{xx} && AX{x}) && (@{xx}: AX{xx}) && EF{x} && EF{xx}")
             run_general_tests(m)
