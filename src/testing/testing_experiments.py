@@ -8,10 +8,10 @@ import sys
 sys.path.append(PROJECT_DIR)
 sys.path.append(f'{SRC_DIR}')
 
+from src.fixed_formulas_eval import *
 from src.parse_all import parse_all
 from src.parse_hctl_formula.evaluator_hctl import eval_tree
-from src.printing import print_results_fast, print_results
-from src.fixed_formulas_eval import *
+from src.printing import print_results, print_results_fast
 
 import time
 import timeout_decorator
@@ -74,10 +74,10 @@ if __name__ == '__main__':
         # Strong basin of an oscillating attractor
         run_test(path_to_bnet, "AF !{x}: (AX (~{x} && AF {x}))")
 
-        # Strong basin of an oscillating attractor which is not a cycle
+        # Strong basin of an oscillating attractor which is not a simple cycle
         run_test(path_to_bnet, "AF !{x}: ((AX (~{x} && AF {x})) && (EF !{y}: EX EG ~{y}))")
 
-        # Existence of two sinks
+        # Multiple steady states
         run_test(path_to_bnet, "!{x}: 3{y}: (@{x}: ~{y} && AX {x}) && (@{y}: AX {y})")
 
         # Fork states existence

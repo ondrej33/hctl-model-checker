@@ -11,11 +11,12 @@ sys.path.append(f'{SRC_DIR}')
 from pathlib import Path
 
 from src.testing.fixed_formulas_eval import *
-from src.evaluator_hctl import parse_and_eval
+from src.evaluator_hctl import eval_tree, parse_and_eval
 from src.parse_all import parse_all
+from src.printing import get_states_only
 
 
-def run_tests(model: Model) -> None:
+def run_general_tests(model: Model) -> None:
     # check that "(EX phi1) || (EX phi2)" == "EX (phi1 || phi2)"
     assert parse_and_eval("(EX s__1) || (EX EX {x})", model) == parse_and_eval("EX (s__1 || EX {x}) ", model)
     assert model_check_fixed19(model) == parse_and_eval("(EX {x}) || (EX EX {x})", model)
@@ -44,7 +45,7 @@ def run_tests(model: Model) -> None:
     assert model_check_fixed17(model) == parse_and_eval("3{x}: 3{xx}: (@{x}: AG~{xx} && AG EF {x}) && (@{xx}: AG EF {xx})", model)
     assert model_check_fixed18(model) == parse_and_eval("3{x}: 3{xx}: (@{x}: ~{xx} && AX{x}) && (@{xx}: AX{xx}) && EF{x} && EF{xx}", model)
 
-    # those should be evaluated with optimizations
+    # these should be evaluated with optimizations for larger models
     assert model_check_fixed21(model) == parse_and_eval("!{x}: (EX {x} || ({x} && s__1))", model)
     assert model_check_fixed22(model) == parse_and_eval("!{x}: (AX {x} || ({x} && s__1))", model)
     assert model_check_fixed23(model) == parse_and_eval("!{x}: ((AX {x} || s__1) || (s__2 || EX {x}))", model)
@@ -53,16 +54,52 @@ def run_tests(model: Model) -> None:
     assert model_check_fixed25(model) == parse_and_eval("AF !{x}: ((AX (~{x} && AF {x})) && (EF !{xx}: EX EG ~{xx}))", model)
 
 
+def run_benchmark_tests():
+    # Strong basin of an oscillating attractor
+    formula1 = "AF !{x}: (AX (~{x} && AF {x}))"
+    # Strong basin of an oscillating attractor which is not a simple cycle
+    formula2 = "AF !{x}: ((AX (~{x} && AF {x})) && (EF !{y}: EX EG ~{y}))"
+    # Multiple steady states
+    formula3 = "!{x}: 3{y}: (@{x}: ~{y} && AX {x}) && (@{y}: AX {y})"
+    # Fork states existence
+    formula4 = "3{x}: 3{y}: (@{x}: ~{y} && AX {x}) && (@{y}: AX {y}) && EF ({x} && !{z}: AX {z}) && EF ({y} && !{z}: AX {z}) && AX (EF ({x} && !{z}: AX {z}) ^ EF ({y} && !{z}: AX {z}))"
+    formulas = [formula1, formula2, formula3, formula4]
+
+    # Interactions in gut microbiome model
+    model1 = "benchmark_models/cav2022/1.bnet"
+    # E Protein model
+    model2 = "benchmark_models/cav2022/6.bnet"
+
+    numbers_sat_states1 = [2048, 2048, 640, 2048]
+    numbers_sat_states2 = [81920, 0, 81920, 81920]
+
+    for i in range(4):
+        model, as_tree_hctl = parse_all(model1, formulas[i])
+        res = eval_tree(as_tree_hctl, model)
+        states_num = model.bdd.count(get_states_only(res, model), nvars=model.num_props)
+        assert states_num == numbers_sat_states1[i]
+        print(f"1st model, formula {i+1} done")
+
+    for i in range(4):
+        model, as_tree_hctl = parse_all(model2, formulas[i])
+        res = eval_tree(as_tree_hctl, model)
+        states_num = model.bdd.count(get_states_only(res, model), nvars=model.num_props)
+        assert states_num == numbers_sat_states2[i]
+        print(f"2nd model, formula {i+1} done")
+
+
 if __name__ == '__main__':
     # runs the whole set of tests on the given model
     if len(sys.argv) == 2:
         if Path(sys.argv[1]).exists() and Path(sys.argv[1]).is_file():
-            # first use some placeholder formula (with the maximal number of HCTL vars that any formula uses (2 atm))
+            print("Running the tests for \"sys.argv[1]\".")
+            # use some placeholder formula (with the maximal number of HCTL vars that any formula uses (2 atm))
             m, _ = parse_all(sys.argv[1], "3{x}: 3{xx}: (@{x}: ~{xx} && AX{x}) && (@{xx}: AX{xx}) && EF{x} && EF{xx}")
-            run_tests(m)
+            run_general_tests(m)
         else:
             print(f"File {sys.argv[1]} does not exist")
-            print("Usage: testing_parser.py path_to_bnet")
+            print("Usage: testing_automatic.py {path_to_bnet}")
     else:
-        print("Wrong number of arguments")
-        print("Usage: testing_parser.py path_to_bnet")
+        print("Running the tests for several large models and complex formulae.")
+        print("Some tests may take several minutes to compute.")
+        run_benchmark_tests()
