@@ -1,21 +1,39 @@
 from antlr4 import *
+from heapq import heappush, heappop
+from typing import Dict, Tuple
+
 from src.abstract_syntax_tree import *
 from src.implementation_components import *
 from src.parse_hctl_formula.parser_wrapper_hctl import parse_to_tree
 
-from heapq import heappush, heappop
-from typing import Dict, Tuple
 
-# TODO: make it around 25 at least (lower number is just for testing)
+# minimal number of propositions in a model to activate certain optimisations
 MIN_NUM_PROPS_TO_OPTIMIZE = 25
 
 
+# check whether given node corresponds to EX operation
 def is_node_ex_to_optimize(node, var: str) -> bool:
     return type(node) == UnaryNode and node.category == NodeType.EX and var in node.subform_string
 
 
+# check whether given node corresponds to OR operation
 def is_node_union(node) -> bool:
     return type(node) == BinaryNode and node.category == NodeType.OR
+
+
+# checks if we can get to some EX node if we travel only through the union nodes
+# this is for optimizing inner EX in hybrid formulas (var is variable bound by hybrid operator)
+def check_descendants_for_ex(node, var: str) -> bool:
+    # if we came to EX node (whose subformula includes the var), we are done
+    if is_node_ex_to_optimize(node, var):
+        return True
+
+    # another chance is to find the goal in at least one child of an Union node
+    if is_node_union(node):
+        return check_descendants_for_ex(node.left, var) or check_descendants_for_ex(node.right, var)
+
+    # otherwise there is no point in optimizing
+    return False
 
 
 """
@@ -83,37 +101,7 @@ def get_canonical_and_dict(subform) -> Tuple[str, Dict[str, str]]:
     return ''.join(canonical), rename_dict
 
 
-# checks if we can get to some EX node if we travel only through the union nodes
-# this is for optimizing inner EX in hybrid formulas (var is variable bound by hybrid operator)
-def check_descendants_for_ex(node, var: str) -> bool:
-    # if we came to EX node (whose subformula includes the var), we are done
-    if is_node_ex_to_optimize(node, var):
-        return True
-
-    # another chance is to find the goal in at least one child of an Union node
-    if is_node_union(node):
-        return check_descendants_for_ex(node.left, var) or check_descendants_for_ex(node.right, var)
-
-    # otherwise there is no point in optimizing
-    return False
-
-
 class EvaluateExpressionVisitor:
-
-    # TODO: test parser and evaluator on more CTL/HCTL formulas
-
-    # TODO: TEST CACHE AND CANONIZATION, a lot
-
-    # TODO: TEST optimizations - nesting through union
-    # TODO: optimize also through the intersection ? and maybe even do something with AX ?
-    # TODO: solve collisions of CACHE vs OPTIMISATIONS if there are some
-
-    # TODO: maybe change all operators in the tree to just EX, EU, EG - so that we can use cache sometimes??
-
-    # TODO: start to use safe ENUM instead of strings
-
-    # TODO: collect variables also from hybrid operators - we can have 3{z}: (EF (s1 & s2 & s3))
-
     """
     Visits node and depending on its type and operation, evaluates the subformula which it represents
     @:param node:  node in abstract syntax tree of HCTL formula, it represents a subformula
@@ -125,7 +113,6 @@ class EvaluateExpressionVisitor:
     """
     def visit(self, node, model: Model, dupl: Dict[str, int], cache,
               optim_h=False, optim_op=None, optim_var=None) -> Function:
-        # TODO : subform_string problem
         # first check for if this node does not belong in the duplicates
         save_to_cache = False
         canonized_subform, renaming = get_canonical_and_dict(node.subform_string)
@@ -168,6 +155,7 @@ class EvaluateExpressionVisitor:
             if node.category == NodeType.NEG:
                 result = negate(model, child_result)
             elif node.category == NodeType.EX:
+                # if predecessor was a hybrid node, we use optimize the process (distribute hybrid ops inside)
                 if optim_h:
                     result = optimized_hybrid_EX(model, child_result, optim_var, optim_op)
                 else:
@@ -183,30 +171,30 @@ class EvaluateExpressionVisitor:
             elif node.category == NodeType.AG:
                 result = AG(model, child_result)
         elif type(node) == BinaryNode:
-            # first lets focus on the optimised part (currently only for the OR operation)
+            # first lets check if we can optimise - if the predecessor was a hybrid node,
+            # we can distribute it through the OR operators and optimize some future EX operator
             if optim_h and node.category == NodeType.OR:
-                # if we have enabled optim, procedure depends what types of children we have
-                optim_left = is_node_ex_to_optimize(node.left, optim_var) or is_node_union(node.left)
-                optim_right = is_node_ex_to_optimize(node.right, optim_var) or is_node_union(node.right)
-                if optim_left:
-                    if optim_right:
+                # if we have enabled optim, procedure depends on what types of children we have
+                optimize_left = is_node_ex_to_optimize(node.left, optim_var) or is_node_union(node.left)
+                optimize_right = is_node_ex_to_optimize(node.right, optim_var) or is_node_union(node.right)
+                if optimize_left:
+                    if optimize_right:
                         result = self.visit(node.left, model, dupl, cache, optim_h, optim_op, optim_var) | \
                                  self.visit(node.right, model, dupl, cache, optim_h, optim_op, optim_var)
                     else:
                         result = self.visit(node.left, model, dupl, cache, optim_h, optim_op, optim_var) | \
                                  self.visit_with_hybrid_op(optim_var, optim_op, node.right, model, dupl, cache)
                 else:
-                    if optim_right:
+                    if optimize_right:
                         result = self.visit_with_hybrid_op(optim_var, optim_op, node.left, model, dupl, cache) | \
                                  self.visit(node.right, model, dupl, cache, optim_h, optim_op, optim_var)
                     else:
                         result = self.visit_with_hybrid_op(optim_var, optim_op, node, model, dupl, cache)
-
-            # we can do operators AND, XOR, IFF in a optimised way - we do it only for AND now
-            # TODO: optimise at least AND - right side is evaluated only on the colors from the result of left side
             else:
+                # we save the results for children and then combine them using the given operation
                 left_result = self.visit(node.left, model, dupl, cache)
                 right_result = self.visit(node.right, model, dupl, cache)
+
                 if node.category == NodeType.AND:
                     result = left_result & right_result
                 if node.category == NodeType.OR:
@@ -233,7 +221,7 @@ class EvaluateExpressionVisitor:
             """
             # Decide if there is a chance to optimize something - our goal is to optimize EX in some descendant node,
             # and we can distribute hybrid ops through the union.
-            # We optimize only for bigger models - for smaller there is not much difference.
+            # We optimize only for bigger models - for smaller ones this is not much effective.
             """
             if model.num_props > MIN_NUM_PROPS_TO_OPTIMIZE and check_descendants_for_ex(node.child, node.var):
                 result = self.visit(node.child, model, dupl, cache, optim_h=True, optim_op=node.category,
@@ -247,13 +235,14 @@ class EvaluateExpressionVisitor:
                 elif node.category == NodeType.EXIST:
                     result = existential(model, child_result, node.var[1:-1])
 
+        # do not forget to save the result for potential future re-use
         if save_to_cache:
             cache[canonized_subform] = (result, renaming)
 
-        # print(f"finished : {node.subform_string} : total_nodes = {len(model.bdd)}: this_bdd_nodes = {len(result)}")
         return result
 
     # gets the result of evaluated node, but applies hybrid op on it in the end
+    # this is useful when optimisations happen somewhere during the eval
     def visit_with_hybrid_op(self, var: str, op: NodeType, node, model: Model,
                              dupl: Dict[str, int], cache: Dict[str, Function]) -> Function:
         child_result = self.visit(node, model, dupl, cache)
@@ -267,9 +256,8 @@ class EvaluateExpressionVisitor:
 
 # find out if we have some duplicate nodes in our parse tree
 # if so - mark them and then when evaluating, save result to some cache (and delete after the last usage)
-# uses some kind of canonization - EX{x} and EX{y} recognized as duplicates
+# uses some kind of canonization - EX{x} and EX{y} are recognized as duplicates
 def mark_duplicates(root_node) -> Dict[str, int]:
-    # TODO: mark canonized duplicates
     # go through the nodes from top, use height to compare only those with the same level
     # once we find duplicate, do not continue traversing its branch (it will be skipped during eval)
     queue = []
@@ -287,9 +275,7 @@ def mark_duplicates(root_node) -> Dict[str, int]:
         # if we have saved some nodes of the same height, lets compare them
         if last_height == node.height:
             for n, n_canonic_subform in same_height_nodes:
-                # TODO: dont we compare node with itself?
                 if node_canonical_subform == n_canonic_subform:
-                    # TODO : subform_string string problem?
                     if n_canonic_subform in duplicates:
                         duplicates[n_canonic_subform] += 1
                         skip = True  # we wont be traversing subtree of this node (cache will be used)

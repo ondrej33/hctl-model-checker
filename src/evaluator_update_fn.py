@@ -34,11 +34,13 @@ class EvaluateExpressionVisitor:
         return result
 
 
+# evaluates syntax tree of an update function into the resulting BDD encoding
 def eval_tree(as_tree: Node, bdd):  # -> Function:
     result = EvaluateExpressionVisitor().visit(as_tree, bdd)
     return result
 
 
+# parses given update fn formula and evaluates it into the equivalent BDD encoding
 def parse_and_eval(formula: str, bdd):  # -> Function:
     as_tree = parse_to_tree(formula)
     return eval_tree(as_tree, bdd)

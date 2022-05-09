@@ -86,18 +86,7 @@ def EX(model: Model, phi: Function) -> Function:
     return pre_E_all_vars(model, phi)
 
 
-"""
-# fixpoint version
-def EU(model: Model, phi1: Function, phi2: Function) -> Function:
-    old = phi2
-    new = model.mk_empty_colored_set()
-    while old != new:
-        new = old
-        old = old | (phi1 & EX(model, old))
-    return old
-"""
-
-# version based on saturation
+# compute EU based on saturation, faster than fixed-point version
 def EU_saturated(model: Model, phi1: Function, phi2: Function) -> Function:
     result = phi2
     done = False
@@ -112,39 +101,14 @@ def EU_saturated(model: Model, phi1: Function, phi2: Function) -> Function:
     #reorder(model.bdd)
     return result
 
-"""
-# fixpoint version without excess computing
-def EF_v2(model: Model, phi: Function) -> Function:
-    # lfpZ. ( phi OR EX Z )
-    old = phi
-    new = model.mk_empty_colored_set()
-    while old != new:
-        new = old
-        old = old | EX(model, old)
-    return old
 
-
-# version based on saturation
-def EF_saturated(model: Model, phi: Function) -> Function:
-    result = phi
-    done = False
-    while not done:
-        done = True
-        for i in range(model.num_props, 0, -1):
-            update = pre_E_one_var(model, result, f"s__{i-1}") & negate(model, result)
-            if update != model.bdd.false:
-                result = result | update
-                done = False
-                break
-    #reorder(model.bdd)
-    return result
-"""
-
-# computed via EU with saturation
+# EF computed via EU with saturation
+# is correct since  EF f == [true EU f]
 def EF_saturated(model: Model, phi: Function) -> Function:
     return EU_saturated(model, model.mk_unit_colored_set(), phi)
 
 
+# classical fixed-point algorithm for EG
 def EG(model: Model, phi: Function) -> Function:
     old = phi
     new = model.mk_empty_colored_set()
@@ -154,23 +118,25 @@ def EG(model: Model, phi: Function) -> Function:
     return old
 
 
-# computed through pure EX
+# AX computed through the EX
 def AX(model: Model, phi: Function) -> Function:
     # AX f = ~EX (~f)
     return negate(model, EX(model, negate(model, phi)))
 
 
+# AX computed through the EG
 def AF(model: Model, phi1: Function) -> Function:
     # AF f = ~EG (~f)
     return negate(model, EG(model, negate(model, phi1)))
 
 
-# computed through EF
+# AG computed through EF
 def AG(model: Model, phi1: Function) -> Function:
     # AG f = ~EF (~f)
     return negate(model, EF_saturated(model, negate(model,phi1)))
 
 
+# AU computed through the combination of EU and EG
 def AU(model: Model, phi1: Function, phi2: Function) -> Function:
     # A[f U g] = ~E[~g U (~f & ~g)] & ~EG ~g
     not_phi1 = negate(model, phi1)
@@ -181,17 +147,17 @@ def AU(model: Model, phi1: Function, phi2: Function) -> Function:
     return not_eu & not_eg
 
 
-# fixpoint version for AU, should be faster
+# fixpoint version for AU, should usually be faster
 def AU_v2(model: Model, phi1: Function, phi2: Function) -> Function:
     old = phi2
     new = model.mk_empty_colored_set()
     while old != new:
         new = old
         old = old | (phi1 & AX(model, old))
-        # collect_garbage_if_needed(model.bdd)
     return old
 
 
+# EW computed through the AU
 def EW(model: Model, phi1: Function, phi2: Function):
     # E[f R g] = ¬A[¬f U ¬g]
     not_phi1 = negate(model, phi1)
@@ -199,6 +165,7 @@ def EW(model: Model, phi1: Function, phi2: Function):
     return negate(model, AU(model, not_phi1, not_phi2))
 
 
+# AW computed through the EU
 def AW(model: Model, phi1: Function, phi2: Function):
     # A[f R g] = ¬E[¬f U ¬g]
     not_phi1 = negate(model, phi1)
