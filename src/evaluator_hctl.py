@@ -11,19 +11,23 @@ from src.parse_hctl_formula.parser_wrapper_hctl import parse_to_tree
 MIN_NUM_PROPS_TO_OPTIMIZE = 25
 
 
-# check whether given node corresponds to EX operation (which we want to optimize)
 def is_node_ex_to_optimize(node, var: str) -> bool:
+    """Check whether node corresponds to EX and contains var in its subtree."""
     return type(node) == UnaryNode and node.category == NodeType.EX and var in node.subform_string
 
 
-# check whether given node corresponds to OR operation
 def is_node_union(node) -> bool:
+    """Check whether node corresponds to OR operation."""
     return type(node) == BinaryNode and node.category == NodeType.OR
 
 
-# checks if we can get to some EX node if we travel only through the union nodes
-# this is for optimizing inner EX in hybrid formulas (var is variable bound by hybrid operator)
 def check_descendants_for_ex(node, var: str) -> bool:
+    """
+    Checks whether there is path containing only union nodes from given node
+    to some EX node (and this EX node contains var in its subtree).
+    This is useful for optimizing combination of EX and hybrid operators
+    """
+
     # if we came to EX node (whose subformula includes the var), we are done
     if is_node_ex_to_optimize(node, var):
         return True
@@ -36,15 +40,29 @@ def check_descendants_for_ex(node, var: str) -> bool:
     return False
 
 
-"""
-returns string representing the same subformula, but with canonical var names (var0, var1...)
-We suppose the subform is:
-    1) syntactically VALID hctl formula, minimized by minimize_number_of_state_vars function
-    2) with NO EXCESS SPACES and includes all PARENTHESES
-for example "(3{x}:(3{xx}:((@{x}:((~{xx})&&(AX{x})))&&(@{xx}:(AX{xx})))))" is valid input
-any node.subform_string field should be OK to use
-"""
-def canonize_subform(subform, idx, translate_dict, canonical, stack_len=0) -> int:
+def canonize_subform(subform: str, idx: int, translate_dict,
+                     canonical: List[str], stack_len=0) -> int:
+    """Canonize names of the state-variables in given subformula.
+
+    Works recursively, each nesting (parentheses) result in recursive call.
+
+    Args:
+        subform: Valid subformula of a hctl formula, minimized by the minimize_number_of_state_vars
+            must include all PARENTHESES, must not contain EXCESS SPACES
+            "(3{x}:(3{xx}:((@{x}:((~{xx})&&(AX{x})))&&(@{xx}:(AX{xx})))))" is valid input
+            any node.subform_string field should be OK to use
+        idx: An index to the current character of the subformula to process
+        translate_dict: A dictionary mapping the encountered variable names to
+            their new canonical forms
+        canonical: List of characters of the new canonical form of the subformula
+            This is where the result is accumulated.
+        stack_len: Number of currently nested variables (represents kind of stack)
+
+    Returns:
+        Index in formula where the process stopped (and thus should continue in the parent).
+        (the resulting canonical formula is collected in the param canonical)
+    """
+
     while idx < len(subform):
         char = subform[idx]
         if char == '(':
@@ -73,7 +91,7 @@ def canonize_subform(subform, idx, translate_dict, canonical, stack_len=0) -> in
             idx += 1
             var_name_str = ''.join(var_name)
 
-            # WE MUST BE PREPARED FOR THE CASE WHEN FREE VARS APPEAR - bcs we are canonizing all subformulas in tree
+            # we must take in account free variables (since we usually canonize all subformulas)
             if var_name_str not in translate_dict:
                 translate_dict[var_name_str] = f"var{stack_len}"
                 stack_len += 1
@@ -86,15 +104,16 @@ def canonize_subform(subform, idx, translate_dict, canonical, stack_len=0) -> in
     return idx
 
 
-# returns semantically same subformula, but with "canonized" var names
-def get_canonical(subform) -> str:
+def get_canonical(subform: str) -> str:
+    """Returns equivalent subformula, but with canonized var names."""
     canonical = []
     canonize_subform(subform, 0, {}, canonical)
     return ''.join(canonical)
 
 
 # returns subformula with "canonized" var names and the dictionary with renamings
-def get_canonical_and_dict(subform) -> Tuple[str, Dict[str, str]]:
+def get_canonical_and_dict(subform: str) -> Tuple[str, Dict[str, str]]:
+    """Returns subformula with "canonized" var names together with name mappings."""
     canonical = []
     rename_dict = {}
     canonize_subform(subform, 0, rename_dict, canonical)
@@ -102,20 +121,35 @@ def get_canonical_and_dict(subform) -> Tuple[str, Dict[str, str]]:
 
 
 class EvaluateExpressionVisitor:
+    """Class wrapping the evaluation of HCTL formulae."""
+
     def __init__(self):
         pass
 
-    """
-    Visits node and depending on its type and operation, evaluates the subformula which it represents
-    @:param node:  node in abstract syntax tree of HCTL formula, it represents a subformula
-    @:param model: model containing var/param/prop names, bdds for update fns and so on
-    @:param dupl:  dict of CANONIZED subformulas present more times in the formula (val is how many are left)
-    @:param cache: dict of solved CANONIZED subformulas from dupl and <their results, renaming vars>
-    @:param optim_h: if optim=True, then parent was some hybrid operation and we can push it inside for example EX...
-    @:param optim_op and @:param optim_var holds info about what hybrid op we are optimizing
-    """
     def visit(self, node, model: Model, dupl: Dict[str, int], cache,
               optim_h=False, optim_op=None, optim_var=None) -> Function:
+        """Visit node and evaluate the subformula which it represents.
+
+        Compute in bottom-up manner. First evaluate potential children, then combine
+        their results depending on the type and operation corresponding to the node.
+        Make use of cached results, optimize computation of several patterns.
+
+        Args:
+            node: A node in abstract syntax tree of HCTL formula, it represents a subformula
+            model: Model structure containing symbolic representation and metadata
+            dupl: Dictionary of CANONIZED subformulas occurring several times in the formula
+                and the number of how many occurrences are left
+            cache: Dictionary of solved (CANONIZED) duplicate subformulas
+                Values are in the form <result, variable_names_mapping>
+            optim_h: If True, then we use optimisations - predecessor was a hybrid operator node
+                and we can push it inside (for example) EX
+            optim_op: Hybrid operation we are optimizing
+            optim_var: Variable bound to hybrid operation we are optimizing
+
+        Returns:
+            A BDD-encoded result of the evaluated formula on the given model.
+        """
+
         # first check for if this node does not belong in the duplicates
         save_to_cache = False
         canonized_subform, renaming = get_canonical_and_dict(node.subform_string)
@@ -221,11 +255,9 @@ class EvaluateExpressionVisitor:
                     result = AW(model, left_result, right_result)
 
         elif type(node) == HybridNode:
-            """
             # Decide if there is a chance to optimize something - our goal is to optimize EX in some descendant node,
-            # and we can distribute hybrid ops through the union.
-            # We optimize only for bigger models - for smaller ones this is not much effective.
-            """
+            # and we can distribute hybrid ops through the unions.
+            # We optimize only for larger models - for smaller ones this is not much effective.
             if model.num_props() > MIN_NUM_PROPS_TO_OPTIMIZE and check_descendants_for_ex(node.child, node.var):
                 result = self.visit(node.child, model, dupl, cache, optim_h=True, optim_op=node.category,
                                     optim_var=node.var[1:-1])
@@ -244,10 +276,12 @@ class EvaluateExpressionVisitor:
 
         return result
 
-    # gets the result of evaluated node, but applies hybrid op on it in the end
-    # this is useful when optimisations happen somewhere during the eval
     def visit_with_hybrid_op(self, var: str, op: NodeType, node, model: Model,
                              dupl: Dict[str, int], cache: Dict[str, Function]) -> Function:
+        """
+        Evaluate the formula corresponding to the node and apply hybrid operation on the result
+        This is useful when optimisations happen somewhere during the evaluation
+        """
         child_result = self.visit(node, model, dupl, cache)
         if op == NodeType.BIND:
             return bind(model, child_result, var)
@@ -257,10 +291,19 @@ class EvaluateExpressionVisitor:
             return existential(model, child_result, var)
 
 
-# find out if we have some duplicate nodes in our parse tree
-# if so - mark them and then when evaluating, save result to some cache (and delete after the last usage)
-# uses some kind of canonization - EX{x} and EX{y} are recognized as duplicates
 def mark_duplicates(root_node) -> Dict[str, int]:
+    """Collect duplicate subformulas in the formula represented by a tree.
+
+    We compare canonized subformulas, thus 'EX{x}' and 'EX{y}' are recognized as duplicates.
+    This is especially useful for the caching during the evaluation.
+
+    Args:
+        root_node: Root of the tree representing the formula
+
+    Returns:
+        Dictionary mapping duplicate subformulas to the number of their occurrences
+    """
+
     # go through the nodes from top, use height to compare only those with the same level
     # once we find duplicate, do not continue traversing its branch (it will be skipped during eval)
     queue = []
@@ -305,12 +348,14 @@ def mark_duplicates(root_node) -> Dict[str, int]:
     return duplicates
 
 
-def eval_tree(as_tree: Node, model: Model) -> Function:
-    duplicates = mark_duplicates(as_tree)
-    result = EvaluateExpressionVisitor().visit(as_tree, model, duplicates, {})
+def eval_tree(syntax_tree: Node, model: Model) -> Function:
+    """Evaluate formula represented by a tree on a given model."""
+    duplicates = mark_duplicates(syntax_tree)
+    result = EvaluateExpressionVisitor().visit(syntax_tree, model, duplicates, {})
     return result
 
 
 def parse_and_eval(formula: str, model: Model) -> Function:
+    """Parse the formula and evaluate it on a given model."""
     as_tree = parse_to_tree(formula)
     return eval_tree(as_tree, model)

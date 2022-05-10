@@ -10,8 +10,11 @@ from pathlib import Path
 from typing import Set, Dict, Tuple
 
 
-# Collect names of all propositions from HCTL formula tree into param props_collected
 def get_prop_names_from_hctl(node, props_collected: Set[str]) -> None:
+    """
+    Collect names of all propositions from HCTL formula tree
+    Result is collected into the parameter props_collected
+    """
     if type(node) == TerminalNode:
         # DO not add any of true/false or variable names, only propositions
         if node.category == NodeType.TRUE or node.category == NodeType.FALSE or node.category == NodeType.VAR:
@@ -24,16 +27,18 @@ def get_prop_names_from_hctl(node, props_collected: Set[str]) -> None:
         get_prop_names_from_hctl(node.right, props_collected)
 
 
-# Collect names of all propositions and params from the update function's tree
-# wrapper for function below
 def get_names_from_update_fn(node) -> Set[str]:
+    """Collect names of props and params in the update function's tree"""
     props_and_params = set()
     get_names_from_update_fn_rec(node, props_and_params)
     return props_and_params
 
 
-# Recursively collect names of all propositions and params from the update function's tree into props_and_params
 def get_names_from_update_fn_rec(node, props_and_params: Set[str]) -> None:
+    """
+    Recursively collect names of all propositions and params from the update function's tree
+    Result is collected into parameter props_and_params
+    """
     if type(node) == TerminalNode:
         # DO not add any of true/false nodes, only proposition or parameter nodes
         if node.category == NodeType.TRUE or node.category == NodeType.FALSE:
@@ -46,9 +51,11 @@ def get_names_from_update_fn_rec(node, props_and_params: Set[str]) -> None:
         get_names_from_update_fn_rec(node.right, props_and_params)
 
 
-# Rename all terminal nodes in update function's tree (propositions and parameters) according
-# to the given dictionary
 def rename_terminals_update_fn(node, rename_dict: Dict[str, str]) -> None:
+    """
+    Rename all terminal nodes in the update function's tree (propositions and
+    parameters), according to the given mapping
+    """
     if type(node) == TerminalNode:
         # rename proposition (param) nodes
         if node.category == NodeType.TRUE or node.category == NodeType.FALSE:
@@ -64,8 +71,11 @@ def rename_terminals_update_fn(node, rename_dict: Dict[str, str]) -> None:
         node.subform_string = "(" + node.left.subform_string + OP_TO_STRING[node.category] + node.right.subform_string + ")"
 
 
-# Rename all propositions in terminal nodes in HCTL formula (does not touch state variable terminals)
 def rename_props_in_hctl(node, rename_dict: Dict[str, str]) -> None:
+    """
+    Rename all propositions in terminal nodes of HCTL formula tree, according
+    to the given mapping (but do not touch state-variable terminals)
+    """
     if type(node) == TerminalNode:
         # only rename proposition nodes, not state variable or constant nodes
         if node.category == NodeType.VAR or node.category == NodeType.TRUE or node.category == NodeType.FALSE:
@@ -84,15 +94,28 @@ def rename_props_in_hctl(node, rename_dict: Dict[str, str]) -> None:
         node.subform_string = "(" + OP_TO_STRING[node.category] + node.var + ":" + node.child.subform_string + ")"
 
 
-# Rename as many state-variables as possible to the canonical names, without changing the meaning of the formula
-# this is the first step to "canonization", followed later by the second part
-def minimize_number_of_state_vars(node, rename_dict: Dict[str, str], last_used_name: str, num_vars=0):
+def reduce_number_of_state_vars(node, rename_dict: Dict[str, str], last_used_name: str, num_vars=0):
+    """Rename 'mutually independent' state-variables to same canonical names.
+
+    Recursively reduce the number of unique state variables in the formula by renaming
+    them, without changing its meaning.
+    This is useful for not having redundant BDD variables, and for canonization step later.
+
+    Args:
+        node: Root of the tree representing the processed subformula
+        rename_dict: Mapping of names of encountered variables to new canonical names
+        last_used_name: Last canonical name used for var that is still being quantified
+            Holds the role of the stack.
+        num_vars: number of variable quantifiers being currently processed
+
+    Returns:
+        Maximal number of the unique variable quantifiers encountered on a path
+        from node to a terminal.
     """
-    # We hold the variable name mappings in rename_dict
-    # When encountering bind/exist node, we add new mapping to canonical name (x, xx, xxx...) for given variable
-    # When we find terminal with free variable or jump, we rename corresponding var using rename_dict
+
+    # When encountering bind/exist node, we add new name mapping (to x, xx, xxx...)
+    # When we find terminal with free var or jump, we rename corresponding var using rename_dict
     # After we leave binder/exist, we remove corresponding mapping from rename_dict
-    """
 
     if type(node) == TerminalNode:
         # do NOT change names of any true/false or proposition nodes, only state-variables
@@ -102,12 +125,12 @@ def minimize_number_of_state_vars(node, rename_dict: Dict[str, str], last_used_n
         node.subform_string = node.value
     elif type(node) == UnaryNode:
         # just dive deeper and then rename the node string
-        num_vars = minimize_number_of_state_vars(node.child, rename_dict, last_used_name, num_vars)
+        num_vars = reduce_number_of_state_vars(node.child, rename_dict, last_used_name, num_vars)
         node.subform_string = "(" + OP_TO_STRING[node.category] + node.child.subform_string + ")"
     elif type(node) == BinaryNode:
         # just dive deeper and then rename the node string
-        num_vars1 = minimize_number_of_state_vars(node.left, rename_dict, last_used_name, num_vars)
-        num_vars2 = minimize_number_of_state_vars(node.right, rename_dict, last_used_name, num_vars)
+        num_vars1 = reduce_number_of_state_vars(node.left, rename_dict, last_used_name, num_vars)
+        num_vars2 = reduce_number_of_state_vars(node.right, rename_dict, last_used_name, num_vars)
         num_vars = max(num_vars1, num_vars2)
         node.subform_string = "(" + node.left.subform_string + OP_TO_STRING[node.category] + node.right.subform_string + ")"
     elif type(node) == HybridNode:
@@ -121,7 +144,7 @@ def minimize_number_of_state_vars(node, rename_dict: Dict[str, str], last_used_n
         var_before = node.var[1:-1]
         node.var = '{' + rename_dict[node.var[1:-1]] + '}'
         # just dive deeper and then rename the node string
-        num_vars = minimize_number_of_state_vars(node.child, rename_dict, last_used_name, num_vars)
+        num_vars = reduce_number_of_state_vars(node.child, rename_dict, last_used_name, num_vars)
         node.subform_string = "(" + OP_TO_STRING[node.category] + node.var + ":" + node.child.subform_string + ")"
 
         # and at last, when we leave binder/exist, we delete the added var from dict
@@ -130,8 +153,18 @@ def minimize_number_of_state_vars(node, rename_dict: Dict[str, str], last_used_n
     return num_vars
 
 
-# Parse boolean network file (in bnet format) and HCTL formula into a Model object and formula tree
 def parse_all(file_name: str, formula: str) -> Tuple[Model, Node]:
+    """Parse network and HCTL formula into a symbolic representation and syntax tree.
+
+    Args:
+        file_name: Name of the file with Boolean network in bnet format.
+        formula: String representing HCTL formula in our encoding.
+
+    Returns:
+        A pair containing model object and formula syntax tree, where model object is a symbolic
+        representation of the network (influenced by formula variables).
+    """
+
     content = Path(file_name).read_text()
     lines = content.splitlines()
 
@@ -156,8 +189,8 @@ def parse_all(file_name: str, formula: str) -> Tuple[Model, Node]:
     if invalid_props:
         raise InvalidPropError(invalid_props.pop())
 
-    # minimize number of state-vars in HCTL tree, canonize their names, collect new names
-    num_vars = minimize_number_of_state_vars(as_tree_hctl, dict(), "", 0)
+    # minimize number of state-vars in HCTL tree, partially canonize their names and collect them
+    num_vars = reduce_number_of_state_vars(as_tree_hctl, dict(), "", 0)
     var_names = ["x" * i for i in range(1, num_vars + 1)]
     # TODO: check that binders and formula variables correspond to each other, no free vars
 
