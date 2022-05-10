@@ -73,6 +73,22 @@ def print_results_fast(result: Function, model: Model, message: str = ""):
     print(f"props: {model.num_props()}, params: {model.num_params()}")
 
 
+def print_colored_assignments(model, assignments):
+    """Print all given assignments, color propositions based on values."""
+    print("Satisfying colored states:")
+    for assignment in assignments:
+        # assign correct names to the propositions and parameters
+        transformed = [(model.name_dict[item[0]], int(item[1])) for item in assignment]
+        for var, val in transformed:
+            if val == 0:
+                text = colored('!' + var, 'red')
+            else:
+                text = colored(var, "green")
+            print(text, end=" ")
+        print()
+    print()
+
+
 def print_results(result: Function, model: Model, message: str = "", show_all=False) -> None:
     """
     Print results, either in short (aggregated) form or long full form.
@@ -94,17 +110,7 @@ def print_results(result: Function, model: Model, message: str = "", show_all=Fa
     sorted_inside = [sorted(assignment.items(), key=lambda x: (model.name_dict[x[0]])) for assignment in assignments]
     # now sorting the whole items by the binary encoding of given states, parameters
     assignments_sorted = sorted(sorted_inside, key=lambda x: (
-        encode_assignment_props(x, model.num_props() + model.num_params())))
+        encode_assignment_props(x, model.num_props() + model.num_params())
+    ))
 
-    print("Satisfying colored states:")
-    for assignment in assignments_sorted:
-        # assign correct names to the propositions and parameters
-        transformed = [(model.name_dict[item[0]], int(item[1])) for item in assignment]
-        for var, val in transformed:
-            if val == 0:
-                text = colored('!' + var, 'red')
-            else:
-                text = colored(var, "green")
-            print(text, end=" ")
-        print()
-    print()
+    print_colored_assignments(model, assignments_sorted)

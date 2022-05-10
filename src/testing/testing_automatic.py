@@ -57,7 +57,7 @@ def run_general_tests(model: Model) -> None:
 
     assert model_check_fixed24(model) == parse_and_eval("AF !{x}: (AX (~{x} && AF {x}))", model)
     assert model_check_fixed25(model) == parse_and_eval("AF !{x}: ((AX (~{x} && AF {x})) && (EF !{xx}: EX EG ~{xx}))", model)
-
+    print("All tests passed.")
 
 def run_benchmark_tests():
     """

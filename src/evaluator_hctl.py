@@ -72,7 +72,7 @@ def canonize_subform(subform: str, idx: int, translate_dict,
         elif char == ')':
             canonical.append(char)
             return idx + 1
-        # we ust distinguish situations when 3 is existential and when it is part of some prop name
+        # we must distinguish situations when 3 is existential and when it is part of some prop name
         elif char == '!' or (char == '3' and idx + 1 < len(subform) and subform[idx + 1] == '{'):
             idx += 2  # move to the beginning of the var name
             var_name = []
