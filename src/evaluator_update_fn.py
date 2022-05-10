@@ -1,16 +1,28 @@
 from antlr4 import *
 from src.abstract_syntax_tree import *
 from src.exceptions import InvalidUpdateFnOperationError
-from src.parse_update_function.parser_wrapper_update_fn import parse_to_tree
+from src.parse_update_function.parser_wrapper_update_fn import parse_update_fn_to_tree
 
 
 class EvaluateExpressionVisitor:
+    """Class wrapping the evaluation of update function into BDDs."""
+
     def __init__(self):
         pass
 
-    # Visits node and depending on its type and operation, evaluates the subformula which it represents
-    # Uses results from children, combines them until whole thing is done
     def visit(self, node, bdd):
+        """Visit node and recursively evaluate the subformula which it represents into BDD.
+
+        Compute in bottom-up manner. First evaluate potential children, then combine
+        their results depending on the type and operation corresponding to the node.
+
+        Args:
+            node: node of the syntax tree of processed subformula
+            bdd: bdd manager
+
+        Returns:
+            BDD encoding of the given update function (formula).
+        """
         result = bdd.add_expr("False")
         if type(node) == TerminalNode:
             # we have either prop/param here (bdd var) or True/False, which is also OK to evaluate
@@ -36,13 +48,13 @@ class EvaluateExpressionVisitor:
         return result
 
 
-# evaluates syntax tree of an update function into the resulting BDD encoding
-def eval_tree(as_tree: Node, bdd):  # -> Function:
+def encode_update_fn_tree(as_tree: Node, bdd):  # -> Function:
+    """Encode update function represented by a tree into the BDD."""
     result = EvaluateExpressionVisitor().visit(as_tree, bdd)
     return result
 
 
-# parses given update fn formula and evaluates it into the equivalent BDD encoding
-def parse_and_eval(formula: str, bdd):  # -> Function:
-    as_tree = parse_to_tree(formula)
-    return eval_tree(as_tree, bdd)
+def encode_update_fn_string(formula: str, bdd):  # -> Function:
+    """Parse update function and encode it into the BDD."""
+    as_tree = parse_update_fn_to_tree(formula)
+    return encode_update_fn_tree(as_tree, bdd)

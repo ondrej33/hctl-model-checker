@@ -1,3 +1,4 @@
+"""Preparing the working directory and settings"""
 import os
 # Change the current working directory
 SRC_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -9,7 +10,6 @@ sys.path.append(PROJECT_DIR)
 
 import time
 import timeout_decorator
-
 
 from src.fixed_formulas_eval import *
 from src.parse_all import parse_all

@@ -128,7 +128,7 @@ class EvaluateExpressionVisitor:
 
     def visit(self, node, model: Model, dupl: Dict[str, int], cache,
               optim_h=False, optim_op=None, optim_var=None) -> Function:
-        """Visit node and evaluate the subformula which it represents.
+        """Visit node and recursively evaluate the subformula which it represents.
 
         Compute in bottom-up manner. First evaluate potential children, then combine
         their results depending on the type and operation corresponding to the node.

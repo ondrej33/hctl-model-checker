@@ -1,3 +1,4 @@
+"""Preparing the working directory and settings"""
 import os
 # Change the current working directory
 SRC_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -16,6 +17,11 @@ from src.printing import get_states_only
 
 
 def run_general_tests(model: Model) -> None:
+    """
+    Run set of tests comparing manually and automatically evaluated formulas
+    on given model. Model should not be too large (over 20 vars).
+    """
+
     # check that "(EX phi1) || (EX phi2)" == "EX (phi1 || phi2)"
     assert parse_and_eval("(EX s__1) || (EX EX {x})", model) == parse_and_eval("EX (s__1 || EX {x}) ", model)
     assert model_check_fixed19(model) == parse_and_eval("(EX {x}) || (EX EX {x})", model)
@@ -54,6 +60,11 @@ def run_general_tests(model: Model) -> None:
 
 
 def run_benchmark_tests():
+    """
+    Run set of automatic tests on several large models and formulas,
+    and compare the numbers of results found to the precomputed ones.
+    """
+
     # Strong basin of an oscillating attractor
     formula1 = "AF !{x}: (AX (~{x} && AF {x}))"
     # Strong basin of an oscillating attractor which is not a simple cycle
@@ -88,7 +99,7 @@ def run_benchmark_tests():
 
 
 if __name__ == '__main__':
-    # runs the whole set of tests on the given model
+    """Run the chosen set of tests on the given model."""
     if len(sys.argv) == 2:
         if Path(sys.argv[1]).exists() and Path(sys.argv[1]).is_file():
             print(f"Running the tests for \"{sys.argv[1]}\".")

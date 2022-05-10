@@ -12,13 +12,13 @@ class Model:
         name: Name of the model.
         bdd: A BDD manager.
         update_fns: Dictionary mapping BN variables to their update functions, starts with F_s0, F_s1
-        stable: BDD encoding the set of colored stable states (fixed points)
         name_dict: Dictionary mapping short canonical variable names to original names
         names_props: Sequence with original names for props s0, s1 ... (in ASCII alphabetical order)
         names_params: Sequence with original names for params p0, p1 ... (in ASCII alphabetical order)
         names_vars: Sequence with original names for vars x, xx ... (in ASCII alphabetical order)
         unit_colored_set: BDD encoding for the unit colored-state set, initially whole space
         empty_colored_set: BDD encoding for the empty colored-state set, initially empty set
+        stable: BDD encoding the set of colored stable states (fixed points)
     """
 
     def __init__(self, name: str, bdd: BDD, names_props: List[str],
@@ -26,7 +26,6 @@ class Model:
         self.name = name
         self.bdd = bdd
         self.update_fns = update_fns
-        self.stable = self.compute_stable()
 
         self.name_dict = name_dict
         self.names_props = names_props
@@ -36,6 +35,7 @@ class Model:
         # unit set initially includes whole colored state space, but can be later restricted to only some colors
         self.unit_colored_set = self.bdd.add_expr("True")
         self.empty_colored_set = self.bdd.add_expr("False")
+        self.stable = self.compute_stable()
 
     def compute_stable(self) -> Function:
         """

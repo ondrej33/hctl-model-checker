@@ -4,20 +4,23 @@ from src.node_type_enum import NodeType, OP_DICT, OP_TO_STRING
 This file includes essential classes used for the syntax tree of the HCTL formula
 """
 
-# base class for syntax trees of HCTL formulas and also update functions in BN
+
 class Node:
+    """Base class for syntax trees of HCTL formulas and update functions in BN."""
+
     def __init__(self, category):
         self.category = category
         self.height = None
         self.subform_string = None
 
-    # just define something so that heapq can be used on nodes
     def __lt__(self, other):
+        # We need < so that heapq can be used on nodes.
         return self.height < other.height
 
 
-# specialized node for variables/propositions/params/booleans
 class TerminalNode(Node):
+    """Specialization of the node for terminals - variables/propositions/params/constants."""
+
     def __init__(self, value, category):
         super().__init__(category)
         self.value = value
@@ -25,8 +28,9 @@ class TerminalNode(Node):
         self.height = 1
 
 
-# specialized node for unary operators
 class UnaryNode(Node):
+    """Specialized node for unary operators."""
+
     def __init__(self, child, category):
         super().__init__(category)
         self.child = child
@@ -34,8 +38,9 @@ class UnaryNode(Node):
         self.height = child.height + 1
 
 
-# specialized node for binary operators
 class BinaryNode(Node):
+    """Specialized node for binary operators."""
+
     def __init__(self, left, right, category):
         super().__init__(category)
         self.left = left
@@ -44,8 +49,9 @@ class BinaryNode(Node):
         self.height = left.height + 1 if left.height > right.height else right.height + 1
 
 
-# specialized node for hybrid operators
 class HybridNode(Node):
+    """Specialized node for hybrid operators."""
+
     def __init__(self, var, child, category):
         super().__init__(category)
         self.var = var
