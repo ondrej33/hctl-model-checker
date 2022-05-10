@@ -1,5 +1,5 @@
+"""Preparing the working directory and settings"""
 import os
-# Change the current working directory
 SRC_DIR = os.path.dirname(os.path.abspath(__file__))
 PROJECT_DIR = os.path.dirname(SRC_DIR)
 os.chdir(PROJECT_DIR)
@@ -16,12 +16,8 @@ from src.printing import print_results
 from src.parse_all import parse_all
 
 
-"""
-Main function which wraps the whole model checking process
-"""
-
-
 def main(file_name: str, formula: str):
+    """Manage the whole model checking process (parsing, evaluating, printing)"""
     try:
         start = time()
         model, as_tree_hctl = parse_all(file_name, formula)

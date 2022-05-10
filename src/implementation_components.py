@@ -10,8 +10,8 @@ It is build so that we can combine them into the bottom-up algorithm
 # ============================================================================================= #
 
 
-# creates a bdd representing all states labeled by proposition given
 def labeled_by(model: Model, prop: str) -> Function:
+    """Create a bdd-representation of all states labeled by given proposition"""
     return model.bdd.add_expr(prop) & model.mk_unit_colored_set()
 
 
@@ -19,17 +19,19 @@ def negate(model: Model, phi: Function) -> Function:
     return ~phi & model.mk_unit_colored_set()
 
 
-# Create comparator for variables s1, s2,... and var1, var2,...
-# it will be bdd for (s1 <=> var1) & (s2 <=> var2)...
 def create_comparator(model: Model, var: str) -> Function:
+    """
+    Create equalizer of the state and a state variable
+    It is essentially a bdd for "bit-comparator" in form (s1 <=> x1) & (s2 <=> x2)...
+    """
     expr_parts = [f"(s__{i} <=> {var}__{i})" for i in range(model.num_props())]
     expr = " & ".join(expr_parts)
     comparator = model.bdd.add_expr(expr) & model.mk_unit_colored_set()
     return comparator
 
 
-# Evaluate bind operator - Release(x, Comparator(x) & MC(M, phi))
 def bind(model: Model, phi: Function, var: str) -> Function:
+    """Evaluate bind quantifier."""
     comparator = create_comparator(model, var)
     intersection = comparator & phi
 
@@ -39,8 +41,8 @@ def bind(model: Model, phi: Function, var: str) -> Function:
     return result
 
 
-# Evaluate jump operator - Release(s, Comparator(x) & MC(M, phi))
 def jump(model: Model, phi: Function, var: str) -> Function:
+    """Evaluate jump operator."""
     comparator = create_comparator(model, var)
     intersection = comparator & phi
 
@@ -50,65 +52,68 @@ def jump(model: Model, phi: Function, var: str) -> Function:
     return result
 
 
-# Evaluate exist operator - Release(x, SMC(M, phi))
 def existential(model: Model, phi: Function, var: str) -> Function:
+    """Evaluate existential quantifier."""
     vars_to_get_rid = [f"{var}__{i}" for i in range(model.num_props())]
     result = model.bdd.quantify(phi, vars_to_get_rid)
     return result
 
 
-# Compute the set of states which can make transition into the initial set
-# applying the update function of the given `var`
-def pre_E_one_var(model: Model, initial: Function, var: str) -> Function:
+def pre_E_one_var(model: Model, initial_set: Function, var: str) -> Function:
     """
+    Compute the set of states which can make a transition into the initial set by
+    applying the update function of the given BN variable.
+
+    Pseudocode:
     NEGATIVE_PREDECESSOR = !X & Exists(SET & X, 'X') & B_X  
     POSITIVE_PREDECESSOR = X & Exists(SET & !X, 'X') & !B_X
     PREDECESSORS_IN_X = NEGATIVE_PREDECESSOR | POSITIVE_PREDECESSOR
     """
     var_bdd = labeled_by(model, var)
     not_var_bdd = negate(model, var_bdd)
-    neg_pred = not_var_bdd & model.bdd.quantify(initial & var_bdd, [var]) & model.update_fns[var]
-    pos_pred = var_bdd & model.bdd.quantify(initial & not_var_bdd, [var]) & negate(model, model.update_fns[var])
+    neg_pred = not_var_bdd & model.bdd.quantify(initial_set & var_bdd, [var]) & model.update_fns[var]
+    pos_pred = var_bdd & model.bdd.quantify(initial_set & not_var_bdd, [var]) & negate(model, model.update_fns[var])
     return neg_pred | pos_pred
 
 
-# Compute the set of states which can make transition into the initial set
-# applying ALL of the update functions
-def pre_E_all_vars(model: Model, initial: Function) -> Function:
+def pre_E_all_vars(model: Model, initial_set: Function) -> Function:
+    """
+    Compute the set of states which can make transition into the initial set
+    applying ANY of the update functions.
+    """
     current_set = model.mk_empty_colored_set()
     for i in range(model.num_props()):
-        current_set = current_set | pre_E_one_var(model, initial, f"s__{i}")
-    return current_set | (initial & model.stable)
+        current_set = current_set | pre_E_one_var(model, initial_set, f"s__{i}")
+    return current_set | (initial_set & model.stable)
 
 
 def EX(model: Model, phi: Function) -> Function:
     return pre_E_all_vars(model, phi)
 
 
-# Evaluate EU using optimized approach based on saturation, faster than fixed-point version
 def EU_saturated(model: Model, phi1: Function, phi2: Function) -> Function:
+    """Evaluate EU using saturation (which is faster than fixed-point algorithm)"""
     result = phi2
     done = False
     while not done:
         done = True
         for i in range(model.num_props(), 0, -1):
-            update = (phi1 & pre_E_one_var(model, result, f"s__{i-1}")) & negate(model, result)
+            update = (phi1 & pre_E_one_var(model, result, f"s__{i - 1}")) & negate(model, result)
             if update != model.bdd.false:
                 result = result | update
                 done = False
                 break
-    #reorder(model.bdd)
     return result
 
 
-# Evaluate EF operation via EU with saturation
-# correctness follows from EF f == [true EU f]
 def EF_saturated(model: Model, phi: Function) -> Function:
+    """Evaluate EF operator via EU with saturation."""
+    # EF f == [true EU f]
     return EU_saturated(model, model.mk_unit_colored_set(), phi)
 
 
-# classical fixed-point algorithm for EG
 def EG(model: Model, phi: Function) -> Function:
+    """Evaluate EG using classical fixed-point algorithm."""
     old = phi
     new = model.mk_empty_colored_set()
     while old != new:
@@ -117,26 +122,26 @@ def EG(model: Model, phi: Function) -> Function:
     return old
 
 
-# AX computed through the EX
 def AX(model: Model, phi: Function) -> Function:
+    """Compute AX through the EX."""
     # AX f = ~EX (~f)
     return negate(model, EX(model, negate(model, phi)))
 
 
-# AX computed through the EG
 def AF(model: Model, phi1: Function) -> Function:
+    """Compute AF through the EG."""
     # AF f = ~EG (~f)
     return negate(model, EG(model, negate(model, phi1)))
 
 
-# AG computed through EF
 def AG(model: Model, phi1: Function) -> Function:
+    """Compute AG through the EF."""
     # AG f = ~EF (~f)
     return negate(model, EF_saturated(model, negate(model,phi1)))
 
 
-# AU computed through the combination of EU and EG
 def AU(model: Model, phi1: Function, phi2: Function) -> Function:
+    """Compute AU through the combination of EU and EG."""
     # A[f U g] = ~E[~g U (~f & ~g)] & ~EG ~g
     not_phi1 = negate(model, phi1)
     not_phi2 = negate(model, phi2)
@@ -146,8 +151,8 @@ def AU(model: Model, phi1: Function, phi2: Function) -> Function:
     return not_eu & not_eg
 
 
-# fixpoint version for AU, should usually be faster
 def AU_v2(model: Model, phi1: Function, phi2: Function) -> Function:
+    """Compute AU using fixed-point algorithm, should be faster."""
     old = phi2
     new = model.mk_empty_colored_set()
     while old != new:
@@ -156,17 +161,17 @@ def AU_v2(model: Model, phi1: Function, phi2: Function) -> Function:
     return old
 
 
-# EW computed through the AU
 def EW(model: Model, phi1: Function, phi2: Function):
-    # E[f R g] = ¬A[¬f U ¬g]
+    """Compute EW through the AU."""
+    # E[f W g] = ¬A[¬f U ¬g]
     not_phi1 = negate(model, phi1)
     not_phi2 = negate(model, phi2)
     return negate(model, AU(model, not_phi1, not_phi2))
 
 
-# AW computed through the EU
 def AW(model: Model, phi1: Function, phi2: Function):
-    # A[f R g] = ¬E[¬f U ¬g]
+    """Compute AW through the EU."""
+    # A[f W g] = ¬E[¬f U ¬g]
     not_phi1 = negate(model, phi1)
     not_phi2 = negate(model, phi2)
     return negate(model, EU_saturated(model, not_phi1, not_phi2))
@@ -177,9 +182,16 @@ def AW(model: Model, phi1: Function, phi2: Function):
 # ============================================================================================= #
 
 
-# binder EX:   ↓var. (EX PHI)
-# var should be something like "x"
 def optimized_bind_EX(model: Model, phi: Function, var: str) -> Function:
+    """Compute combination of binder and EX using optimized approach.
+
+    For example used for formula ↓var. (EX phi).
+
+    Args:
+        model: model structure with symbolic representation
+        phi: BDD-representation of the evaluated inner subformula
+        var: hybrid variable quantified by the binder
+    """
     current_set = model.mk_empty_colored_set()
     comparator = create_comparator(model, var)
     vars_to_get_rid = [f"{var}__{i}" for i in range(model.num_props())]
@@ -193,9 +205,11 @@ def optimized_bind_EX(model: Model, phi: Function, var: str) -> Function:
     return current_set | stable_binded
 
 
-# jump EX:   @x. (EX PHI)
-# var should be something like "x"
 def optimized_jump_EX(model: Model, phi: Function, var: str) -> Function:
+    """
+    Compute combination of jump and EX using optimized approach.
+    For example used for formula @var. (EX phi).
+    """
     current_set = model.mk_empty_colored_set()
     comparator = create_comparator(model, var)
     vars_to_get_rid = [f"s__{i}" for i in range(model.num_props())]
@@ -209,8 +223,11 @@ def optimized_jump_EX(model: Model, phi: Function, var: str) -> Function:
     return current_set | stable_jumped
 
 
-# existential EX:   ∃x. (EX SET1)
 def optimized_exist_EX(model: Model, phi: Function, var: str) -> Function:
+    """
+    Compute combination of existential quantifier and EX using optimized approach.
+    For example used for formula ∃var. (EX phi).
+    """
     current_set = model.mk_empty_colored_set()
     vars_to_get_rid = [f"{var}__{i}" for i in range(model.num_props())]
 
@@ -223,8 +240,8 @@ def optimized_exist_EX(model: Model, phi: Function, var: str) -> Function:
     return current_set | stable_exist
 
 
-# wrapper for all 3 functions above
 def optimized_hybrid_EX(model: Model, phi: Function, var: str, operation: str) -> Function:
+    """Compute combination of hybrid operator and EX using optimized approach"""
     if operation == "!":
         return optimized_bind_EX(model, phi, var)
     elif operation == "@":

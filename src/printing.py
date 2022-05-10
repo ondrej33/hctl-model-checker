@@ -7,41 +7,55 @@ This contains all the functions for result printing and necessary functionality
 """
 
 
-# Return decimal value of binary vector s0,s1,s2...
-# this is used for sorting resulting assignments
-def encode_assignment(assignment, num_props) -> int:
+def encode_assignment_props(assignment, num_props) -> int:
+    """
+    Return decimal value representing the binary assignment to propositions.
+    This is used for sorting resulting assignments
+    """
     result_val = 0
     for i in range(num_props):
         result_val += assignment[len(assignment) - 1 - i][1] * 2 ** i
     return result_val
 
 
-# Return decimal value of binary vector p0,p1,p2... - BUT uses inverted values
-# this is used for result sorting as a addition to previous function
 def encode_color(assignment, num_cols) -> float:
+    """
+    Return inverted decimal value representing the color (assignment to parameters)
+    This is used (as secondary criteria) for sorting resulting assignments
+    """
     result_val = 0
     for i in range(num_cols):
         result_val += assignment[len(assignment) - 1 - i][1] * (1 / 2 ** i)
     return result_val
 
 
-# Get rid of all parameters from the BDD instance using projection
-# bdd must support only props and params, no state-variables
 def get_states_only(phi: Function, model: Model):
+    """Get rid of all parameters from the BDD instance using projection.
+
+    Args:
+        phi: bdd-encoded set of colored-states - bdd instance must not depend on state-vars
+        model: model object
+    """
     vars_to_get_rid = [f"p__{i}" for i in range(model.num_params())]
     return model.bdd.quantify(phi, vars_to_get_rid)
 
 
-# Get rid of all propositions from the BDD instance using projection
-# BDD must support only props and params, no state-variables
 def get_colors_only(phi: Function, model: Model):
+    """Get rid of all propositions from the BDD instance using projection.
+
+    Args:
+        phi: bdd-encoded set of colored-states - bdd instance must not depend on state-vars
+        model: model object
+    """
     vars_to_get_rid = [f"s__{i}" for i in range(model.num_props())]
     return model.bdd.quantify(phi, vars_to_get_rid)
 
 
-# Print number of computed results in the final BDD (number of state-color pairs),
-# and then numbers of colors & states alone
 def print_results_fast(result: Function, model: Model, message: str = ""):
+    """
+    Print number of computed BDD-encoded results (number of state-color pairs),
+    and also information about colors / states alone
+    """
     if message:
         print(message)
 
@@ -59,10 +73,12 @@ def print_results_fast(result: Function, model: Model, message: str = ""):
     print(f"props: {model.num_props()}, params: {model.num_params()}")
 
 
-# Print results, either in short or long form
-# Short form includes just the basic statistics (number of results etc.)
-# Long form includes detailed listing of all results (might be infeasible)
-def print_results(result: Function, model: Model, message: str = "", show_all: bool = False) -> None:
+def print_results(result: Function, model: Model, message: str = "", show_all=False) -> None:
+    """
+    Print results, either in short (aggregated) form or long full form.
+    Short form includes just the basic statistics (number of results etc.).
+    Long form includes detailed listing of all results (might be infeasible).
+    """
     print_results_fast(result, model, message)
 
     if not show_all:
@@ -77,7 +93,8 @@ def print_results(result: Function, model: Model, message: str = "", show_all: b
     # sorting vars in individual items
     sorted_inside = [sorted(assignment.items(), key=lambda x: (model.name_dict[x[0]])) for assignment in assignments]
     # now sorting the whole items by the binary encoding of given states, parameters
-    assignments_sorted = sorted(sorted_inside, key=lambda x: (encode_assignment(x, model.num_props() + model.num_params())))
+    assignments_sorted = sorted(sorted_inside, key=lambda x: (
+        encode_assignment_props(x, model.num_props() + model.num_params())))
 
     print("Satisfying colored states:")
     for assignment in assignments_sorted:
