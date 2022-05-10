@@ -19,47 +19,46 @@ def negate(model: Model, phi: Function) -> Function:
     return ~phi & model.mk_unit_colored_set()
 
 
-# creates comparator for variables s1, s2,... and var1, var2,...
+# Create comparator for variables s1, s2,... and var1, var2,...
 # it will be bdd for (s1 <=> var1) & (s2 <=> var2)...
 def create_comparator(model: Model, var: str) -> Function:
-    expr_parts = [f"(s__{i} <=> {var}__{i})" for i in range(model.num_props)]
+    expr_parts = [f"(s__{i} <=> {var}__{i})" for i in range(model.num_props())]
     expr = " & ".join(expr_parts)
     comparator = model.bdd.add_expr(expr) & model.mk_unit_colored_set()
     return comparator
 
 
-# Release(x, Comparator(x) & SMC(M, phi))
+# Evaluate bind operator - Release(x, Comparator(x) & MC(M, phi))
 def bind(model: Model, phi: Function, var: str) -> Function:
     comparator = create_comparator(model, var)
     intersection = comparator & phi
 
     # now lets use existential quantification to get rid of the bdd vars coding VAR
-    vars_to_get_rid = [f"{var}__{i}" for i in range(model.num_props)]
+    vars_to_get_rid = [f"{var}__{i}" for i in range(model.num_props())]
     result = model.bdd.quantify(intersection, vars_to_get_rid)
     return result
 
 
-# Release(s, Comparator(x) & SMC(M, phi))
+# Evaluate jump operator - Release(s, Comparator(x) & MC(M, phi))
 def jump(model: Model, phi: Function, var: str) -> Function:
     comparator = create_comparator(model, var)
     intersection = comparator & phi
 
     # now lets use existential quantification to get rid of the bdd vars coding STATE
-    vars_to_get_rid = [f"s__{i}" for i in range(model.num_props)]
+    vars_to_get_rid = [f"s__{i}" for i in range(model.num_props())]
     result = model.bdd.quantify(intersection, vars_to_get_rid)
     return result
 
 
-# Release(x, SMC(M, phi))
+# Evaluate exist operator - Release(x, SMC(M, phi))
 def existential(model: Model, phi: Function, var: str) -> Function:
-    vars_to_get_rid = [f"{var}__{i}" for i in range(model.num_props)]
+    vars_to_get_rid = [f"{var}__{i}" for i in range(model.num_props())]
     result = model.bdd.quantify(phi, vars_to_get_rid)
     return result
 
 
-# computes the set of states which can make transition into the initial set
+# Compute the set of states which can make transition into the initial set
 # applying the update function of the given `var`
-# SHOULD BE USED ONLY BY FUNCTIONS IN THIS FILE
 def pre_E_one_var(model: Model, initial: Function, var: str) -> Function:
     """
     NEGATIVE_PREDECESSOR = !X & Exists(SET & X, 'X') & B_X  
@@ -73,11 +72,11 @@ def pre_E_one_var(model: Model, initial: Function, var: str) -> Function:
     return neg_pred | pos_pred
 
 
-# computes the set of states which can make transition into the initial set
+# Compute the set of states which can make transition into the initial set
 # applying ALL of the update functions
 def pre_E_all_vars(model: Model, initial: Function) -> Function:
     current_set = model.mk_empty_colored_set()
-    for i in range(model.num_props):
+    for i in range(model.num_props()):
         current_set = current_set | pre_E_one_var(model, initial, f"s__{i}")
     return current_set | (initial & model.stable)
 
@@ -86,13 +85,13 @@ def EX(model: Model, phi: Function) -> Function:
     return pre_E_all_vars(model, phi)
 
 
-# compute EU based on saturation, faster than fixed-point version
+# Evaluate EU using optimized approach based on saturation, faster than fixed-point version
 def EU_saturated(model: Model, phi1: Function, phi2: Function) -> Function:
     result = phi2
     done = False
     while not done:
         done = True
-        for i in range(model.num_props, 0, -1):
+        for i in range(model.num_props(), 0, -1):
             update = (phi1 & pre_E_one_var(model, result, f"s__{i-1}")) & negate(model, result)
             if update != model.bdd.false:
                 result = result | update
@@ -102,8 +101,8 @@ def EU_saturated(model: Model, phi1: Function, phi2: Function) -> Function:
     return result
 
 
-# EF computed via EU with saturation
-# is correct since  EF f == [true EU f]
+# Evaluate EF operation via EU with saturation
+# correctness follows from EF f == [true EU f]
 def EF_saturated(model: Model, phi: Function) -> Function:
     return EU_saturated(model, model.mk_unit_colored_set(), phi)
 
@@ -183,9 +182,9 @@ def AW(model: Model, phi1: Function, phi2: Function):
 def optimized_bind_EX(model: Model, phi: Function, var: str) -> Function:
     current_set = model.mk_empty_colored_set()
     comparator = create_comparator(model, var)
-    vars_to_get_rid = [f"{var}__{i}" for i in range(model.num_props)]
+    vars_to_get_rid = [f"{var}__{i}" for i in range(model.num_props())]
 
-    for i in range(model.num_props):
+    for i in range(model.num_props()):
         intersection = comparator & pre_E_one_var(model, phi, f"s__{i}")
         current_set = current_set | model.bdd.quantify(intersection, vars_to_get_rid)
 
@@ -199,9 +198,9 @@ def optimized_bind_EX(model: Model, phi: Function, var: str) -> Function:
 def optimized_jump_EX(model: Model, phi: Function, var: str) -> Function:
     current_set = model.mk_empty_colored_set()
     comparator = create_comparator(model, var)
-    vars_to_get_rid = [f"s__{i}" for i in range(model.num_props)]
+    vars_to_get_rid = [f"s__{i}" for i in range(model.num_props())]
 
-    for i in range(model.num_props):
+    for i in range(model.num_props()):
         intersection = comparator & pre_E_one_var(model, phi, f"s__{i}")
         current_set = current_set | model.bdd.quantify(intersection, vars_to_get_rid)
 
@@ -213,9 +212,9 @@ def optimized_jump_EX(model: Model, phi: Function, var: str) -> Function:
 # existential EX:   ∃x. (EX SET1)
 def optimized_exist_EX(model: Model, phi: Function, var: str) -> Function:
     current_set = model.mk_empty_colored_set()
-    vars_to_get_rid = [f"{var}__{i}" for i in range(model.num_props)]
+    vars_to_get_rid = [f"{var}__{i}" for i in range(model.num_props())]
 
-    for i in range(model.num_props):
+    for i in range(model.num_props()):
         pred = pre_E_one_var(model, phi, f"s__{i}")
         current_set = current_set | model.bdd.quantify(pred, vars_to_get_rid)
 

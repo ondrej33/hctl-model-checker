@@ -75,14 +75,14 @@ def run_benchmark_tests():
     for i in range(4):
         model, as_tree_hctl = parse_all(model1, formulas[i])
         res = eval_tree(as_tree_hctl, model)
-        states_num = model.bdd.count(get_states_only(res, model), nvars=model.num_props)
+        states_num = model.bdd.count(get_states_only(res, model), nvars=model.num_props())
         assert states_num == numbers_sat_states1[i]
         print(f"1st model, formula {i+1} done")
 
     for i in range(4):
         model, as_tree_hctl = parse_all(model2, formulas[i])
         res = eval_tree(as_tree_hctl, model)
-        states_num = model.bdd.count(get_states_only(res, model), nvars=model.num_props)
+        states_num = model.bdd.count(get_states_only(res, model), nvars=model.num_props())
         assert states_num == numbers_sat_states2[i]
         print(f"2nd model, formula {i+1} done")
 

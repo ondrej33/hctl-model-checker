@@ -28,14 +28,14 @@ def encode_color(assignment, num_cols) -> float:
 # Get rid of all parameters from the BDD instance using projection
 # bdd must support only props and params, no state-variables
 def get_states_only(phi: Function, model: Model):
-    vars_to_get_rid = [f"p__{i}" for i in range(model.num_params)]
+    vars_to_get_rid = [f"p__{i}" for i in range(model.num_params())]
     return model.bdd.quantify(phi, vars_to_get_rid)
 
 
 # Get rid of all propositions from the BDD instance using projection
 # BDD must support only props and params, no state-variables
 def get_colors_only(phi: Function, model: Model):
-    vars_to_get_rid = [f"s__{i}" for i in range(model.num_props)]
+    vars_to_get_rid = [f"s__{i}" for i in range(model.num_props())]
     return model.bdd.quantify(phi, vars_to_get_rid)
 
 
@@ -45,18 +45,18 @@ def print_results_fast(result: Function, model: Model, message: str = ""):
     if message:
         print(message)
 
-    assignments = model.bdd.count(result, nvars=model.num_props + model.num_params)
+    assignments = model.bdd.count(result, nvars=model.num_props() + model.num_params())
     print(f"{assignments} RESULTS FOUND IN TOTAL")
 
     result_colors = get_colors_only(result, model)
-    assignments = model.bdd.count(result_colors, nvars=model.num_params)
+    assignments = model.bdd.count(result_colors, nvars=model.num_params())
     print(f"{assignments} COLORS FOUND IN TOTAL")
 
     result_states = get_states_only(result, model)
-    assignments = model.bdd.count(result_states, nvars=model.num_props)
+    assignments = model.bdd.count(result_states, nvars=model.num_props())
     print(f"{assignments} STATES FOUND IN TOTAL")
 
-    print(f"props: {model.num_props}, params: {model.num_params}")
+    print(f"props: {model.num_props()}, params: {model.num_params()}")
 
 
 # Print results, either in short or long form
@@ -72,12 +72,12 @@ def print_results(result: Function, model: Model, message: str = "", show_all: b
     # for each resulting assignment, prints its propositions+parameters, in alphabetical order, colored
     # propositions assigned 0 are colored red, props assigned 1 assigned green
 
-    vars_to_show = [f"s__{i}" for i in range(model.num_props)]+[f"p__{i}" for i in range(model.num_params)]
+    vars_to_show = [f"s__{i}" for i in range(model.num_props())] + [f"p__{i}" for i in range(model.num_params())]
     assignments = model.bdd.pick_iter(result, care_vars=vars_to_show)
     # sorting vars in individual items
     sorted_inside = [sorted(assignment.items(), key=lambda x: (model.name_dict[x[0]])) for assignment in assignments]
     # now sorting the whole items by the binary encoding of given states, parameters
-    assignments_sorted = sorted(sorted_inside, key=lambda x: (encode_assignment(x, model.num_props + model.num_params)))
+    assignments_sorted = sorted(sorted_inside, key=lambda x: (encode_assignment(x, model.num_props() + model.num_params())))
 
     print("Satisfying colored states:")
     for assignment in assignments_sorted:

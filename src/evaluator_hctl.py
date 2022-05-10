@@ -11,7 +11,7 @@ from src.parse_hctl_formula.parser_wrapper_hctl import parse_to_tree
 MIN_NUM_PROPS_TO_OPTIMIZE = 25
 
 
-# check whether given node corresponds to EX operation
+# check whether given node corresponds to EX operation (which we want to optimize)
 def is_node_ex_to_optimize(node, var: str) -> bool:
     return type(node) == UnaryNode and node.category == NodeType.EX and var in node.subform_string
 
@@ -133,7 +133,7 @@ class EvaluateExpressionVisitor:
                     # since we are working with canonical cache, we must rename vars in result bdd
                     result_renaming = {val: key for key, val in result_renaming.items()}
                     combined_renaming = {result_renaming[val] : key for key, val in renaming.items()}
-                    renaming_vectors = {f"{key}__{i}": f"{val}__{i}" for key, val in combined_renaming.items() for i in range(model.num_props)}
+                    renaming_vectors = {f"{key}__{i}": f"{val}__{i}" for key, val in combined_renaming.items() for i in range(model.num_props())}
                     renamed_res = model.bdd.let(renaming_vectors, result)
                     #print(f"finished : {node.subform_string} : total_nodes = {len(model.bdd)} : this_bdd_nodes = {len(renamed_res)}")
                     return renamed_res
@@ -226,7 +226,7 @@ class EvaluateExpressionVisitor:
             # and we can distribute hybrid ops through the union.
             # We optimize only for bigger models - for smaller ones this is not much effective.
             """
-            if model.num_props > MIN_NUM_PROPS_TO_OPTIMIZE and check_descendants_for_ex(node.child, node.var):
+            if model.num_props() > MIN_NUM_PROPS_TO_OPTIMIZE and check_descendants_for_ex(node.child, node.var):
                 result = self.visit(node.child, model, dupl, cache, optim_h=True, optim_op=node.category,
                                     optim_var=node.var[1:-1])
             else:

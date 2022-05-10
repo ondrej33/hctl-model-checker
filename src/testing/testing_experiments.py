@@ -7,13 +7,15 @@ os.chdir(PROJECT_DIR)
 import sys
 sys.path.append(PROJECT_DIR)
 
+import time
+import timeout_decorator
+
+
 from src.fixed_formulas_eval import *
 from src.parse_all import parse_all
 from src.parse_hctl_formula.evaluator_hctl import eval_tree
 from src.printing import print_results, print_results_fast
 
-import time
-import timeout_decorator
 
 @timeout_decorator.timeout(1 * 3600)
 def run_test(file_name, formula):

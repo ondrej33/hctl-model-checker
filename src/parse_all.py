@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import Set, Dict, Tuple
 
 
-# collects names of all propositions from HCTL formula tree into param props_collected
+# Collect names of all propositions from HCTL formula tree into param props_collected
 def get_prop_names_from_hctl(node, props_collected: Set[str]) -> None:
     if type(node) == TerminalNode:
         # DO not add any of true/false or variable names, only propositions
@@ -24,14 +24,15 @@ def get_prop_names_from_hctl(node, props_collected: Set[str]) -> None:
         get_prop_names_from_hctl(node.right, props_collected)
 
 
-# wrapper for collecting names of all propositions and params from the update function's tree
+# Collect names of all propositions and params from the update function's tree
+# wrapper for function below
 def get_names_from_update_fn(node) -> Set[str]:
     props_and_params = set()
     get_names_from_update_fn_rec(node, props_and_params)
     return props_and_params
 
 
-# recursively collects names of all propositions and params from the update function's tree into props_and_params
+# Recursively collect names of all propositions and params from the update function's tree into props_and_params
 def get_names_from_update_fn_rec(node, props_and_params: Set[str]) -> None:
     if type(node) == TerminalNode:
         # DO not add any of true/false nodes, only proposition or parameter nodes
@@ -45,7 +46,8 @@ def get_names_from_update_fn_rec(node, props_and_params: Set[str]) -> None:
         get_names_from_update_fn_rec(node.right, props_and_params)
 
 
-# renames all terminal nodes in update function's tree (propositions and parameters)
+# Rename all terminal nodes in update function's tree (propositions and parameters) according
+# to the given dictionary
 def rename_terminals_update_fn(node, rename_dict: Dict[str, str]) -> None:
     if type(node) == TerminalNode:
         # rename proposition (param) nodes
@@ -62,7 +64,7 @@ def rename_terminals_update_fn(node, rename_dict: Dict[str, str]) -> None:
         node.subform_string = "(" + node.left.subform_string + OP_TO_STRING[node.category] + node.right.subform_string + ")"
 
 
-# renames all propositions in terminal nodes in HCTL formula (does not touch state variables)
+# Rename all propositions in terminal nodes in HCTL formula (does not touch state variable terminals)
 def rename_props_in_hctl(node, rename_dict: Dict[str, str]) -> None:
     if type(node) == TerminalNode:
         # only rename proposition nodes, not state variable or constant nodes
@@ -82,7 +84,7 @@ def rename_props_in_hctl(node, rename_dict: Dict[str, str]) -> None:
         node.subform_string = "(" + OP_TO_STRING[node.category] + node.var + ":" + node.child.subform_string + ")"
 
 
-# rename as many state-variables as possible to the canonical names, without changing the meaning of the formula
+# Rename as many state-variables as possible to the canonical names, without changing the meaning of the formula
 # this is the first step to "canonization", followed later by the second part
 def minimize_number_of_state_vars(node, rename_dict: Dict[str, str], last_used_name: str, num_vars=0):
     """
@@ -128,7 +130,7 @@ def minimize_number_of_state_vars(node, rename_dict: Dict[str, str], last_used_n
     return num_vars
 
 
-# parse boolean network file (in bnet format) and HCTL formula into a Model object and formula tree
+# Parse boolean network file (in bnet format) and HCTL formula into a Model object and formula tree
 def parse_all(file_name: str, formula: str) -> Tuple[Model, Node]:
     content = Path(file_name).read_text()
     lines = content.splitlines()
