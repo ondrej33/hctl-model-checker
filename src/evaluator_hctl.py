@@ -7,7 +7,7 @@ from src.implementation_components import *
 from src.parse_hctl_formula.parser_wrapper_hctl import parse_to_tree
 
 
-# minimal number of propositions in a model to activate certain optimisations
+"""Minimal number of propositions in a model to activate certain optimisations."""
 MIN_NUM_PROPS_TO_OPTIMIZE = 25
 
 

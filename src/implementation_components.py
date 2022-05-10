@@ -1,8 +1,8 @@
 from src.model import *
 
 """
-This file includes the implementation for evaluating all components of HCTL formula
-It is build so that we can combine them into the bottom-up algorithm
+This file includes the implementation for evaluating all components of HCTL formula.
+It is build so that we can combine them into the bottom-up algorithm.
 """
 
 # ============================================================================================= #

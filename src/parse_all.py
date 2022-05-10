@@ -10,6 +10,11 @@ from pathlib import Path
 from typing import Set, Dict, Tuple
 
 
+"""
+File wrapping the functionality for parsing models and formulas.
+"""
+
+
 def get_prop_names_from_hctl(node, props_collected: Set[str]) -> None:
     """
     Collect names of all propositions from HCTL formula tree

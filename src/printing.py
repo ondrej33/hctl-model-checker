@@ -3,7 +3,7 @@ from termcolor import colored
 
 
 """
-This contains all the functions for result printing and necessary functionality
+File containing functionality for result printing and aggregation.
 """
 
 

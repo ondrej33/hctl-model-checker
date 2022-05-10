@@ -16,6 +16,18 @@ from src.printing import print_results
 from src.parse_all import parse_all
 
 
+"""Model checker for HCTL on coloured KS generated from Boolean networks.
+
+Program parses Boolean network and HCTL formula into Model object and formula syntax tree.
+Formula's tree is then evaluated using BDD-based algorithm.
+Either the information about the number of satisfying colored-states, or 
+all satisfying tuples <color, state> can be printed.
+
+    Program usage:
+    python3 model_check.py path_to_bnet formula
+"""
+
+
 def main(file_name: str, formula: str):
     """Manage the whole model checking process (parsing, evaluating, printing)"""
     try:

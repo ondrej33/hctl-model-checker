@@ -1,5 +1,5 @@
 """
-This file includes basic exception classes
+This file includes basic exception classes.
 """
 
 class InvalidPropError(Exception):

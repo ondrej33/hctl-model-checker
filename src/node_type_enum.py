@@ -1,5 +1,9 @@
 from enum import Enum, auto
 
+"""
+Enums and dictionaries for logical operators and elements in formula.
+"""
+
 
 class NodeType(Enum):
     """Enum for categories of nodes in formula syntax tree"""
