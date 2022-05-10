@@ -76,9 +76,9 @@ def run_benchmark_tests():
     formulas = [formula1, formula2, formula3, formula4]
 
     # Interactions in gut microbiome model
-    model1 = "benchmark_models/cav2022/1.bnet"
+    model1 = "benchmark_models/coloured_benchmarks/1.bnet"
     # E Protein model
-    model2 = "benchmark_models/cav2022/6.bnet"
+    model2 = "benchmark_models/coloured_benchmarks/6.bnet"
 
     numbers_sat_states1 = [2048, 2048, 640, 2048]
     numbers_sat_states2 = [81920, 0, 81920, 81920]
