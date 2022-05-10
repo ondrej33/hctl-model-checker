@@ -1,5 +1,5 @@
 from src.abstract_syntax_tree import *
-from src.evaluator_update_fn import encode_update_fn_tree
+from src.evaluator_update_fn import eval_update_fn_tree
 from src.exceptions import *
 from src.model import *
 from src.parse_hctl_formula import parser_wrapper_hctl
@@ -262,7 +262,7 @@ def parse_all(file_name: str, formula: str) -> Tuple[Model, Node]:
     bdd.reorder(my_order)
 
     # create BDD for each update function by evaluating their syntax trees
-    list_update_fns = [encode_update_fn_tree(as_tree, bdd) for as_tree in update_fn_trees]
+    list_update_fns = [eval_update_fn_tree(as_tree, bdd) for as_tree in update_fn_trees]
     update_dict = OrderedDict()
     for i in range(len(prop_names)):
         update_dict[f"s__{i}"] = list_update_fns[i]

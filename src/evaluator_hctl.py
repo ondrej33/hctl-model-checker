@@ -111,184 +111,12 @@ def get_canonical(subform: str) -> str:
     return ''.join(canonical)
 
 
-# returns subformula with "canonized" var names and the dictionary with renamings
 def get_canonical_and_dict(subform: str) -> Tuple[str, Dict[str, str]]:
     """Returns subformula with "canonized" var names together with name mappings."""
     canonical = []
     rename_dict = {}
     canonize_subform(subform, 0, rename_dict, canonical)
     return ''.join(canonical), rename_dict
-
-
-class EvaluateExpressionVisitor:
-    """Class wrapping the evaluation of HCTL formulae."""
-
-    def __init__(self):
-        pass
-
-    def visit(self, node, model: Model, dupl: Dict[str, int], cache,
-              optim_h=False, optim_op=None, optim_var=None) -> Function:
-        """Visit node and recursively evaluate the subformula which it represents.
-
-        Compute in bottom-up manner. First evaluate potential children, then combine
-        their results depending on the type and operation corresponding to the node.
-        Make use of cached results, optimize computation of several patterns.
-
-        Args:
-            node: A node in abstract syntax tree of HCTL formula, it represents a subformula
-            model: Model structure containing symbolic representation and metadata
-            dupl: Dictionary of CANONIZED subformulas occurring several times in the formula
-                and the number of how many occurrences are left
-            cache: Dictionary of solved (CANONIZED) duplicate subformulas
-                Values are in the form <result, variable_names_mapping>
-            optim_h: If True, then we use optimisations - predecessor was a hybrid operator node
-                and we can push it inside (for example) EX
-            optim_op: Hybrid operation we are optimizing
-            optim_var: Variable bound to hybrid operation we are optimizing
-
-        Returns:
-            A BDD-encoded result of the evaluated formula on the given model.
-        """
-
-        # first check for if this node does not belong in the duplicates
-        save_to_cache = False
-        canonized_subform, renaming = get_canonical_and_dict(node.subform_string)
-        if canonized_subform in dupl:
-            if canonized_subform in cache:
-                # one duplicate less now, if we already visited all of them, lets delete the cached value
-                dupl[canonized_subform] -= 1
-                result, result_renaming = cache[canonized_subform]
-                if dupl[canonized_subform] == 0:
-                    dupl.pop(canonized_subform)
-                    cache.pop(canonized_subform)
-
-                # we can only return cached value if we are not in the middle of optimizing
-                if not optim_h:
-                    # since we are working with canonical cache, we must rename vars in result bdd
-                    result_renaming = {val: key for key, val in result_renaming.items()}
-                    combined_renaming = {result_renaming[val] : key for key, val in renaming.items()}
-                    renaming_vectors = {f"{key}__{i}": f"{val}__{i}" for key, val in combined_renaming.items() for i in range(model.num_props())}
-                    renamed_res = model.bdd.let(renaming_vectors, result)
-                    #print(f"finished : {node.subform_string} : total_nodes = {len(model.bdd)} : this_bdd_nodes = {len(renamed_res)}")
-                    return renamed_res
-            else:
-                # we want to save the result of this subformula unless we are in the middle of optimizing
-                save_to_cache = not optim_h
-
-        result = model.mk_empty_colored_set()
-        if type(node) == TerminalNode:
-            # we must differentiate between atomic props VS state-variables VS constants
-            if node.category == NodeType.VAR:
-                # if we have a state-variable, node.value has form of {var_name}
-                result = create_comparator(model, node.value[1:-1])
-            elif node.category == NodeType.TRUE:
-                result = model.mk_unit_colored_set()
-            elif node.category == NodeType.FALSE:
-                result = model.mk_empty_colored_set()
-            else:
-                result = labeled_by(model, node.value)
-        elif type(node) == UnaryNode:
-            child_result = self.visit(node.child, model, dupl, cache)
-            if node.category == NodeType.NEG:
-                result = negate(model, child_result)
-            elif node.category == NodeType.EX:
-                # if predecessor was a hybrid node, we use optimize the process (distribute hybrid ops inside)
-                if optim_h:
-                    result = optimized_hybrid_EX(model, child_result, optim_var, optim_op)
-                else:
-                    result = EX(model, child_result)
-            elif node.category == NodeType.AX:
-                result = AX(model, child_result)
-            elif node.category == NodeType.EF:
-                result = EF_saturated(model, child_result)
-            elif node.category == NodeType.AF:
-                result = AF(model, child_result)
-            elif node.category == NodeType.EG:
-                result = EG(model, child_result)
-            elif node.category == NodeType.AG:
-                result = AG(model, child_result)
-        elif type(node) == BinaryNode:
-            # first lets check if we can optimise - if the predecessor was a hybrid node,
-            # we can distribute it through the OR operators and optimize some future EX operator
-            if optim_h and node.category == NodeType.OR:
-                # if we have enabled optim, procedure depends on what types of children we have
-                optimize_left = is_node_ex_to_optimize(node.left, optim_var) or is_node_union(node.left)
-                optimize_right = is_node_ex_to_optimize(node.right, optim_var) or is_node_union(node.right)
-                if optimize_left:
-                    if optimize_right:
-                        result = self.visit(node.left, model, dupl, cache, optim_h, optim_op, optim_var) | \
-                                 self.visit(node.right, model, dupl, cache, optim_h, optim_op, optim_var)
-                    else:
-                        result = self.visit(node.left, model, dupl, cache, optim_h, optim_op, optim_var) | \
-                                 self.visit_with_hybrid_op(optim_var, optim_op, node.right, model, dupl, cache)
-                else:
-                    if optimize_right:
-                        result = self.visit_with_hybrid_op(optim_var, optim_op, node.left, model, dupl, cache) | \
-                                 self.visit(node.right, model, dupl, cache, optim_h, optim_op, optim_var)
-                    else:
-                        result = self.visit_with_hybrid_op(optim_var, optim_op, node, model, dupl, cache)
-            else:
-                # we save the results for children and then combine them using the given operation
-                left_result = self.visit(node.left, model, dupl, cache)
-                right_result = self.visit(node.right, model, dupl, cache)
-
-                if node.category == NodeType.AND:
-                    result = left_result & right_result
-                if node.category == NodeType.OR:
-                    result = left_result | right_result
-                elif node.category == NodeType.IMP:
-                    # P -> Q == ~P | Q
-                    result = negate(model, left_result) | right_result
-                elif node.category == NodeType.IFF:
-                    # P <=> Q == (P & Q) | (~P & ~Q)
-                    result = (left_result & right_result) | (negate(model, left_result) & negate(model, right_result))
-                elif node.category == NodeType.XOR:
-                    # P ^ Q == (P & ~Q) | (~P & Q)
-                    result = (left_result & negate(model, right_result)) | (negate(model, left_result) & right_result)
-                elif node.category == NodeType.EU:
-                    result = EU_saturated(model, left_result, right_result)
-                elif node.category == NodeType.AU:
-                    result = AU_v2(model, left_result, right_result)
-                elif node.category == NodeType.EW:
-                    result = EW(model, left_result, right_result)
-                elif node.category == NodeType.AW:
-                    result = AW(model, left_result, right_result)
-
-        elif type(node) == HybridNode:
-            # Decide if there is a chance to optimize something - our goal is to optimize EX in some descendant node,
-            # and we can distribute hybrid ops through the unions.
-            # We optimize only for larger models - for smaller ones this is not much effective.
-            if model.num_props() > MIN_NUM_PROPS_TO_OPTIMIZE and check_descendants_for_ex(node.child, node.var):
-                result = self.visit(node.child, model, dupl, cache, optim_h=True, optim_op=node.category,
-                                    optim_var=node.var[1:-1])
-            else:
-                child_result = self.visit(node.child, model, dupl, cache)
-                if node.category == NodeType.BIND:
-                    result = bind(model, child_result, node.var[1:-1])
-                elif node.category == NodeType.JUMP:
-                    result = jump(model, child_result, node.var[1:-1])
-                elif node.category == NodeType.EXIST:
-                    result = existential(model, child_result, node.var[1:-1])
-
-        # do not forget to save the result for potential future re-use
-        if save_to_cache:
-            cache[canonized_subform] = (result, renaming)
-
-        return result
-
-    def visit_with_hybrid_op(self, var: str, op: NodeType, node, model: Model,
-                             dupl: Dict[str, int], cache: Dict[str, Function]) -> Function:
-        """
-        Evaluate the formula corresponding to the node and apply hybrid operation on the result
-        This is useful when optimisations happen somewhere during the evaluation
-        """
-        child_result = self.visit(node, model, dupl, cache)
-        if op == NodeType.BIND:
-            return bind(model, child_result, var)
-        elif op == NodeType.JUMP:
-            return jump(model, child_result, var)
-        elif op == NodeType.EXIST:
-            return existential(model, child_result, var)
 
 
 def mark_duplicates(root_node) -> Dict[str, int]:
@@ -348,10 +176,176 @@ def mark_duplicates(root_node) -> Dict[str, int]:
     return duplicates
 
 
+def eval_tree_recursive(node, model: Model, dupl: Dict[str, int], cache,
+                        optim_h=False, optim_op=None, optim_var=None) -> Function:
+    """Visit node and recursively evaluate the subformula which it represents.
+
+    Compute in bottom-up manner. First evaluate potential children, then combine
+    their results depending on the type and operation corresponding to the node.
+    Make use of cached results, optimize computation of several patterns.
+
+    Args:
+        node: A node in abstract syntax tree of HCTL formula, it represents a subformula
+        model: Model structure containing symbolic representation and metadata
+        dupl: Dictionary of CANONIZED subformulas occurring several times in the formula
+            and the number of how many occurrences are left
+        cache: Dictionary of solved (CANONIZED) duplicate subformulas
+            Values are in the form <result, variable_names_mapping>
+        optim_h: If True, then we use optimisations - predecessor was a hybrid operator node
+            and we can push it inside (for example) EX
+        optim_op: Hybrid operation we are optimizing
+        optim_var: Variable bound to hybrid operation we are optimizing
+
+    Returns:
+        A BDD-encoded result of the evaluated formula on the given model.
+    """
+
+    # first check for if this node does not belong in the duplicates
+    save_to_cache = False
+    canonized_subform, renaming = get_canonical_and_dict(node.subform_string)
+    if canonized_subform in dupl:
+        if canonized_subform in cache:
+            # one duplicate less now, if we already visited all of them, lets delete the cached value
+            dupl[canonized_subform] -= 1
+            result, result_renaming = cache[canonized_subform]
+            if dupl[canonized_subform] == 0:
+                dupl.pop(canonized_subform)
+                cache.pop(canonized_subform)
+
+            # we can only return cached value if we are not in the middle of optimizing
+            if not optim_h:
+                # since we are working with canonical cache, we must rename vars in result bdd
+                result_renaming = {val: key for key, val in result_renaming.items()}
+                combined_renaming = {result_renaming[val] : key for key, val in renaming.items()}
+                renaming_vectors = {f"{key}__{i}": f"{val}__{i}" for key, val in combined_renaming.items() for i in range(model.num_props())}
+                renamed_res = model.bdd.let(renaming_vectors, result)
+                #print(f"finished : {node.subform_string} : total_nodes = {len(model.bdd)} : this_bdd_nodes = {len(renamed_res)}")
+                return renamed_res
+        else:
+            # we want to save the result of this subformula unless we are in the middle of optimizing
+            save_to_cache = not optim_h
+
+    result = model.mk_empty_colored_set()
+    if type(node) == TerminalNode:
+        # we must differentiate between atomic props VS state-variables VS constants
+        if node.category == NodeType.VAR:
+            # if we have a state-variable, node.value has form of {var_name}
+            result = create_comparator(model, node.value[1:-1])
+        elif node.category == NodeType.TRUE:
+            result = model.mk_unit_colored_set()
+        elif node.category == NodeType.FALSE:
+            result = model.mk_empty_colored_set()
+        else:
+            result = labeled_by(model, node.value)
+    elif type(node) == UnaryNode:
+        child_result = eval_tree_recursive(node.child, model, dupl, cache)
+        if node.category == NodeType.NEG:
+            result = negate(model, child_result)
+        elif node.category == NodeType.EX:
+            # if predecessor was a hybrid node, we use optimize the process (distribute hybrid ops inside)
+            if optim_h:
+                result = optimized_hybrid_EX(model, child_result, optim_var, optim_op)
+            else:
+                result = EX(model, child_result)
+        elif node.category == NodeType.AX:
+            result = AX(model, child_result)
+        elif node.category == NodeType.EF:
+            result = EF_saturated(model, child_result)
+        elif node.category == NodeType.AF:
+            result = AF(model, child_result)
+        elif node.category == NodeType.EG:
+            result = EG(model, child_result)
+        elif node.category == NodeType.AG:
+            result = AG(model, child_result)
+    elif type(node) == BinaryNode:
+        # first lets check if we can optimise - if the predecessor was a hybrid node,
+        # we can distribute it through the OR operators and optimize some future EX operator
+        if optim_h and node.category == NodeType.OR:
+            # if we have enabled optim, procedure depends on what types of children we have
+            optimize_left = is_node_ex_to_optimize(node.left, optim_var) or is_node_union(node.left)
+            optimize_right = is_node_ex_to_optimize(node.right, optim_var) or is_node_union(node.right)
+            if optimize_left:
+                if optimize_right:
+                    result = eval_tree_recursive(node.left, model, dupl, cache, optim_h, optim_op, optim_var) | \
+                             eval_tree_recursive(node.right, model, dupl, cache, optim_h, optim_op, optim_var)
+                else:
+                    result = eval_tree_recursive(node.left, model, dupl, cache, optim_h, optim_op, optim_var) | \
+                             eval_with_hybrid_op_rec(optim_var, optim_op, node.right, model, dupl, cache)
+            else:
+                if optimize_right:
+                    result = eval_with_hybrid_op_rec(optim_var, optim_op, node.left, model, dupl, cache) | \
+                             eval_tree_recursive(node.right, model, dupl, cache, optim_h, optim_op, optim_var)
+                else:
+                    result = eval_with_hybrid_op_rec(optim_var, optim_op, node, model, dupl, cache)
+        else:
+            # we save the results for children and then combine them using the given operation
+            left_result = eval_tree_recursive(node.left, model, dupl, cache)
+            right_result = eval_tree_recursive(node.right, model, dupl, cache)
+
+            if node.category == NodeType.AND:
+                result = left_result & right_result
+            if node.category == NodeType.OR:
+                result = left_result | right_result
+            elif node.category == NodeType.IMP:
+                # P -> Q == ~P | Q
+                result = negate(model, left_result) | right_result
+            elif node.category == NodeType.IFF:
+                # P <=> Q == (P & Q) | (~P & ~Q)
+                result = (left_result & right_result) | (negate(model, left_result) & negate(model, right_result))
+            elif node.category == NodeType.XOR:
+                # P ^ Q == (P & ~Q) | (~P & Q)
+                result = (left_result & negate(model, right_result)) | (negate(model, left_result) & right_result)
+            elif node.category == NodeType.EU:
+                result = EU_saturated(model, left_result, right_result)
+            elif node.category == NodeType.AU:
+                result = AU_v2(model, left_result, right_result)
+            elif node.category == NodeType.EW:
+                result = EW(model, left_result, right_result)
+            elif node.category == NodeType.AW:
+                result = AW(model, left_result, right_result)
+
+    elif type(node) == HybridNode:
+        # Decide if there is a chance to optimize something - our goal is to optimize EX in some descendant node,
+        # and we can distribute hybrid ops through the unions.
+        # We optimize only for larger models - for smaller ones this is not much effective.
+        if model.num_props() > MIN_NUM_PROPS_TO_OPTIMIZE and check_descendants_for_ex(node.child, node.var):
+            result = eval_tree_recursive(node.child, model, dupl, cache, optim_h=True, optim_op=node.category,
+                                         optim_var=node.var[1:-1])
+        else:
+            child_result = eval_tree_recursive(node.child, model, dupl, cache)
+            if node.category == NodeType.BIND:
+                result = bind(model, child_result, node.var[1:-1])
+            elif node.category == NodeType.JUMP:
+                result = jump(model, child_result, node.var[1:-1])
+            elif node.category == NodeType.EXIST:
+                result = existential(model, child_result, node.var[1:-1])
+
+    # do not forget to save the result for potential future re-use
+    if save_to_cache:
+        cache[canonized_subform] = (result, renaming)
+
+    return result
+
+
+def eval_with_hybrid_op_rec(var: str, op: NodeType, node, model: Model,
+                            dupl: Dict[str, int], cache: Dict[str, Function]) -> Function:
+    """
+    Evaluate the formula corresponding to the node and apply hybrid operation on the result
+    This is useful when optimisations happen somewhere during the evaluation
+    """
+    child_result = eval_tree_recursive(node, model, dupl, cache)
+    if op == NodeType.BIND:
+        return bind(model, child_result, var)
+    elif op == NodeType.JUMP:
+        return jump(model, child_result, var)
+    elif op == NodeType.EXIST:
+        return existential(model, child_result, var)
+
+
 def eval_tree(syntax_tree: Node, model: Model) -> Function:
     """Evaluate formula represented by a tree on a given model."""
     duplicates = mark_duplicates(syntax_tree)
-    result = EvaluateExpressionVisitor().visit(syntax_tree, model, duplicates, {})
+    result = eval_tree_recursive(syntax_tree, model, duplicates, {})
     return result
 
 
