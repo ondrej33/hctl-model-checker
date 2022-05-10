@@ -1,8 +1,8 @@
 from enum import Enum, auto
 
 
-# enum for categories of nodes in formula syntax tree
 class NodeType(Enum):
+    """Enum for categories of nodes in formula syntax tree"""
     PROP = auto()
     VAR = auto()
     TRUE = auto()
@@ -31,7 +31,7 @@ class NodeType(Enum):
     EXIST = auto()
 
 
-# mapping from string representation of operators to the enum representation
+"""Mapping from string representation of operators to their enum representation"""
 OP_DICT = {
     "~": NodeType.NEG,
     "||": NodeType.OR,
@@ -58,5 +58,5 @@ OP_DICT = {
     "3": NodeType.EXIST,
 }
 
-# mapping from enum representation of operators to the string
+"""Mapping from enum representation of operators to corresponding string."""
 OP_TO_STRING = {op: op_string for (op_string, op) in OP_DICT.items()}
