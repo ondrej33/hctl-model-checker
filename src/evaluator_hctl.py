@@ -3,12 +3,13 @@ from heapq import heappush, heappop
 from typing import Dict, Tuple
 
 from src.abstract_syntax_tree import *
+from src.exceptions import InvalidHctlOperationError
 from src.implementation_components import *
 from src.parse_hctl_formula.parser_wrapper_hctl import parse_to_tree
 
 
 """Minimal number of propositions in a model to activate certain optimisations."""
-MIN_NUM_PROPS_TO_OPTIMIZE = 25
+MIN_PROPS_TO_OPTIMIZE = 25
 
 
 def is_node_ex_to_optimize(node, var: str) -> bool:
@@ -176,6 +177,85 @@ def mark_duplicates(root_node) -> Dict[str, int]:
     return duplicates
 
 
+def eval_terminal(node, model):
+    """Evaluate terminal node of formula tree based on its type."""
+    # we have several types of terminals: atomic props, state-variables, constants
+    if node.category == NodeType.VAR:
+        # if we have a state-variable, node.value has form of '{var_name}'
+        return create_comparator(model, node.value[1:-1])
+    elif node.category == NodeType.TRUE:
+        return model.mk_unit_colored_set()
+    elif node.category == NodeType.FALSE:
+        return model.mk_empty_colored_set()
+    elif node.category == NodeType.PROP:
+        return labeled_by(model, node.value)
+    else:
+        raise InvalidHctlOperationError(node.category)
+
+
+def apply_unary_op(operation, model, child_result, optimize_ex=False):
+    """Apply unary operation corresponding to a node to the result of its child."""
+    if operation == NodeType.NEG:
+        return negate(model, child_result)
+    elif operation == NodeType.EX:
+        # if predecessor was a hybrid node, we optimize - distribute hybrid ops inside
+        if optimize_ex:
+            return optimized_hybrid_EX(model, child_result, optim_var, optim_op)
+        else:
+            return EX(model, child_result)
+    elif operation == NodeType.AX:
+        return AX(model, child_result)
+    elif operation == NodeType.EF:
+        return EF_saturated(model, child_result)
+    elif operation == NodeType.AF:
+        return AF(model, child_result)
+    elif operation == NodeType.EG:
+        return EG(model, child_result)
+    elif operation == NodeType.AG:
+        return AG(model, child_result)
+    else:
+        raise InvalidHctlOperationError(operation)
+
+
+def apply_binary_op(operation, model, left_result, right_result):
+    """Apply binary operation corresponding to a node to the results of its children"""
+    if operation == NodeType.AND:
+        return left_result & right_result
+    elif operation == NodeType.OR:
+        return left_result | right_result
+    elif operation == NodeType.IMP:
+        # P -> Q == ~P | Q
+        return negate(model, left_result) | right_result
+    elif operation == NodeType.IFF:
+        # P <=> Q == (P & Q) | (~P & ~Q)
+        return (left_result & right_result) | (negate(model, left_result) & negate(model, right_result))
+    elif operation == NodeType.XOR:
+        # P ^ Q == (P & ~Q) | (~P & Q)
+        return (left_result & negate(model, right_result)) | (negate(model, left_result) & right_result)
+    elif operation == NodeType.EU:
+        return  EU_saturated(model, left_result, right_result)
+    elif operation == NodeType.AU:
+        return  AU_v2(model, left_result, right_result)
+    elif operation == NodeType.EW:
+        return  EW(model, left_result, right_result)
+    elif operation == NodeType.AW:
+        return  AW(model, left_result, right_result)
+    else:
+        raise InvalidHctlOperationError(operation)
+
+
+def apply_hybrid_op(operation, model, child_result, hybrid_var):
+    """Apply hybrid operation corresponding to a node to the result of its child"""
+    if operation == NodeType.BIND:
+        return bind(model, child_result, hybrid_var)
+    elif operation == NodeType.JUMP:
+        return jump(model, child_result, hybrid_var)
+    elif operation == NodeType.EXIST:
+        return existential(model, child_result, hybrid_var)
+    else:
+        raise InvalidHctlOperationError(operation)
+
+
 def eval_tree_recursive(node, model: Model, dupl: Dict[str, int], cache,
                         optim_h=False, optim_op=None, optim_var=None) -> Function:
     """Visit node and recursively evaluate the subformula which it represents.
@@ -217,9 +297,9 @@ def eval_tree_recursive(node, model: Model, dupl: Dict[str, int], cache,
                 # since we are working with canonical cache, we must rename vars in result bdd
                 result_renaming = {val: key for key, val in result_renaming.items()}
                 combined_renaming = {result_renaming[val] : key for key, val in renaming.items()}
-                renaming_vectors = {f"{key}__{i}": f"{val}__{i}" for key, val in combined_renaming.items() for i in range(model.num_props())}
+                renaming_vectors = {f"{key}__{i}": f"{val}__{i}" for key, val in combined_renaming.items()
+                                    for i in range(model.num_props())}
                 renamed_res = model.bdd.let(renaming_vectors, result)
-                #print(f"finished : {node.subform_string} : total_nodes = {len(model.bdd)} : this_bdd_nodes = {len(renamed_res)}")
                 return renamed_res
         else:
             # we want to save the result of this subformula unless we are in the middle of optimizing
@@ -227,36 +307,10 @@ def eval_tree_recursive(node, model: Model, dupl: Dict[str, int], cache,
 
     result = model.mk_empty_colored_set()
     if type(node) == TerminalNode:
-        # we must differentiate between atomic props VS state-variables VS constants
-        if node.category == NodeType.VAR:
-            # if we have a state-variable, node.value has form of {var_name}
-            result = create_comparator(model, node.value[1:-1])
-        elif node.category == NodeType.TRUE:
-            result = model.mk_unit_colored_set()
-        elif node.category == NodeType.FALSE:
-            result = model.mk_empty_colored_set()
-        else:
-            result = labeled_by(model, node.value)
+        result = eval_terminal(node, model)
     elif type(node) == UnaryNode:
         child_result = eval_tree_recursive(node.child, model, dupl, cache)
-        if node.category == NodeType.NEG:
-            result = negate(model, child_result)
-        elif node.category == NodeType.EX:
-            # if predecessor was a hybrid node, we use optimize the process (distribute hybrid ops inside)
-            if optim_h:
-                result = optimized_hybrid_EX(model, child_result, optim_var, optim_op)
-            else:
-                result = EX(model, child_result)
-        elif node.category == NodeType.AX:
-            result = AX(model, child_result)
-        elif node.category == NodeType.EF:
-            result = EF_saturated(model, child_result)
-        elif node.category == NodeType.AF:
-            result = AF(model, child_result)
-        elif node.category == NodeType.EG:
-            result = EG(model, child_result)
-        elif node.category == NodeType.AG:
-            result = AG(model, child_result)
+        result = apply_unary_op(node.category, model, child_result, optim_h)
     elif type(node) == BinaryNode:
         # first lets check if we can optimise - if the predecessor was a hybrid node,
         # we can distribute it through the OR operators and optimize some future EX operator
@@ -270,55 +324,28 @@ def eval_tree_recursive(node, model: Model, dupl: Dict[str, int], cache,
                              eval_tree_recursive(node.right, model, dupl, cache, optim_h, optim_op, optim_var)
                 else:
                     result = eval_tree_recursive(node.left, model, dupl, cache, optim_h, optim_op, optim_var) | \
-                             eval_with_hybrid_op_rec(optim_var, optim_op, node.right, model, dupl, cache)
+                             eval_with_hybrid(optim_var, optim_op, node.right, model, dupl, cache)
             else:
                 if optimize_right:
-                    result = eval_with_hybrid_op_rec(optim_var, optim_op, node.left, model, dupl, cache) | \
+                    result = eval_with_hybrid(optim_var, optim_op, node.left, model, dupl, cache) | \
                              eval_tree_recursive(node.right, model, dupl, cache, optim_h, optim_op, optim_var)
                 else:
-                    result = eval_with_hybrid_op_rec(optim_var, optim_op, node, model, dupl, cache)
+                    result = eval_with_hybrid(optim_var, optim_op, node, model, dupl, cache)
         else:
             # we save the results for children and then combine them using the given operation
             left_result = eval_tree_recursive(node.left, model, dupl, cache)
             right_result = eval_tree_recursive(node.right, model, dupl, cache)
-
-            if node.category == NodeType.AND:
-                result = left_result & right_result
-            if node.category == NodeType.OR:
-                result = left_result | right_result
-            elif node.category == NodeType.IMP:
-                # P -> Q == ~P | Q
-                result = negate(model, left_result) | right_result
-            elif node.category == NodeType.IFF:
-                # P <=> Q == (P & Q) | (~P & ~Q)
-                result = (left_result & right_result) | (negate(model, left_result) & negate(model, right_result))
-            elif node.category == NodeType.XOR:
-                # P ^ Q == (P & ~Q) | (~P & Q)
-                result = (left_result & negate(model, right_result)) | (negate(model, left_result) & right_result)
-            elif node.category == NodeType.EU:
-                result = EU_saturated(model, left_result, right_result)
-            elif node.category == NodeType.AU:
-                result = AU_v2(model, left_result, right_result)
-            elif node.category == NodeType.EW:
-                result = EW(model, left_result, right_result)
-            elif node.category == NodeType.AW:
-                result = AW(model, left_result, right_result)
-
+            result = apply_binary_op(node.category, model, left_result, right_result)
     elif type(node) == HybridNode:
         # Decide if there is a chance to optimize something - our goal is to optimize EX in some descendant node,
         # and we can distribute hybrid ops through the unions.
         # We optimize only for larger models - for smaller ones this is not much effective.
-        if model.num_props() > MIN_NUM_PROPS_TO_OPTIMIZE and check_descendants_for_ex(node.child, node.var):
-            result = eval_tree_recursive(node.child, model, dupl, cache, optim_h=True, optim_op=node.category,
-                                         optim_var=node.var[1:-1])
+        if model.num_props() > MIN_PROPS_TO_OPTIMIZE and check_descendants_for_ex(node.child, node.var):
+            result = eval_tree_recursive(node.child, model, dupl, cache, optim_h=True,
+                                         optim_op=node.category, optim_var=node.var[1:-1])
         else:
             child_result = eval_tree_recursive(node.child, model, dupl, cache)
-            if node.category == NodeType.BIND:
-                result = bind(model, child_result, node.var[1:-1])
-            elif node.category == NodeType.JUMP:
-                result = jump(model, child_result, node.var[1:-1])
-            elif node.category == NodeType.EXIST:
-                result = existential(model, child_result, node.var[1:-1])
+            result = apply_hybrid_op(node.category, model, child_result, node.var[1:-1])
 
     # do not forget to save the result for potential future re-use
     if save_to_cache:
@@ -327,8 +354,8 @@ def eval_tree_recursive(node, model: Model, dupl: Dict[str, int], cache,
     return result
 
 
-def eval_with_hybrid_op_rec(var: str, op: NodeType, node, model: Model,
-                            dupl: Dict[str, int], cache: Dict[str, Function]) -> Function:
+def eval_with_hybrid(var: str, op: NodeType, node, model: Model,
+                     dupl: Dict[str, int], cache: Dict[str, Function]) -> Function:
     """
     Evaluate the formula corresponding to the node and apply hybrid operation on the result
     This is useful when optimisations happen somewhere during the evaluation
