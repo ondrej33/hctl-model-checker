@@ -1,4 +1,4 @@
-115 - props: 20, params: 327
+E Protein - props: 20, params: 327
 
 formula: AF !{x}: (AX (~{x} && AF {x}))
 1.8454927990356663e+99 RESULTS FOUND IN TOTAL
@@ -18,7 +18,7 @@ formula: !{x}: 3{y}: (@{x}: ~{y} && AX {x}) && (@{y}: AX {y})
 81920.0 STATES FOUND IN TOTAL
 4.084940433502197
 
-3{x}: 3{y}: (@{x}: ~{y} && AX {x}) && (@{y}: AX {y}) && EF ({x} && !{z}: AX {z}) && EF ({y} && !{z}: AX {z}) && AX (EF ({x} && !{z}: AX {z}) ^ EF ({y} && !{z}: AX {z}))
+formula: 3{x}: 3{y}: (@{x}: ~{y} && AX {x}) && (@{y}: AX {y}) && EF ({x} && !{z}: AX {z}) && EF ({y} && !{z}: AX {z}) && AX (EF ({x} && !{z}: AX {z}) ^ EF ({y} && !{z}: AX {z}))
 1.3670317029893825e+98 RESULTS FOUND IN TOTAL
 1.281592221552546e+97 COLORS FOUND IN TOTAL
 81920.0 STATES FOUND IN TOTAL

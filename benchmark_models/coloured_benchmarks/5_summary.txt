@@ -1,4 +1,4 @@
-tacas1_upgraded_v2 - props: 17, params: 260
+Reduced MAPK network - props: 17, params: 260
 
 formula: AF !{x}: (AX (~{x} && AF {x}))
 3.719820866748783e+78 RESULTS FOUND IN TOTAL

@@ -1,4 +1,4 @@
-tacas3 - props: 11, params: 83
+Interactions in gut microbiome - props: 11, params: 83
 
 formula: AF !{x}: (AX (~{x} && AF {x}))
 5.814063924734561e+25 RESULTS FOUND IN TOTAL

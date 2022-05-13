@@ -1,4 +1,4 @@
-020 - props: 39, params: 132
+Apoptosis network - props: 39, params: 132
 
 formula: AF !{x}: (AX (~{x} && AF {x}))
 0.0 RESULTS FOUND IN TOTAL

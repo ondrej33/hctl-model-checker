@@ -1,4 +1,4 @@
-069 - props: 20, params: 110
+Iron acquisition - props: 20, params: 110
 
 formula: AF !{x}: (AX (~{x} && AF {x}))
 3.856232739975531e+32 RESULTS FOUND IN TOTAL

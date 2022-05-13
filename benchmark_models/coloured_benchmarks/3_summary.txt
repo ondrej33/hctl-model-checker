@@ -1,4 +1,4 @@
-tacas4 - props: 26, params: 141
+WG Signaling Pathway - props: 26, params: 141
 
 formula: AF !{x}: (AX (~{x} && AF {x}))
 1.7617588706839192e+45 RESULTS FOUND IN TOTAL
