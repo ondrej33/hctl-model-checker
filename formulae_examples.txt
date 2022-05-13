@@ -1,15 +1,15 @@
 ## BENCHMARK FORMULAE
 
-# states from which all outgoing paths eventually reach a "checkpoint" state
+# states from which all outgoing paths eventually reach a checkpoint state
 AF (!{x}: (AX (~{x} && AF {x})))
 
-# states from which all outgoing paths eventually reach a checkpoint state, which lies on at least two different cycles
+# states from which all outgoing paths eventually reach a checkpoint state that lies on at least two different cycles
 AF (!{x}: ((AX (~{x} && AF {x})) && (EF (!{y}: EX ~AF {y}))))
 
-# steady states, in case there are at least two of them
+# steady states, in case that there are at least two of them
 !{x}: 3{y}: (@{x}: ~{y} && AX {x}) && (@{y}: AX {y})
 
-# existence of "fork" the states (states where system decides which terminal steady state to visit)
+# existence of fork states in the system (states where system decides which terminal steady state to visit)
 3{x}: 3{y}: (@{x}: ~{y} && AX {x}) && (@{y}: AX {y}) && EF ({x} && (!{z}: AX {z})) && EF ({y} && (!{z}: AX {z})) && AX (EF ({x} && (!{z}: AX {z})) ^ EF ({y} && (!{z}: AX {z})))
 
 
