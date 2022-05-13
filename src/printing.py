@@ -10,7 +10,7 @@ File containing functionality for result printing and aggregation.
 def encode_assignment_props(assignment, num_props) -> int:
     """
     Return decimal value representing the binary assignment to propositions.
-    This is used for sorting resulting assignments
+    This is used for sorting resulting assignments.
     """
     result_val = 0
     for i in range(num_props):
@@ -20,8 +20,8 @@ def encode_assignment_props(assignment, num_props) -> int:
 
 def encode_color(assignment, num_cols) -> float:
     """
-    Return inverted decimal value representing the color (assignment to parameters)
-    This is used (as secondary criteria) for sorting resulting assignments
+    Return inverted decimal value representing the color (assignment to parameters).
+    This is used (as secondary criteria) for sorting resulting assignments.
     """
     result_val = 0
     for i in range(num_cols):
@@ -53,8 +53,8 @@ def get_colors_only(phi: Function, model: Model):
 
 def print_results_fast(result: Function, model: Model, message: str = ""):
     """
-    Print number of computed BDD-encoded results (number of state-color pairs),
-    and also information about colors / states alone
+    Print the number of computed BDD-encoded results (number of state-color pairs),
+    and also information about numbers of colors / states alone.
     """
     if message:
         print(message)
