@@ -221,13 +221,13 @@ def eval_terminal(node, model: Model) -> Function:
         raise InvalidHctlOperationError(node.category)
 
 
-def apply_unary_op(operation: NodeType, model: Model,
-                   child_result: Function, optimize_ex=False) -> Function:
+def apply_unary_op(operation: NodeType, model: Model, child_result: Function,
+                   optimize_ex: bool, optim_op: NodeType, optim_var: str) -> Function:
     """Apply unary operation corresponding to a node to the result of its child."""
     if operation == NodeType.NEG:
         return negate(model, child_result)
     elif operation == NodeType.EX:
-        # if predecessor was a hybrid node, we optimize - distribute hybrid ops inside
+        # if predecessor was a hybrid node, we optimize (distribute hybrid ops inside EX)
         if optimize_ex:
             return optimized_hybrid_EX(model, child_result, optim_var, optim_op)
         else:
@@ -303,8 +303,8 @@ def eval_tree_recursive(node, model: Model, dupl: Dict[str, int], cache,
             to the pair in form <result, variable_names_mapping>
         optim_h: If True, then use optimisations - predecessor was a hybrid operator node
             and we can push it inside (for example) some EX operator
-        optim_op: Hybrid operation being optimized
-        optim_var: Variable bound to hybrid operation being optimized
+        optim_op: NodeType representing hybrid operation being optimized
+        optim_var: Name of the variable bound to hybrid operation being optimized
 
     Returns:
         A BDD-encoded result of the evaluated formula on the given model.
@@ -328,7 +328,7 @@ def eval_tree_recursive(node, model: Model, dupl: Dict[str, int], cache,
         result = eval_terminal(node, model)
     elif type(node) == UnaryNode:
         child_result = eval_tree_recursive(node.child, model, dupl, cache)
-        result = apply_unary_op(node.category, model, child_result, optim_h)
+        result = apply_unary_op(node.category, model, child_result, optim_h, optim_op, optim_var)
     elif type(node) == BinaryNode:
         # check if we can apply optimisation - if the predecessor was a hybrid quantifier,
         # we can distribute it through the OR operators and later optimize some EX operator
@@ -370,7 +370,7 @@ def eval_tree_recursive(node, model: Model, dupl: Dict[str, int], cache,
     return result
 
 
-def eval_with_hybrid(var: str, op: NodeType, node, model: Model,
+def eval_with_hybrid(variable: str, op: NodeType, node, model: Model,
                      dupl: Dict[str, int], cache: Dict[str, Function]) -> Function:
     """
     Evaluate the formula corresponding to the node and apply hybrid operation on the result.
@@ -378,11 +378,11 @@ def eval_with_hybrid(var: str, op: NodeType, node, model: Model,
     """
     child_result = eval_tree_recursive(node, model, dupl, cache)
     if op == NodeType.BIND:
-        return bind(model, child_result, var)
+        return bind(model, child_result, variable)
     elif op == NodeType.JUMP:
-        return jump(model, child_result, var)
+        return jump(model, child_result, variable)
     elif op == NodeType.EXIST:
-        return existential(model, child_result, var)
+        return existential(model, child_result, variable)
 
 
 def eval_tree(syntax_tree: Node, model: Model) -> Function:

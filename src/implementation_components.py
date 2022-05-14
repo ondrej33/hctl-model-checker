@@ -1,4 +1,5 @@
 from src.model import *
+from src.node_type_enum import NodeType
 
 """
 This file includes the implementation for evaluating all components of HCTL formula.
@@ -240,11 +241,11 @@ def optimized_exist_EX(model: Model, phi: Function, var: str) -> Function:
     return current_set | stable_exist
 
 
-def optimized_hybrid_EX(model: Model, phi: Function, var: str, operation: str) -> Function:
+def optimized_hybrid_EX(model: Model, phi: Function, var: str, operation: NodeType) -> Function:
     """Compute combination of hybrid operator and EX using optimized approach"""
-    if operation == "!":
+    if operation == NodeType.BIND:
         return optimized_bind_EX(model, phi, var)
-    elif operation == "@":
+    elif operation == NodeType.JUMP:
         return optimized_jump_EX(model, phi, var)
-    elif operation == "3":
+    elif operation == NodeType.EXIST:
         return optimized_exist_EX(model, phi, var)
