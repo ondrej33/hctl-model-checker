@@ -13,7 +13,13 @@ python3 src/model_check.py model_file hctl_formula [-p]
 
 - `model_file` is a path to a file with BN model in bnet format (i.e. `benchmark_models/coloured_benchmarks/1.bnet`)
 - `hctl_formula` is a valid HCTL formula in correct format
-- Add `-p` for printing all satisfying coloured states (might be infeasible)
+- Add `-p` for printing all ordered satisfying coloured states (might be infeasible)
+
+For example, with concrete arguments, command might look like:
+```
+python3 src/model_check.py ./benchmark_models/coloured_benchmarks/1.bnet '!{x}: 3{y}: (@{x}: ~{y} && AX {x}) && (@{y}: AX {y})'
+```
+
 
 # Inputs and models
 
@@ -21,22 +27,16 @@ The tool takes BN models in the `bnet` format as its input, with many example mo
 
 The grammar for HCTL is specified in the readable format in the file `src/parse_hctl_formula/HCTL.g4`. Example formulae can be found in the file `formulae_examples.txt`.
 
-# Code structure
 
-The main script to run is the `model_check.py`.
+# Benchmarks
 
-The main body of the bottom-up model-checking algorithm, together with the caching and optimizations, is implemented in the `evaluator_hctl.py`.
-The evaluation of individual HCTL operators (like EX, binder, ...) can be found in the `implementation_components.py`. 
-Encoding of the update functions of BN variables (to BDD representation) is handled in `evaluator_update_fn.py`.
+To run the benchmarks from the Evaluation, two bash scripts are prepared:
 
-In the `parse_hctl_formula` directory, there is a grammar and parser for the HCTL logic. 
-Most of the other files in the folder is generated automatically from the grammar by ANTLR.
-Similarly, in the `parse_update_function` directory, there is a grammar and utilities for parsing the update functions of BN variables.
+- `script_eval_coloured.sh` which model-checks all four formulas on six models from the `benchmark_models/coloured_benchmarks` directory
+- `script_eval_monochromatic.sh` which model-checks all four formulas on 145 models from the `benchmark_models/models_collection_large` directory, with 1h timeout
 
-The file `parse_all.py` contains functions to transform the Boolean network model into its symbolic representation, and the HCTL formula to its syntax tree.
-That includes (sort of) canonization of state variables in the formula.
-
-In the `abstract_syntax_tree.py` and `model.py`, the main data structures can be found.
+Computed results for the coloured set are available directly in the `benchmark_models/coloured_benchmarks` folder.
+Results for the monochromatic set are available in the `benchmark_models/results_monochromatic` folder.
 
 
 # Setup
@@ -64,12 +64,19 @@ python setup.py install --fetch --cudd
 If any problems occur during the installation, [dd](https://github.com/tulip-control/dd) page contains convenient instructions.
 
 
-# Benchmarks
+# Code structure
 
-To run the benchmarks from the Evaluation, two bash scripts are prepared:
+The main script to run is the `model_check.py`.
 
-- `script_eval_coloured.sh` which model-checks all four formulas on six models from the `benchmark_models/coloured_benchmarks` directory
-- `script_eval_monochromatic.sh` which model-checks all four formulas on 145 models from the `benchmark_models/models_collection_large` directory, with 1h timeout
+The main body of the bottom-up model-checking algorithm, together with the caching and optimizations, is implemented in the `evaluator_hctl.py`.
+The evaluation of individual HCTL operators (like EX, binder, ...) can be found in the `implementation_components.py`.
+Encoding of the update functions of BN variables (to BDD representation) is handled in `evaluator_update_fn.py`.
 
-Computed results for the coloured set are available directly in the `benchmark_models/coloured_benchmarks` folder.
-Results for the monochromatic set are available in the `benchmark_models/results_monochromatic` folder.
+In the `parse_hctl_formula` directory, there is a grammar and parser for the HCTL logic.
+Most of the other files in the folder is generated automatically from the grammar by ANTLR.
+Similarly, in the `parse_update_function` directory, there is a grammar and utilities for parsing the update functions of BN variables.
+
+The file `parse_all.py` contains functions to transform the Boolean network model into its symbolic representation, and the HCTL formula to its syntax tree.
+That includes (sort of) canonization of state variables in the formula.
+
+In the `abstract_syntax_tree.py` and `model.py`, the main data structures can be found.

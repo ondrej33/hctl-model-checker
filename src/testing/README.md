@@ -1,5 +1,5 @@
 There are two types of automated tests:
-1. Test whether evaluating few large models and formulae result in expected number of states:
+1. Test whether evaluating coloured benchmarks models and formulae result in expected number of states:
     ```
     python3 testing_automatic.py
     ```
