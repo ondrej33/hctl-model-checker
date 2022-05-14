@@ -41,7 +41,7 @@ In the `abstract_syntax_tree.py` and `model.py`, the main data structures can be
 
 # Setup
 
-Following steps should work on Linux systems, as well as WSL. 
+Following steps should work on Linux systems (tested on Aisa and Psyche servers), as well as WSL. Creating Python virtual environment first is recommended.
 
 Two main libraries are needed:
 - [dd](https://github.com/tulip-control/dd) for the underlying binary decision diagrams implementation
