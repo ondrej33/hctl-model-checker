@@ -3,12 +3,17 @@
 This repository contains the implementation of the symbolic model checker for the logic HCTL.
 It is focused on the analysis of (partially specified) Boolean networks. In particular, it allows to check for any behavioural hypotheses expressible in HCTL on large, non-trivial networks. This includes properties like stability, bi-stability, attractors, or oscillatory behaviour.
 
-For given Boolean network (with possible inputs) and HCTL formula (representing the property we want to check), it computes all the states of the network (and corresponding colours) that satisfy the formula. 
+For given Boolean network (with inputs) and HCTL formula (representing the property we want to check), it computes all the states of the network (and corresponding colours) that satisfy the formula.
+Depending on the mode, either prints the numbers of satisfying states and colours, or prints all the satisfying assignments.
 
 The usage is following:
 ```
-python3 model_check.py model_file hctl_formula
+python3 model_check.py model_file hctl_formula [-p]
 ```
+
+- `model_file` is a path to a file with BN model in bnet format
+- `hctl_formula` is a valid HCTL formula in correct format
+- Add `-p` for printing all satisfying coloured states (might be infeasible)
 
 # Inputs and models
 
@@ -57,3 +62,14 @@ python setup.py install --fetch --cudd
 ```
 
 If any problems occur during the installation, [dd](https://github.com/tulip-control/dd) page contains convenient instructions.
+
+
+# Benchmarks
+
+To run the benchmarks from the Evaluation, two bash scripts are prepared:
+
+- `script_eval_coloured.sh` which model-checks all four formulas on six models from the `benchmark_models/coloured_benchmarks` directory
+- `script_eval_monochromatic.sh` which model-checks all four formulas on 145 models from the `benchmark_models/models_collection_large` directory, with 1h timeout
+
+Computed results for the coloured set are available directly in the `benchmark_models/coloured_benchmarks` folder.
+Results for the monochromatic set are available in the `benchmark_models/results_monochromatic` folder.

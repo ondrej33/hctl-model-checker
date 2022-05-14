@@ -16,19 +16,16 @@ from src.printing import print_results
 from src.parse_all import parse_all
 
 
-"""Model checker for HCTL on coloured KS generated from Boolean networks.
-
-Program parses Boolean network and HCTL formula into Model object and formula syntax tree.
-Formula's tree is then evaluated using BDD-based algorithm.
-Either the information about the number of satisfying colored-states, or 
-all satisfying tuples <color, state> can be printed.
-
-    Program usage:
-    python3 model_check.py path_to_bnet formula
-"""
+def print_error_usage(error_message: str):
+    print(error_message)
+    print("Usage: model_check.py path_to_bnet formula [-p]")
 
 
-def main(file_name: str, formula: str):
+def valid_file(file_name: str) -> bool:
+    return Path(file_name).exists() and Path(file_name).is_file()
+
+
+def main(file_name: str, formula: str, print_all: bool):
     """Manage the whole model checking process (parsing, evaluating, printing)"""
     try:
         start = time()
@@ -52,7 +49,7 @@ def main(file_name: str, formula: str):
         return
 
     try:
-        print_results(res, model, f"model: {model.name}, formula: {formula}", show_all=False)
+        print_results(res, model, f"model: {model.name}, formula: {formula}", show_all=print_all)
         print(res_time)
         print()
     except Exception as e:
@@ -61,12 +58,15 @@ def main(file_name: str, formula: str):
 
 
 if __name__ == '__main__':
-    if len(sys.argv) == 3:
-        if Path(sys.argv[1]).exists() and Path(sys.argv[1]).is_file():
-            main(sys.argv[1], sys.argv[2])
+    if 3 <= len(sys.argv) < 5:
+        if valid_file(sys.argv[1]):
+            if len(sys.argv) == 3:
+                main(sys.argv[1], sys.argv[2], print_all=False)
+            elif sys.argv[3] == "-p":
+                main(sys.argv[1], sys.argv[2], print_all=True)
+            else:
+                print_error_usage(f"Invalid argument {sys.argv[3]}.")
         else:
-            print(f"File {sys.argv[1]} does not exist")
-            print("Usage: model_check.py path_to_bnet formula")
+            print_error_usage(f"File {sys.argv[1]} does not exist.")
     else:
-        print("Wrong number of arguments")
-        print("Usage: model_check.py path_to_bnet formula")
+        print_error_usage("Wrong number of arguments.")
