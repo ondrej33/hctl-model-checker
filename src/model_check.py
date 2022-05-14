@@ -18,7 +18,7 @@ from src.parse_all import parse_all
 
 def print_error_usage(error_message: str):
     print(error_message)
-    print("Usage: model_check.py path_to_bnet formula [-p]")
+    print("Usage: model_check.py model_file formula [-p]")
 
 
 def valid_file(file_name: str) -> bool:
