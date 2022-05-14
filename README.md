@@ -1,4 +1,4 @@
-# Symbolic HCTL model checker
+# Symbolic HCTL Model Checker
 
 This repository contains the implementation of the symbolic model checker for the logic HCTL.
 It is focused on the analysis of (partially specified) Boolean networks. In particular, it allows to check for any behavioural hypotheses expressible in HCTL on large, non-trivial networks. This includes properties like stability, bi-stability, attractors, or oscillatory behaviour.
@@ -21,7 +21,7 @@ python3 src/model_check.py ./benchmark_models/coloured_benchmarks/1.bnet '!{x}: 
 ```
 
 
-# Inputs and models
+# Inputs and Models
 
 The tool takes BN models in the `bnet` format as its input, with many example models present in the `benchmark_models` directory. Benchmark models are also present in the aeon formats, but this is just for the convenience of the user and those can't be used as inputs.
 
@@ -64,7 +64,7 @@ python setup.py install --fetch --cudd
 If any problems occur during the installation, [dd](https://github.com/tulip-control/dd) page contains convenient instructions.
 
 
-# Code structure
+# Code Structure
 
 The main script to run is the `model_check.py`.
 
