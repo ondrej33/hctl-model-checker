@@ -56,8 +56,8 @@ pip install -r requirements.txt
 To install the dd library's Cython bindings for CUDD:
 ```
 pip download dd --no-deps  
-tar xzf dd-\*.tar.gz  
-cd dd-\*/  
+tar xzf dd-*.tar.gz  
+cd dd-*/  
 python setup.py install --fetch --cudd  
 ```
 
