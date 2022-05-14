@@ -18,8 +18,9 @@ from src.printing import get_states_only
 
 def run_general_tests(model: Model) -> None:
     """
-    Run set of tests comparing manually and automatically evaluated formulas
-    on given model. Model should not be too large (over 20 vars).
+    Run set of tests comparing results of automatically evaluated formulas to
+    results of prepared manually evaluated formulas on given model.
+    Model should not be too large (20+ vars models take several min).
     """
 
     # check that "(EX phi1) || (EX phi2)" == "EX (phi1 || phi2)"
@@ -64,8 +65,9 @@ def run_general_tests(model: Model) -> None:
 
 def run_benchmark_tests():
     """
-    Run set of automatic tests on several large models and formulas,
-    and compare the numbers of results found to the precomputed ones.
+    Run set of automatic tests on several large models and formulas, and
+    compare the numbers of results found to the precomputed ones. Whole set of
+    tests might take around 45 minutes (strongly depends on Python's caching).
     """
 
     # Strong basin of an oscillating attractor
@@ -78,27 +80,30 @@ def run_benchmark_tests():
     formula4 = "3{x}: 3{y}: (@{x}: ~{y} && AX {x}) && (@{y}: AX {y}) && EF ({x} && !{z}: AX {z}) && EF ({y} && !{z}: AX {z}) && AX (EF ({x} && !{z}: AX {z}) ^ EF ({y} && !{z}: AX {z}))"
     formulas = [formula1, formula2, formula3, formula4]
 
-    # Interactions in gut microbiome model
-    model1 = "benchmark_models/coloured_benchmarks/1.bnet"
-    # E Protein model
-    model2 = "benchmark_models/coloured_benchmarks/6.bnet"
+    model1 = "benchmark_models/coloured_benchmarks/1.bnet"  # Interactions in gut microbiome model
+    model2 = "benchmark_models/coloured_benchmarks/2.bnet"  # Iron acquisition model
+    model3 = "benchmark_models/coloured_benchmarks/3.bnet"  # WG Signaling Pathway model
+    model4 = "benchmark_models/coloured_benchmarks/4.bnet"  # Apoptosis network model
+    model5 = "benchmark_models/coloured_benchmarks/5.bnet"  # Reduced MAPK network model
+    model6 = "benchmark_models/coloured_benchmarks/6.bnet"  # E Protein model
+    models = [model1, model2, model3, model4, model5, model6]
 
-    numbers_sat_states1 = [2048, 2048, 640, 2048]
-    numbers_sat_states2 = [81920, 0, 81920, 81920]
+    numbers_states1 = [2048, 2048, 640, 2048]
+    numbers_states2 = [128, 128, 16, 64]
+    numbers_states3 = [65408, 0, 65536, 0]
+    numbers_states4 = [0, 0, 0, 0]
+    numbers_states5 = [48, 32, 46, 16]
+    numbers_states6 = [81920, 0, 81920, 81920]
+    numbers_states = [numbers_states1, numbers_states2, numbers_states3,
+                      numbers_states4, numbers_states5, numbers_states6]
 
-    for i in range(4):
-        model, as_tree_hctl = parse_all(model1, formulas[i])
-        res = eval_tree(as_tree_hctl, model)
-        states_num = model.bdd.count(get_states_only(res, model), nvars=model.num_props())
-        assert states_num == numbers_sat_states1[i]
-        print(f"1st model, formula {i+1} done")
-
-    for i in range(4):
-        model, as_tree_hctl = parse_all(model2, formulas[i])
-        res = eval_tree(as_tree_hctl, model)
-        states_num = model.bdd.count(get_states_only(res, model), nvars=model.num_props())
-        assert states_num == numbers_sat_states2[i]
-        print(f"2nd model, formula {i+1} done")
+    for model_num in range(6):
+        for form_num in range(4):
+            model, as_tree_hctl = parse_all(models[model_num], formulas[form_num])
+            res = eval_tree(as_tree_hctl, model)
+            states_num = model.bdd.count(get_states_only(res, model), nvars=model.num_props())
+            assert states_num == numbers_states[model_num][form_num]
+            print(f"Test for model {model_num + 1}, formula {form_num + 1} successful")
 
 
 if __name__ == '__main__':
