@@ -100,7 +100,7 @@ def rename_props_in_hctl(node, rename_dict: Dict[str, str]) -> None:
 
 
 def reduce_number_of_vars(node, rename_dict: Dict[str, str], last_used_name: str):
-    """Rename as many state-variables to identical canonical names, without altering formula.
+    """Rename as many state-variables to identical canonical names, without altering the meaning.
 
     Recursively reduce the number of unique state variables in the formula by renaming
     them, without changing the meaning of the formula. Count the max number of nested vars.
@@ -174,11 +174,42 @@ def parse_bnet_file(file_name: str):
     return var_names, update_fn_strings
 
 
+def collect_param_names(prop_names, update_fn_trees):
+    """Collect names of parameters from update functions' trees."""
+    param_names = set()
+    for tree in update_fn_trees:
+        new_props_params = get_names_from_update_fn(tree)
+        new_params = new_props_params.difference(prop_names)
+        param_names = param_names.union(new_params)
+    return sorted(param_names)
+
+
+def canonize_props_params(prop_names, param_names, as_tree_hctl, update_fn_trees):
+    """
+    Canonize propositions and parameters in formula and update fn trees.
+    Return the renaming mapping.
+    """
+    rename_dict = dict()
+    # we canonize proposition names to s0, s1... and parameter names to p0, p1...
+    for i in range(len(prop_names)):
+        rename_dict[prop_names[i]] = f"s__{i}"
+    for i in range(len(param_names)):
+        rename_dict[param_names[i]] = f"p__{i}"
+
+    # canonize proposition names in HCTL formula tree
+    rename_props_in_hctl(as_tree_hctl, rename_dict)
+    # canonize prop/param names in update fn trees
+    for tree in update_fn_trees:
+        rename_terminals_update_fn(tree, rename_dict)
+
+    return rename_dict
+
+
 def create_bdd_manager(num_props, num_params, var_names):
-    """Create a BDD manager with all necessary variables in good order."""
+    """Create a BDD manager with all necessary variables in 'good' order."""
     bdd_manager = BDD()
-    vrs = [f"s__{i}" for i in range(num_props)]                   # propositions describing state
-    vrs.extend(f"p__{i}" for i in range(num_params))              # parameters
+    vrs = [f"s__{i}" for i in range(num_props)]       # propositions describing state
+    vrs.extend(f"p__{i}" for i in range(num_params))  # parameters
     for var_name in var_names:
         vrs.extend(f"{var_name}__{i}" for i in range(num_props))  # HCTL variables
     bdd_manager.declare(*vrs)
@@ -227,26 +258,10 @@ def parse_all(file_name: str, formula: str) -> Tuple[Model, Node]:
 
     # create syntax trees for update functions and collect their parameters (inputs)
     update_fn_trees = [parse_update_fn_to_tree(update_str) for update_str in update_fn_strings]
-    param_names = set()
-    params_per_fn = dict()
-    for prop, tree in zip(prop_names, update_fn_trees):
-        new_props_params = get_names_from_update_fn(tree)
-        new_params = new_props_params.difference(prop_names)
-        params_per_fn[prop] = new_params
-        param_names = param_names.union(new_params)
-    param_names = sorted(param_names)
+    param_names = collect_param_names(prop_names, update_fn_trees)
 
-    # we canonize proposition names to s0, s1... and parameter names to p0, p1...
-    rename_dict = dict()
-    for i in range(len(prop_names)):
-        rename_dict[prop_names[i]] = f"s__{i}"
-    for i in range(len(param_names)):
-        rename_dict[param_names[i]] = f"p__{i}"
-
-    # canonize proposition names in HCTL formula tree, canonize prop/param names in update trees
-    rename_props_in_hctl(as_tree_hctl, rename_dict)
-    for tree in update_fn_trees:
-        rename_terminals_update_fn(tree, rename_dict)
+    # canonize proposition names to s0, s1... and parameter names to p0, p1...
+    rename_dict = canonize_props_params(prop_names, param_names, as_tree_hctl, update_fn_trees)
 
     # create a BDD manager with correctly ordered variables
     bdd_manager = create_bdd_manager(len(prop_names), len(param_names), var_names)
