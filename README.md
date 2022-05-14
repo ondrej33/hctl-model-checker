@@ -11,7 +11,7 @@ The usage is following:
 python3 src/model_check.py model_file hctl_formula [-p]
 ```
 
-- `model_file` is a path to a file with BN model in bnet format
+- `model_file` is a path to a file with BN model in bnet format (i.e. `benchmark_models/coloured_benchmarks/1.bnet`)
 - `hctl_formula` is a valid HCTL formula in correct format
 - Add `-p` for printing all satisfying coloured states (might be infeasible)
 

@@ -1,4 +1,4 @@
-"""Preparing the working directory and settings"""
+"""Preparing the working directory and settings."""
 import os
 SRC_DIR = os.path.dirname(os.path.abspath(__file__))
 PROJECT_DIR = os.path.dirname(SRC_DIR)

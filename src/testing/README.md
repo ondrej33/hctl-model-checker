@@ -15,7 +15,7 @@ There are two types of automated tests:
     Takes few seconds for models with ~10 variables, few minutes for models with ~20 variables.    
 
 
-Following 3 concrete commands can be used to sort of test the current state of the implementation:
+Following 3 concrete commands can be used to generally test the current state of the implementation:
 ```
 python3 testing_automatic.py
 python3 testing_automatic.py 'benchmark_models/model_collection_large/[var:11]__[id:095]__[FISSION-YEAST-2008]/model_inputs_free.bnet'
