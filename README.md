@@ -32,10 +32,10 @@ The grammar for HCTL is specified in the readable format in the file `src/parse_
 
 To run the benchmarks from the Evaluation, two bash scripts are prepared:
 
-- `script_eval_coloured.sh` which model-checks all four formulas on six models from the `benchmark_models/coloured_benchmarks` directory
+- `script_eval_coloured.sh` which model-checks all four presented formulas on six models from the `benchmark_models/coloured_benchmarks` directory
 - `script_eval_monochromatic.sh` which model-checks all four formulas on 145 models from the `benchmark_models/models_collection_large` directory, with 1h timeout
 
-Computed results for the coloured set are available directly in the `benchmark_models/coloured_benchmarks` folder.
+Pre-computed results for the coloured set are available directly in the `benchmark_models/coloured_benchmarks` folder.
 Results for the monochromatic set are available in the `benchmark_models/results_monochromatic` folder.
 
 
@@ -80,3 +80,7 @@ The file `parse_all.py` contains functions to transform the Boolean network mode
 That includes (sort of) canonization of state variables in the formula.
 
 In the `abstract_syntax_tree.py` and `model.py`, the main data structures can be found.
+
+### Tests
+
+Basic overall tests of the model-checking procedure are present in the `testing` folder, together with instructions (readme).
