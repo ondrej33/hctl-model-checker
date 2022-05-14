@@ -13,6 +13,7 @@ AF (!{x}: ((AX (~{x} && AF {x})) && (EF (!{y}: EX ~AF {y}))))
 3{x}: 3{y}: (@{x}: ~{y} && AX {x}) && (@{y}: AX {y}) && EF ({x} && (!{z}: AX {z})) && EF ({y} && (!{z}: AX {z})) && AX (EF ({x} && (!{z}: AX {z})) ^ EF ({y} && (!{z}: AX {z})))
 
 
+
 ## OTHER USEFUL FORMULAE
 
 # attractor states
@@ -20,4 +21,3 @@ AF (!{x}: ((AX (~{x} && AF {x})) && (EF (!{y}: EX ~AF {y}))))
 
 # steady states
 !{x}: AX {x}
-
