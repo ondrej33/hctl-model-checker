@@ -30,12 +30,14 @@ def run_general_tests(model: Model) -> None:
     assert model_check_fixed20(model) == parse_and_eval("(AX {x}) && (AX EX {x})", model)
 
     # check all the other formulas that are built in fixed_formulas_eval.py
+    assert model_check_fixed1(model) == parse_and_eval("!{x}: EX {x}", model)
     assert model_check_fixed1_v2(model) == parse_and_eval("!{x}: EX {x}", model)
+    assert model_check_fixed2(model) == parse_and_eval("!{x}: AX {x}", model)
     assert model_check_fixed2_v2(model) == parse_and_eval("!{x}: AX {x}", model)
     assert model_check_fixed3(model) == parse_and_eval("!{x}: (EX (~{x} && EX {x}))", model)
     assert model_check_fixed4(model) == parse_and_eval("!{x}: EX EF {x}", model)
     assert model_check_fixed5(model) == parse_and_eval("!{x}: (EX EF {x}) && (EG s__3)", model)
-    assert model_check_fixed6(model) == parse_and_eval("EF !{x}: EF (~s__0 && EF (s__0 && {x}))", model)
+    assert model_check_fixed6(model) == parse_and_eval("!{x}: 3{xx}: (@{x}: ~{xx} && AX {x}) && (@{xx}: AX {xx})", model)
     assert model_check_fixed7(model) == parse_and_eval("(EG s__2) && (EF ~s__0)", model)
     assert model_check_fixed8(model) == parse_and_eval("!{x}: AX AF {x}", model)
     assert model_check_fixed9(model) == parse_and_eval("!{x}: AG EF {x}", model)
@@ -58,6 +60,7 @@ def run_general_tests(model: Model) -> None:
     assert model_check_fixed24(model) == parse_and_eval("AF !{x}: (AX (~{x} && AF {x}))", model)
     assert model_check_fixed25(model) == parse_and_eval("AF !{x}: ((AX (~{x} && AF {x})) && (EF !{xx}: EX EG ~{xx}))", model)
     print("All tests passed.")
+
 
 def run_benchmark_tests():
     """
@@ -108,7 +111,7 @@ if __name__ == '__main__':
             run_general_tests(m)
         else:
             print(f"File {sys.argv[1]} does not exist")
-            print("Usage: testing_automatic.py {path_to_bnet}")
+            print("Usage: testing_automatic.py [model_file]")
     else:
         print("Running the tests for several large models and complex formulae.")
         print("Some tests may take several minutes to compute.")

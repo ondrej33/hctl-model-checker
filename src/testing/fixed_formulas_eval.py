@@ -1,7 +1,7 @@
 from src.implementation_components import *
 
 """
-This file contains functions for manual evaluation of the HCTL formulae.
+This file contains several 'manually' evaluated HCTL formulae.
 This can be later used to test the parser or evaluator.
 """
 
@@ -11,31 +11,32 @@ This can be later used to test the parser or evaluator.
 # ============================================================================================= #
 
 """
-List of formulas included (current version, might be updated):
-    model_check_fixed1 == "!{x}: EX {x}"
-    model_check_fixed2 == "!{x}: AX {x}"
-    model_check_fixed3 == "!{x}: (EX (~{x} && EX {x}))"
-    model_check_fixed4 == "!{x}: EX EF {x}"
-    model_check_fixed5 == "!{x}: (EX EF {x}) && (EG s__3)"
-    model_check_fixed6 == "EF !{x}: EF (~s__0 && EF (s__0 && {x}))"
-    model_check_fixed7 == "(EG s__2) && (EF ~s__0)"
-    model_check_fixed8 == "!{x}: AX AF {x}"
-    model_check_fixed9 == "!{x}: AG EF {x}"
-    model_check_fixed10 == "!{x}: EX (~{x} && (!{xx}: AX {xx}))"
-    model_check_fixed11 == "!{x}: EX (!{xx}: AX ({xx} && ~{x}))"
-    model_check_fixed12 == "!{x}: (3{xx}: {x} && EX {xx})"
-    model_check_fixed13 == "!{x}: 3{xx}: ({x} && AX ({xx} && AX {xx}))"
-    model_check_fixed14 == "!{x}: 3{xx}: ({x} && EX (~{x} && {xx} && AX {xx}))"
-    model_check_fixed15 == "3{x}: 3{xx}: (@{x}: ~{xx} && AX {x}) && (@{xx}: AX {xx})"
-    model_check_fixed16 == "!{x}: EG EF {x}"
-    model_check_fixed17 == "3{x}: 3{xx}: (@{x}: AG~{xx} && AG EF {x}) && (@{xx}: AG EF {xx})"
-    model_check_fixed18 == "3{x}: 3{xx}: (@{x}: ~{xx} && AX{x}) && (@{xx}: AX{xx}) && EF{x} && EF{xx}"
-    model_check_fixed19 == "EX ({x} || EX {x})"
-    model_check_fixed20 == "AX ({x} && EX {x})"
-    model_check_fixed21 == "!{x}: (EX {x} || ({x} && s__1))"
-    model_check_fixed22 == "!{x}: (AX {x} || ({x} && s__1))"
-    model_check_fixed23 == "!{x}: ((AX {x} || s__1) || (s__2 || EX {x}))"
-
+List of formulas included in current version:
+    1: "!{x}: EX {x}"
+    2: "!{x}: AX {x}"
+    3: "!{x}: (EX (~{x} && EX {x}))"
+    4:  "!{x}: EX EF {x}"
+    5: "!{x}: (EX EF {x}) && (EG s__3)"
+    6: "!{x}: 3{xx}: (@{x}: ~{xx} && AX {x}) && (@{xx}: AX {xx})"
+    7: "(EG s__2) && (EF ~s__0)"
+    8: "!{x}: AX AF {x}"
+    9: "!{x}: AG EF {x}"
+    10: "!{x}: EX (~{x} && (!{xx}: AX {xx}))"
+    11: "!{x}: EX (!{xx}: AX ({xx} && ~{x}))"
+    12: "!{x}: (3{xx}: {x} && EX {xx})"
+    13: "!{x}: 3{xx}: ({x} && AX ({xx} && AX {xx}))"
+    14: "!{x}: 3{xx}: ({x} && EX (~{x} && {xx} && AX {xx}))"
+    15: "3{x}: 3{xx}: (@{x}: ~{xx} && AX {x}) && (@{xx}: AX {xx})"
+    16: "!{x}: EG EF {x}"
+    17: "3{x}: 3{xx}: (@{x}: AG~{xx} && AG EF {x}) && (@{xx}: AG EF {xx})"
+    18: "3{x}: 3{xx}: (@{x}: ~{xx} && AX{x}) && (@{xx}: AX{xx}) && EF{x} && EF{xx}"
+    19: "EX ({x} || EX {x})"
+    20: "AX ({x} && EX {x})"
+    21: "!{x}: (EX {x} || ({x} && s__1))"
+    22: "!{x}: (AX {x} || ({x} && s__1))"
+    23: "!{x}: ((AX {x} || s__1) || (s__2 || EX {x}))"
+    24: "AF !{x}: (AX (~{x} && AF {x}))"
+    25: "AF !{x}: ((AX (~{x} && AF {x})) && (EF !{xx}: EX EG ~{xx}))"
 """
 
 
@@ -108,17 +109,19 @@ def model_check_fixed5(model: Model) -> Function:
     return bind(model, and_inner, 'x')
 
 
-# formula: EF ↓x (EF ((~s0) & EF (s0 & x)))
-# states that are part of (unstable) cycles with oscillating gene s0
+# formula: "↓x. ∃y: (@x: ~y & AX x) & (@y: AX y)"
+# steady states in multi stable systems
 def model_check_fixed6(model: Model) -> Function:
     x = create_comparator(model, 'x')
-    s0 = labeled_by(model, "s__0")
-    ef_inner_inner = EF_saturated(model, x & s0)
+    y = create_comparator(model, 'xx')
+    not_y = negate(model, y)
 
-    and_outer = negate(model, s0) & ef_inner_inner
-    ef_inner = EF_saturated(model, and_outer)
-    binder = bind(model, ef_inner, 'x')
-    return EF_saturated(model, binder)
+    jump_y = jump(model, AX(model, y), 'xx')
+    jump_x = jump(model, not_y & AX(model, x), 'x')
+
+    and_inner = jump_x & jump_y
+    exist_y = existential(model, and_inner, 'xx')
+    return bind(model, exist_y, 'x')
 
 
 # formula: (EG s2) & (EF ~s0)
@@ -245,7 +248,7 @@ def model_check_fixed14(model: Model) -> Function:
 
 
 # ∃x. ∃y. ((@x. ~y & AX x) & (@y. AX y))
-# all colored states where "there exist at least 2 sinks"
+# all colored states in colors where "there exist at least 2 sinks"
 def model_check_fixed15(model: Model) -> Function:
     x = create_comparator(model, 'x')
     y = create_comparator(model, 'xx')
