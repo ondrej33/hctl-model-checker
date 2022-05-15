@@ -8,7 +8,7 @@ os.chdir(PROJECT_DIR)
 import sys
 sys.path.append(PROJECT_DIR)
 
-from src.evaluator_hctl import eval_tree, parse_and_eval
+from src.evaluator_hctl import eval_tree
 from src.parse_all import parse_all
 
 def run_attractor_tests():
@@ -46,5 +46,5 @@ if __name__ == '__main__':
         print("Running the attractor tests against results from AEON.")
         run_attractor_tests()
     else:
-        print("Script does not need any arguments.")
-        print("Usage: testing_attractors.py")
+        print("Script does not take any arguments.")
+        print("Usage: test_attractors.py")
