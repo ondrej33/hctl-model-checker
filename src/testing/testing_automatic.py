@@ -20,7 +20,7 @@ def run_general_tests(model: Model) -> None:
     """
     Run set of tests comparing results of automatically evaluated formulas to
     results of prepared manually evaluated formulas on given model.
-    Model should not be too large (20+ vars models take several min).
+    Model should not be too large (20+ vars models may take several min).
     """
 
     # check that "(EX phi1) || (EX phi2)" == "EX (phi1 || phi2)"
@@ -116,7 +116,7 @@ if __name__ == '__main__':
             run_general_tests(m)
         else:
             print(f"File {sys.argv[1]} does not exist")
-            print("Usage: testing_automatic.py [model_file]")
+            print("Usage: testing_automatic.py [model_file | -b | - ]")
     else:
         print("Running the tests for several large models and complex formulae.")
         print("Some tests may take several minutes to compute.")

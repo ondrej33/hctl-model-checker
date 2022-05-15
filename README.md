@@ -81,6 +81,6 @@ That includes (sort of) canonization of state variables in the formula.
 
 In the `abstract_syntax_tree.py` and `model.py`, the main data structures can be found.
 
-### Tests
+## Tests
 
-Basic overall tests of the model-checking procedure are present in the `testing` folder, together with instructions (readme).
+Basic overall tests of the model-checking procedure are present in the `src/testing` folder, together with their instructions (readme).
