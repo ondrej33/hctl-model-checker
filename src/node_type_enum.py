@@ -6,7 +6,7 @@ Enums and dictionaries for logical operators and elements in formula.
 
 
 class NodeType(Enum):
-    """Enum for categories of nodes in formula syntax tree"""
+    """Enum for categories of nodes in formula' syntax tree."""
     PROP = auto()
     VAR = auto()
     TRUE = auto()
@@ -35,7 +35,7 @@ class NodeType(Enum):
     EXIST = auto()
 
 
-"""Mapping from string representation of operators to their enum representation"""
+"""Mapping from string representation of operators to their enum representation."""
 OP_DICT = {
     "~": NodeType.NEG,
     "||": NodeType.OR,

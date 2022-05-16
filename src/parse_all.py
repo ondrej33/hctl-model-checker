@@ -17,12 +17,13 @@ File wrapping the functionality for parsing models and formulas.
 
 def get_prop_names_from_hctl(node, props_collected: Set[str]) -> None:
     """
-    Collect names of all propositions from HCTL formula tree
-    Result is collected into the parameter props_collected
+    Collect names of all propositions from HCTL formula tree.
+    Result is collected into the parameter props_collected.
     """
     if type(node) == TerminalNode:
         # DO not add any of true/false or variable names, only propositions
-        if node.category == NodeType.TRUE or node.category == NodeType.FALSE or node.category == NodeType.VAR:
+        if node.category == NodeType.TRUE or node.category == NodeType.FALSE or \
+                node.category == NodeType.VAR:
             return
         props_collected.add(node.value)
     elif type(node) == UnaryNode or type(node) == HybridNode:
@@ -33,7 +34,7 @@ def get_prop_names_from_hctl(node, props_collected: Set[str]) -> None:
 
 
 def get_names_from_update_fn(node) -> Set[str]:
-    """Collect names of props and params in the update function's tree"""
+    """Collect names of props and params in the update function's tree."""
     props_and_params = set()
     get_names_from_update_fn_rec(node, props_and_params)
     return props_and_params
@@ -41,8 +42,8 @@ def get_names_from_update_fn(node) -> Set[str]:
 
 def get_names_from_update_fn_rec(node, props_and_params: Set[str]) -> None:
     """
-    Recursively collect names of all propositions and params from the update function's tree
-    Result is collected into parameter props_and_params
+    Recursively collect names of all propositions and params from the update
+    function's tree. Result is collected into parameter props_and_params.
     """
     if type(node) == TerminalNode:
         # DO not add any of true/false nodes, only proposition or parameter nodes
@@ -59,7 +60,7 @@ def get_names_from_update_fn_rec(node, props_and_params: Set[str]) -> None:
 def rename_terminals_update_fn(node, rename_dict: Dict[str, str]) -> None:
     """
     Rename all terminal nodes in the update function's tree (propositions and
-    parameters), according to the given mapping
+    parameters), according to the given mapping.
     """
     if type(node) == TerminalNode:
         # rename proposition (param) nodes
@@ -73,17 +74,19 @@ def rename_terminals_update_fn(node, rename_dict: Dict[str, str]) -> None:
     elif type(node) == BinaryNode:
         rename_terminals_update_fn(node.left, rename_dict)
         rename_terminals_update_fn(node.right, rename_dict)
-        node.subform_string = "(" + node.left.subform_string + OP_TO_STRING[node.category] + node.right.subform_string + ")"
+        inner_name = node.left.subform_string + OP_TO_STRING[node.category] + node.right.subform_string
+        node.subform_string = "(" + inner_name + ")"
 
 
 def rename_props_in_hctl(node, rename_dict: Dict[str, str]) -> None:
     """
     Rename all propositions in terminal nodes of HCTL formula tree, according
-    to the given mapping (but do not touch state-variable terminals)
+    to the given mapping (but do not touch state-variable terminals).
     """
     if type(node) == TerminalNode:
         # only rename proposition nodes, not state variable or constant nodes
-        if node.category == NodeType.VAR or node.category == NodeType.TRUE or node.category == NodeType.FALSE:
+        if node.category == NodeType.VAR or node.category == NodeType.TRUE or \
+                node.category == NodeType.FALSE:
             return
         node.value = rename_dict[node.value]
         node.subform_string = node.value
@@ -93,10 +96,12 @@ def rename_props_in_hctl(node, rename_dict: Dict[str, str]) -> None:
     elif type(node) == BinaryNode:
         rename_props_in_hctl(node.left, rename_dict)
         rename_props_in_hctl(node.right, rename_dict)
-        node.subform_string = "(" + node.left.subform_string + OP_TO_STRING[node.category] + node.right.subform_string + ")"
+        inner_name = node.left.subform_string + OP_TO_STRING[node.category] + node.right.subform_string
+        node.subform_string = "(" + inner_name + ")"
     elif type(node) == HybridNode:
         rename_props_in_hctl(node.child, rename_dict)
-        node.subform_string = "(" + OP_TO_STRING[node.category] + node.var + ":" + node.child.subform_string + ")"
+        inner_name = OP_TO_STRING[node.category] + node.var + ":" + node.child.subform_string
+        node.subform_string = "(" + inner_name + ")"
 
 
 def reduce_number_of_vars(node, rename_dict: Dict[str, str], last_used_name: str):
@@ -117,9 +122,9 @@ def reduce_number_of_vars(node, rename_dict: Dict[str, str], last_used_name: str
         from node to a terminal.
     """
 
-    # When encountering bind/exist node, we add new name mapping (to x, xx, xxx...)
-    # When we find terminal with free var or jump, we rename corresponding var using rename_dict
-    # After we leave binder/exist, we remove corresponding mapping from rename_dict
+    # When encountering bind/exist node, add new name mapping (to x, xx, xxx...)
+    # When finding terminal with free var or jump, rename corresponding var using rename_dict
+    # After leaving binder/exist, remove corresponding mapping from the rename_dict
 
     if type(node) == TerminalNode:
         # do NOT change names of any true/false or proposition nodes, only state-variables
@@ -136,21 +141,23 @@ def reduce_number_of_vars(node, rename_dict: Dict[str, str], last_used_name: str
         num_hybrid1 = reduce_number_of_vars(node.left, rename_dict, last_used_name)
         num_hybrid2 = reduce_number_of_vars(node.right, rename_dict, last_used_name)
         num_hybrid = max(num_hybrid1, num_hybrid2)
-        node.subform_string = "(" + node.left.subform_string + OP_TO_STRING[node.category] + node.right.subform_string + ")"
+        inner_name = node.left.subform_string + OP_TO_STRING[node.category] + node.right.subform_string
+        node.subform_string = "(" + inner_name + ")"
     else: #  type(node) == HybridNode:
-        # if we hit binder or exist, we are adding its new var name mapping to dict
+        # if we hit binder or exist, addin its new var name mapping to dict
         if node.category == NodeType.BIND or node.category == NodeType.EXIST:
             last_used_name = last_used_name + 'x'
             rename_dict[node.var[1:-1]] = last_used_name
 
-        # we rename the var of this hybrid node (if we have "jump" node, name should be in dict already)
+        # rename the var of this hybrid node (if it is a "jump" node, name should be in dict already)
         var_before = node.var[1:-1]
         node.var = '{' + rename_dict[node.var[1:-1]] + '}'
         # just dive deeper and then rename the node string
         num_hybrid = reduce_number_of_vars(node.child, rename_dict, last_used_name)
-        node.subform_string = "(" + OP_TO_STRING[node.category] + node.var + ":" + node.child.subform_string + ")"
+        inner_name = OP_TO_STRING[node.category] + node.var + ":" + node.child.subform_string
+        node.subform_string = "(" + inner_name + ")"
 
-        # when leaving binder/exist, we delete the added var from dict (and increment counter)
+        # when leaving binder/exist, delete the added var from dict (and increment counter)
         if node.category == NodeType.BIND or node.category == NodeType.EXIST:
             rename_dict.pop(var_before)
             num_hybrid += 1 # increment the number of seen hybrid quantifiers
@@ -190,7 +197,7 @@ def canonize_props_params(prop_names, param_names, as_tree_hctl, update_fn_trees
     Return the renaming mapping.
     """
     rename_dict = dict()
-    # we canonize proposition names to s0, s1... and parameter names to p0, p1...
+    # canonize proposition names to s0, s1... and parameter names to p0, p1...
     for i in range(len(prop_names)):
         rename_dict[prop_names[i]] = f"s__{i}"
     for i in range(len(param_names)):
@@ -214,7 +221,8 @@ def create_bdd_manager(num_props, num_params, var_names):
         vrs.extend(f"{var_name}__{i}" for i in range(num_props))  # HCTL variables
     bdd_manager.declare(*vrs)
 
-    # reordering BDD vars to desired order, now it is: s0,x0,y0,...,s1,x1,y0,...,s2,...,p0,p1...
+    # reordering BDD vars to desired order
+    # now it is: s0,x0,y0,...,s1,x1,y0,...,s2,...,p0,p1...
     my_order = dict()
     for i in range(num_props):
         my_order[f"s__{i}"] = i * (len(var_names) + 1)
@@ -235,8 +243,8 @@ def parse_all(file_name: str, formula: str) -> Tuple[Model, Node]:
         formula: String representing HCTL formula in our encoding.
 
     Returns:
-        A pair containing model object and formula syntax tree, where model object is a symbolic
-        representation of the network (influenced by formula variables).
+        A pair containing model object and formula syntax tree, where model object is
+        a symbolic representation of the network (influenced by formula variables).
     """
 
     # collect all BN variable names and their update functions from the bnet file
@@ -275,5 +283,6 @@ def parse_all(file_name: str, formula: str) -> Tuple[Model, Node]:
     # pack it all into a model object and return it together with a formula syntax tree
     name_dict_reversed = {y: x for x, y in rename_dict.items()}
     model_name = file_name.split("/")[-1]
-    model = Model(model_name, bdd_manager, prop_names, param_names, var_names, update_dict, name_dict_reversed)
+    model = Model(model_name, bdd_manager, prop_names, param_names,
+                  var_names, update_dict, name_dict_reversed)
     return model, as_tree_hctl

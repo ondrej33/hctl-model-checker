@@ -6,7 +6,7 @@ This file includes essential classes used for the syntax tree of the HCTL formul
 
 
 class Node:
-    """Base class for syntax trees of HCTL formulas and update functions in BN."""
+    """Base class for syntax trees of HCTL formulas and BN update functions."""
 
     def __init__(self, category):
         self.category = category
@@ -19,7 +19,7 @@ class Node:
 
 
 class TerminalNode(Node):
-    """Specialization of the node for terminals - variables/propositions/params/constants."""
+    """Specialization of the node for terminals - vars/props/params/constants."""
 
     def __init__(self, value, category):
         super().__init__(category)

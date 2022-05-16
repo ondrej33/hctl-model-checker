@@ -6,24 +6,25 @@ if __name__ is not None and "." in __name__:
 else:
     from update_fn_parser import update_fnParser
 
-# This class defines a complete generic visitor for a parse tree produced by update_fnParser.
 
 class update_fnVisitor(ParseTreeVisitor):
+    """This class defines a generic visitor for a parse tree produced by update_fnParser."""
 
-    # Visit a parse tree produced by HCTLParser#root.
     def visitRoot(self, ctx: update_fnParser.RootContext):
+        """Visit a parse tree produced by HCTLParser#root."""
         return self.visit(ctx.formula())
 
-    # Visit a parse tree produced by HCTLParser#fullStop.
-    # We should never arrive here!!
     def visitFullStop(self, ctx: update_fnParser.FullStopContext):
+        """Visit a parse tree produced by HCTLParser#fullStop."""
+        # We should never arrive here
         return self.visitChildren(ctx)
 
-    # This is a node of "parentheses", we just dive one more level
     def visitSkipNode(self, ctx: update_fnParser.SkipNodeContext):
+        """Skip the node for "parentheses"."""
         return self.visit(ctx.child)
 
     def visitTerminalNode(self, ctx: update_fnParser.TerminalNodeContext):
+        """Process terminal nodes."""
         # unify all possibilities for true/false nodes into one option
         if ctx.value.text in {"True", "true", "tt"}:
             return TerminalNode(value="True", category=NodeType.TRUE)
@@ -34,7 +35,9 @@ class update_fnVisitor(ParseTreeVisitor):
         return TerminalNode(value=ctx.value.text, category=NodeType.PROP)
 
     def visitUnary(self, ctx: update_fnParser.UnaryContext):
-        # we have slight inconsistency here - "!" means negation in context of update functions,
+        """Process unary nodes."""
+
+        # there is slight inconsistency - "!" means negation in context of update functions,
         # but it is considered as binder otherwise
         # this is caused due to the compatibility with AEON or BNET format
         if ctx.value.text == "!":
@@ -42,7 +45,12 @@ class update_fnVisitor(ParseTreeVisitor):
         return UnaryNode(child=self.visit(ctx.child), category=OP_DICT[ctx.value.text])
 
     def visitBinary(self, ctx: update_fnParser.BinaryContext):
-        return BinaryNode(left=self.visit(ctx.left), right=self.visit(ctx.right), category=OP_DICT[ctx.value.text])
+        """Process binary nodes."""
+        return BinaryNode(
+            left=self.visit(ctx.left),
+            right=self.visit(ctx.right),
+            category=OP_DICT[ctx.value.text]
+        )
 
 
 

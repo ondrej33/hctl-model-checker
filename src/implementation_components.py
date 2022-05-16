@@ -22,7 +22,7 @@ def negate(model: Model, phi: Function) -> Function:
 
 def create_comparator(model: Model, var: str) -> Function:
     """
-    Create equalizer of the state and a state variable
+    Create equalizer of the state and a state variable.
     It is essentially a bdd for "bit-comparator" in form (s1 <=> x1) & (s2 <=> x2)...
     """
     expr_parts = [f"(s__{i} <=> {var}__{i})" for i in range(model.num_props())]
@@ -66,14 +66,15 @@ def pre_E_one_var(model: Model, initial_set: Function, var: str) -> Function:
     applying the update function of the given BN variable.
 
     Pseudocode:
-    NEGATIVE_PREDECESSOR = !X & Exists(SET & X, 'X') & B_X  
-    POSITIVE_PREDECESSOR = X & Exists(SET & !X, 'X') & !B_X
-    PREDECESSORS_IN_X = NEGATIVE_PREDECESSOR | POSITIVE_PREDECESSOR
+    negative_predecessor = !X & Exists(SET & X, 'X') & B_X
+    positive_predecessor = X & Exists(SET & !X, 'X') & !B_X
+    predecessor_in_X = negative_predecessor | positive_predecessor
     """
     var_bdd = labeled_by(model, var)
     not_var_bdd = negate(model, var_bdd)
     neg_pred = not_var_bdd & model.bdd.quantify(initial_set & var_bdd, [var]) & model.update_fns[var]
-    pos_pred = var_bdd & model.bdd.quantify(initial_set & not_var_bdd, [var]) & negate(model, model.update_fns[var])
+    pos_pred = var_bdd & model.bdd.quantify(initial_set & not_var_bdd, [var]) & \
+               negate(model, model.update_fns[var])
     return neg_pred | pos_pred
 
 
@@ -242,7 +243,7 @@ def optimized_exist_EX(model: Model, phi: Function, var: str) -> Function:
 
 
 def optimized_hybrid_EX(model: Model, phi: Function, var: str, operation: NodeType) -> Function:
-    """Compute combination of hybrid operator and EX using optimized approach"""
+    """Compute combination of hybrid operator and EX using optimized approach."""
     if operation == NodeType.BIND:
         return optimized_bind_EX(model, phi, var)
     elif operation == NodeType.JUMP:

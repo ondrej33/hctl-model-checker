@@ -19,10 +19,10 @@ def eval_uf_tree_rec(node, bdd):
     """
     result = bdd.add_expr("False")
     if type(node) == TerminalNode:
-        # we have either prop/param here (bdd var) or True/False, which is also OK to evaluate
+        # there is either prop/param (bdd var) or true/false
         result = bdd.add_expr(node.value)
 
-    # we have only the negation here at the moment
+    # there is only the negation at the moment
     elif type(node) == UnaryNode and node.category == NodeType.NEG:
         result = ~eval_uf_tree_rec(node.child, bdd)
 
@@ -43,12 +43,12 @@ def eval_uf_tree_rec(node, bdd):
 
 
 def eval_update_fn_tree(as_tree: Node, bdd):  # -> Function:
-    """Encode update function represented by a tree into the BDD."""
+    """Encode update function represented by a tree into a BDD instance."""
     result = eval_uf_tree_rec(as_tree, bdd)
     return result
 
 
 def eval_update_fn_string(formula: str, bdd):  # -> Function:
-    """Parse update function and encode it into the BDD."""
+    """Parse update function and encode it into a BDD instance."""
     as_tree = parse_update_fn_to_tree(formula)
     return eval_update_fn_tree(as_tree, bdd)

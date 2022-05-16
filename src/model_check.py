@@ -16,7 +16,7 @@ from src.printing import print_results
 from src.parse_all import parse_all
 
 
-def print_error_usage(error_message: str):
+def print_error_usage(error_message: str) -> None:
     print(error_message)
     print("Usage: model_check.py model_file formula [-p]")
 
@@ -25,8 +25,17 @@ def valid_file(file_name: str) -> bool:
     return Path(file_name).exists() and Path(file_name).is_file()
 
 
-def main(file_name: str, formula: str, print_all: bool):
-    """Manage the whole model checking process (parsing, evaluating, printing)"""
+def main(file_name: str, formula: str, print_all: bool) -> None:
+    """Manage the whole model checking process (parsing, evaluating, printing).
+
+    A body wrapping the whole parsing and model checking process wih simple
+    error handling.
+
+    Args:
+        file_name: A path to a file with BN model
+        formula: A string with valid HCTL formula
+        print_all: If True, all satisfying assignments are attempted to print
+    """
     try:
         start = time()
         model, as_tree_hctl = parse_all(file_name, formula)

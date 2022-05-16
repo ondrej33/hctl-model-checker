@@ -287,6 +287,32 @@ def apply_hybrid_op(operation: NodeType, model: Model,
         raise InvalidHctlOperationError(operation)
 
 
+def eval_OR_optimized(node, model: Model, dupl: Dict[str, int],
+                      cache, optim_op, optim_var) -> Function:
+    """
+    Evaluate OR node when optimizations are enabled. The Procedure depends
+    on the types of children. Parameters have the same meaning as in the next fn.
+    """
+
+    # check if we can apply optimisation - if the predecessor was a hybrid quantifier,
+    # we can distribute it through the OR operators and later optimize some EX operator
+    optimize_left = is_node_ex_to_optimize(node.left, optim_var) or is_node_union(node.left)
+    optimize_right = is_node_ex_to_optimize(node.right, optim_var) or is_node_union(node.right)
+    if optimize_left:
+        if optimize_right:
+            return eval_tree_recursive(node.left, model, dupl, cache, True, optim_op, optim_var) | \
+                   eval_tree_recursive(node.right, model, dupl, cache, True, optim_op, optim_var)
+        else:
+            return eval_tree_recursive(node.left, model, dupl, cache, True, optim_op, optim_var) | \
+                   eval_with_hybrid(optim_var, optim_op, node.right, model, dupl, cache)
+    else:
+        if optimize_right:
+            return eval_with_hybrid(optim_var, optim_op, node.left, model, dupl, cache) | \
+                   eval_tree_recursive(node.right, model, dupl, cache, True, optim_op, optim_var)
+        else:
+            return eval_with_hybrid(optim_var, optim_op, node, model, dupl, cache)
+
+
 def eval_tree_recursive(node, model: Model, dupl: Dict[str, int], cache,
                         optim_h=False, optim_op=None, optim_var=None) -> Function:
     """Visit node and recursively evaluate the subformula which it represents.
@@ -330,25 +356,9 @@ def eval_tree_recursive(node, model: Model, dupl: Dict[str, int], cache,
         child_result = eval_tree_recursive(node.child, model, dupl, cache)
         result = apply_unary_op(node.category, model, child_result, optim_h, optim_op, optim_var)
     elif type(node) == BinaryNode:
-        # check if we can apply optimisation - if the predecessor was a hybrid quantifier,
-        # we can distribute it through the OR operators and later optimize some EX operator
+        # check if we can apply optimisation
         if optim_h and node.category == NodeType.OR:
-            # if optim is enabled, procedure depends on the types of children
-            optimize_left = is_node_ex_to_optimize(node.left, optim_var) or is_node_union(node.left)
-            optimize_right = is_node_ex_to_optimize(node.right, optim_var) or is_node_union(node.right)
-            if optimize_left:
-                if optimize_right:
-                    result = eval_tree_recursive(node.left, model, dupl, cache, optim_h, optim_op, optim_var) | \
-                             eval_tree_recursive(node.right, model, dupl, cache, optim_h, optim_op, optim_var)
-                else:
-                    result = eval_tree_recursive(node.left, model, dupl, cache, optim_h, optim_op, optim_var) | \
-                             eval_with_hybrid(optim_var, optim_op, node.right, model, dupl, cache)
-            else:
-                if optimize_right:
-                    result = eval_with_hybrid(optim_var, optim_op, node.left, model, dupl, cache) | \
-                             eval_tree_recursive(node.right, model, dupl, cache, optim_h, optim_op, optim_var)
-                else:
-                    result = eval_with_hybrid(optim_var, optim_op, node, model, dupl, cache)
+            result = eval_OR_optimized(node, model, dupl, cache, optim_op, optim_var)
         else:
             left_result = eval_tree_recursive(node.left, model, dupl, cache)
             right_result = eval_tree_recursive(node.right, model, dupl, cache)
@@ -366,7 +376,6 @@ def eval_tree_recursive(node, model: Model, dupl: Dict[str, int], cache,
     # do not forget to save the result for potential future re-use
     if save_to_cache:
         cache[canonized_form] = (result, renaming)
-
     return result
 
 

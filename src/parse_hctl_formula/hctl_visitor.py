@@ -7,24 +7,24 @@ else:
     from hctl_parser import HCTLParser
 
 
-# This class defines a complete generic visitor for a parse tree produced by HCTLParser.
-
 class HCTLVisitor(ParseTreeVisitor):
+    """Class wrapping the construction of the HCTL abstract syntax tree."""
 
-    # Visit a parse tree produced by HCTLParser#root.
     def visitRoot(self, ctx: HCTLParser.RootContext):
+        """Visit a parse tree produced by HCTLParser#root."""
         return self.visit(ctx.formula())
 
-    # Visit a parse tree produced by HCTLParser#fullStop.
-    # We should never arrive here!!
     def visitFullStop(self, ctx: HCTLParser.FullStopContext):
+        """Visit a parse tree produced by HCTLParser#fullStop."""
+        # We should never arrive here
         return self.visitChildren(ctx)
 
-    # This is a node of "parentheses", we just dive one more level
     def visitSkipNode(self, ctx: HCTLParser.SkipNodeContext):
+        """Skip the node for "parentheses"."""
         return self.visit(ctx.child)
 
     def visitTerminalNode(self, ctx: HCTLParser.TerminalNodeContext):
+        """Process terminal nodes."""
         # unify all possibilities for true/false nodes into one option
         if ctx.value.text in {"True", "true", "tt"}:
             return TerminalNode(value="True", category=NodeType.TRUE)
@@ -37,51 +37,94 @@ class HCTLVisitor(ParseTreeVisitor):
             return TerminalNode(value=ctx.value.text, category=NodeType.PROP)
 
     def visitUnary(self, ctx: HCTLParser.UnaryContext):
+        """Process unary nodes."""
         return UnaryNode(child=self.visit(ctx.child), category=OP_DICT[ctx.value.text])
 
     def visitBinary(self, ctx: HCTLParser.BinaryContext):
-        # special case: if we have "(EX phi1) || (EX phi2)", we will make it instead as "EX (phi1 || phi2)"
-        # THERE MIGHT BE PARENTHESIS NODE ON THE WAY (lets care about one layer of parentheses)
+        """Process binary nodes."""
+        # special case: "(EX phi1) || (EX phi2)", will be transformed into "EX (phi1 || phi2)"
+        # THERE MIGHT BE PARENTHESIS NODE ON THE WAY (lets handle one layer of parentheses)
         if ctx.value.text == "||":
             if ctx.left.value.text == "EX" and ctx.right.value.text == "EX":
-                child_or = BinaryNode(left=self.visit(ctx.left.child), right=self.visit(ctx.right.child), category=NodeType.OR)
+                child_or = BinaryNode(
+                    left=self.visit(ctx.left.child),
+                    right=self.visit(ctx.right.child),
+                    category=NodeType.OR
+                )
                 return UnaryNode(child=child_or, category=NodeType.EX)
             elif ctx.left.value.text == "(" and ctx.left.child.value.text == "EX" and \
                     ctx.right.value.text == "EX":
-                child_or = BinaryNode(left=self.visit(ctx.left.child.child), right=self.visit(ctx.right.child), category=NodeType.OR)
+                child_or = BinaryNode(
+                    left=self.visit(ctx.left.child.child),
+                    right=self.visit(ctx.right.child),
+                    category=NodeType.OR
+                )
                 return UnaryNode(child=child_or, category=NodeType.EX)
             elif ctx.left.value.text == "EX" and \
                     ctx.right.value.text == "(" and ctx.right.child.value.text == "EX":
-                child_or = BinaryNode(left=self.visit(ctx.left.child), right=self.visit(ctx.right.child.child), category=NodeType.OR)
+                child_or = BinaryNode(
+                    left=self.visit(ctx.left.child),
+                    right=self.visit(ctx.right.child.child),
+                    category=NodeType.OR
+                )
                 return UnaryNode(child=child_or, category=NodeType.EX)
             elif ctx.left.value.text == "(" and ctx.left.child.value.text == "EX" and \
                     ctx.right.value.text == "(" and ctx.right.child.value.text == "EX":
-                child_or = BinaryNode(left=self.visit(ctx.left.child.child), right=self.visit(ctx.right.child.child), category=NodeType.OR)
+                child_or = BinaryNode(
+                    left=self.visit(ctx.left.child.child),
+                    right=self.visit(ctx.right.child.child),
+                    category=NodeType.OR
+                )
                 return UnaryNode(child=child_or, category=NodeType.EX)
 
         # same thing for "(AX phi1) && (AX phi2)" == "AX (phi1 && phi2)"
         if ctx.value.text == "&&":
             if ctx.left.value.text == "AX" and ctx.right.value.text == "AX":
-                child_and = BinaryNode(left=self.visit(ctx.left.child), right=self.visit(ctx.right.child), category=NodeType.AND)
+                child_and = BinaryNode(
+                    left=self.visit(ctx.left.child),
+                    right=self.visit(ctx.right.child),
+                    category=NodeType.AND
+                )
                 return UnaryNode(child=child_and, category=NodeType.AX)
             elif ctx.left.value.text == "(" and ctx.left.child.value.text == "AX" and \
                     ctx.right.value.text == "AX":
-                child_and = BinaryNode(left=self.visit(ctx.left.child.child), right=self.visit(ctx.right.child), category=NodeType.AND)
+                child_and = BinaryNode(
+                    left=self.visit(ctx.left.child.child),
+                    right=self.visit(ctx.right.child),
+                    category=NodeType.AND
+                )
                 return UnaryNode(child=child_and, category=NodeType.AX)
             elif ctx.left.value.text == "AX" and \
                     ctx.right.value.text == "(" and ctx.right.child.value.text == "AX":
-                child_and = BinaryNode(left=self.visit(ctx.left.child), right=self.visit(ctx.right.child.child), category=NodeType.AND)
+                child_and = BinaryNode(
+                    left=self.visit(ctx.left.child),
+                    right=self.visit(ctx.right.child.child),
+                    category=NodeType.AND
+                )
                 return UnaryNode(child=child_and, category=NodeType.AX)
             elif ctx.left.value.text == "(" and ctx.left.child.value.text == "AX" and \
                     ctx.right.value.text == "(" and ctx.right.child.value.text == "AX":
                 # both children have parentheses
-                child_and = BinaryNode(left=self.visit(ctx.left.child.child), right=self.visit(ctx.right.child.child), category=NodeType.AND)
+                child_and = BinaryNode(
+                    left=self.visit(ctx.left.child.child),
+                    right=self.visit(ctx.right.child.child),
+                    category=NodeType.AND
+                )
                 return UnaryNode(child=child_and, category=NodeType.AX)
 
-        return BinaryNode(left=self.visit(ctx.left), right=self.visit(ctx.right), category=OP_DICT[ctx.value.text])
+        return BinaryNode(
+            left=self.visit(ctx.left),
+            right=self.visit(ctx.right),
+            category=OP_DICT[ctx.value.text]
+        )
 
     def visitHybrid(self, ctx: HCTLParser.HybridContext):
-        return HybridNode(var=ctx.var.text, child=self.visit(ctx.child), category=OP_DICT[ctx.value.text])
+        """Process hybrid nodes."""
+        return HybridNode(
+            var=ctx.var.text,
+            child=self.visit(ctx.child),
+            category=OP_DICT[ctx.value.text]
+        )
 
 
 del HCTLParser
