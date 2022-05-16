@@ -1,7 +1,8 @@
 # Symbolic HCTL Model Checker
 
 This repository contains the implementation of the symbolic model checker for the logic HCTL.
-It is focused on the analysis of (partially specified) Boolean networks. In particular, it allows to check for any behavioural hypotheses expressible in HCTL on large, non-trivial networks. This includes properties like stability, bi-stability, attractors, or oscillatory behaviour.
+It is focused on the analysis of (partially specified) Boolean networks. In particular, it allows to check for any behavioural hypotheses expressible in HCTL on large, non-trivial networks. 
+This includes properties like stability, bi-stability, attractors, or oscillatory behaviour.
 
 For given Boolean network (with inputs) and HCTL formula (representing the property we want to check), it computes all the states of the network (and corresponding colours) that satisfy the formula.
 Depending on the mode, either prints the numbers of satisfying states and colours, or prints all the satisfying assignments.
@@ -23,9 +24,11 @@ python3 src/model_check.py ./benchmark_models/coloured_benchmarks/1.bnet '!{x}: 
 
 # Inputs and Models
 
-The tool takes BN models in the `bnet` format as its input, with many example models present in the `benchmark_models` directory. Benchmark models are also present in the aeon formats, but this is just for the convenience of the user and those can't be used as inputs.
+The tool takes BN models in the `bnet` format as its input, with many example models present in the `benchmark_models` directory. 
+Benchmark models are also present in the aeon formats, but this is just for the convenience of the user (easier to visualise), and those can't be used as inputs.
 
-The grammar for HCTL is specified in the readable format in the file `src/parse_hctl_formula/HCTL.g4`. Example formulae can be found in the file `formulae_examples.txt`.
+The grammar for HCTL is specified in the readable format in the file `src/parse_hctl_formula/HCTL.g4`. 
+Example formulae can be found in the file `formulae_examples.txt`.
 
 
 # Benchmarks
