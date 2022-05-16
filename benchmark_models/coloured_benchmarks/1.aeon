@@ -16,7 +16,7 @@ Enterococcus -?? Blautia
 Blautia -?? Blautia
 #position:Mollicutes:347.3249025960545,227.03370423934072
 $Mollicutes:Mollicutes
-Mollicutes -> Mollicutes
+Mollicutes -?? Mollicutes
 #position:Barnesiella:133.14224145288213,662.2981203973085
 Lachnospiraceae_other_ -?? Barnesiella
 Other -?? Barnesiella
@@ -24,10 +24,10 @@ Clindamycin_ -?? Barnesiella
 Lachnospiraceae -?? Barnesiella
 #position:Lachnospiraceae_other_:345.41792541351583,1120.228047320982
 $Lachnospiraceae_other_:(((Lachnospiraceae & !Clindamycin_) | (Other & !Clindamycin_)) | (Lachnospiraceae_other_ & !Clindamycin_))
-Lachnospiraceae_other_ -> Lachnospiraceae_other_
-Other -> Lachnospiraceae_other_
-Clindamycin_ -| Lachnospiraceae_other_
-Lachnospiraceae -> Lachnospiraceae_other_
+Lachnospiraceae_other_ -?? Lachnospiraceae_other_
+Other -?? Lachnospiraceae_other_
+Clindamycin_ -?? Lachnospiraceae_other_
+Lachnospiraceae -?? Lachnospiraceae_other_
 #position:Other:345.7552836329774,896.9328810804914
 Lachnospiraceae_other_ -?? Other
 Other -?? Other
@@ -37,10 +37,9 @@ Lachnospiraceae -?? Other
 Clindamycin_ -?? Clindamycin_
 #position:Lachnospiraceae:52.482174687311606,1023.7512436332124
 $Lachnospiraceae:(((Lachnospiraceae & !Clindamycin_) | (Lachnospiraceae_other_ & !Clindamycin_)) | (Other & !Clindamycin_))
-Lachnospiraceae_other_ -> Lachnospiraceae
-Other -> Lachnospiraceae
-Clindamycin_ -| Lachnospiraceae
-Lachnospiraceae -> Lachnospiraceae
+Lachnospiraceae_other_ -?? Lachnospiraceae
+Other -?? Lachnospiraceae
+Clindamycin_ -?? Lachnospiraceae
+Lachnospiraceae -?? Lachnospiraceae
 #position:Akkermansia_:-56.72530508415641,165.09230906316913
 Coprobacillus -?? Akkermansia_
-
