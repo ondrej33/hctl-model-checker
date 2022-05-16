@@ -41,7 +41,7 @@ Results for the monochromatic set are available in the `benchmark_models/results
 
 # Setup
 
-Following steps should work on Linux systems (tested on Aisa and Psyche servers), as well as WSL.
+Following steps should work on Linux systems (tested on Aisa, Hedron and Psyche servers), as well as WSL.
 
 Two main libraries are needed:
 - [dd](https://github.com/tulip-control/dd) for the underlying binary decision diagrams implementation
