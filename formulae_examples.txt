@@ -8,6 +8,7 @@ AF (!{x}: ((AX (~{x} && AF {x})) && (EF (!{y}: EX ~AF {y}))))
 
 # steady states, in case that there are at least two of them
 !{x}: 3{y}: (@{x}: ~{y} && AX {x}) && (@{y}: AX {y})
+# equivalent to: '!{x}: 3{y}: (@{x}: ~{y} && (!{z}: AX {z})) && (@{y}: (!{z}: AX {z}))'
 
 # existence of fork states in the system (states where system decides which terminal steady state to visit)
 3{x}: 3{y}: (@{x}: ~{y} && AX {x}) && (@{y}: AX {y}) && EF ({x} && (!{z}: AX {z})) && EF ({y} && (!{z}: AX {z})) && AX (EF ({x} && (!{z}: AX {z})) ^ EF ({y} && (!{z}: AX {z})))

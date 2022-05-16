@@ -15,14 +15,14 @@ from src.printing import get_states_only
 def run_benchmark_tests():
     """
     Run set of automatic tests on several large models and formulas, and
-    compare the numbers of results found to the precomputed ones. Whole set of
-    tests might take around 45 minutes (strongly depends on Python's caching).
+    compare the numbers of results found to the precomputed ones. Whole set
+    of tests might take around 45 minutes to complete.
     """
 
     # Strong basin of an oscillating attractor
     formula1 = "AF !{x}: (AX (~{x} && AF {x}))"
     # Strong basin of an oscillating attractor which is not a simple cycle
-    formula2 = "AF !{x}: ((AX (~{x} && AF {x})) && (EF !{y}: EX EG ~{y}))"
+    formula2 = "AF !{x}: ((AX (~{x} && AF {x})) && (EF !{y}: EX ~AF {y}))"
     # Multiple steady states
     formula3 = "!{x}: 3{y}: (@{x}: ~{y} && AX {x}) && (@{y}: AX {y})"
     # Fork states existence
