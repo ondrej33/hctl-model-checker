@@ -41,11 +41,17 @@ Results for the monochromatic set are available in the `benchmark_models/results
 
 # Setup
 
-Following steps should work on Linux systems (tested on Aisa and Psyche servers), as well as WSL. Creating Python virtual environment first is recommended.
+Following steps should work on Linux systems (tested on Aisa and Psyche servers), as well as WSL.
 
 Two main libraries are needed:
 - [dd](https://github.com/tulip-control/dd) for the underlying binary decision diagrams implementation
 - [ANTLR4](https://github.com/antlr/antlr4/blob/master/doc/python-target.md) for the parser of both HCTL formulae and update functions
+
+Creating Python virtual environment first is recommended, otherwise a problem with setuptools might arise.
+```
+python3 -m venv env
+source env/bin/activate
+```
 
 To set up ANTLR and some other minor modules and requirements:
 ```
@@ -58,7 +64,7 @@ To install the dd library's Cython bindings for CUDD:
 pip download dd --no-deps  
 tar xzf dd-*.tar.gz  
 cd dd-*/  
-python setup.py install --fetch --cudd  
+python3 setup.py install --fetch --cudd  
 ```
 
 If any problems occur during the installation, [dd](https://github.com/tulip-control/dd) page contains convenient instructions.
