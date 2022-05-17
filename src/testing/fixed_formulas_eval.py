@@ -11,16 +11,16 @@ This can be later used to test the parser or evaluator.
 # ============================================================================================= #
 
 """
-List of formulas included in current version:
-    1: "!{x}: EX {x}"
-    2: "!{x}: AX {x}"
-    3: "!{x}: (EX (~{x} && EX {x}))"
+List of formulas included in the current version:
+    1:  "!{x}: EX {x}"
+    2:  "!{x}: AX {x}"
+    3:  "!{x}: (EX (~{x} && EX {x}))"
     4:  "!{x}: EX EF {x}"
-    5: "!{x}: (EX EF {x}) && (EG s__3)"
-    6: "!{x}: 3{xx}: (@{x}: ~{xx} && AX {x}) && (@{xx}: AX {xx})"
-    7: "(EG s__2) && (EF ~s__0)"
-    8: "!{x}: AX AF {x}"
-    9: "!{x}: AG EF {x}"
+    5:  "!{x}: (EX EF {x}) && (EG s__3)"
+    6:  "!{x}: 3{xx}: (@{x}: ~{xx} && AX {x}) && (@{xx}: AX {xx})"
+    7:  "(EG s__2) && (EF ~s__0)"
+    8:  "!{x}: AX AF {x}"
+    9:  "!{x}: AG EF {x}"
     10: "!{x}: EX (~{x} && (!{xx}: AX {xx}))"
     11: "!{x}: EX (!{xx}: AX ({xx} && ~{x}))"
     12: "!{x}: (3{xx}: {x} && EX {xx})"
@@ -40,22 +40,22 @@ List of formulas included in current version:
 """
 
 
-# formula: ↓x (EX x)
-# unstable steady states (self loop)
+# ↓x (EX x)
+# unstable steady states (self loops)
 def model_check_fixed1(model: Model) -> Function:
     x = create_comparator(model, 'x')
     ex = EX(model, x)
     return bind(model, ex, 'x')
 
 
-# formula: ↓x (EX x)
-# faster version, uses binder already during computing the EX, with smaller BDDs
+# ↓x (EX x)
+# unstable steady states, faster optimized version
 def model_check_fixed1_v2(model: Model) -> Function:
     x = create_comparator(model, 'x')
     return optimized_bind_EX(model, x, 'x')
 
 
-# formula: ↓x (AX x)
+# ↓x (AX x)
 # stable steady states - sink states
 def model_check_fixed2(model: Model) -> Function:
     x = create_comparator(model, 'x')
@@ -63,14 +63,14 @@ def model_check_fixed2(model: Model) -> Function:
     return bind(model, ax, 'x')
 
 
-# formula: ↓x (AX x), stable steady states (self loop only, sink)
-# FASTEST probably, uses "equational fixed point", big conjunction of all (s_i <=> F_s_i) formulas
+# ↓x (AX x), stable steady states (self loop only, sink)
+# uses already precomputed set of fixed points
 def model_check_fixed2_v2(model: Model) -> Function:
     return model.stable
 
 
-# formula: ↓x (EX (~x & (EX x)))
-# states that are part of (unstable) cycles of size 2  (those might be part of bigger cycles)
+# ↓x (EX (~x & (EX x)))
+# states that are part of (unstable) cycles of size 2  (might be part of bigger cycles)
 def model_check_fixed3(model: Model) -> Function:
     x = create_comparator(model, 'x')
     not_x = negate(model, x)
@@ -80,7 +80,7 @@ def model_check_fixed3(model: Model) -> Function:
     return bind(model, ex_outer, 'x')
 
 
-# formula: ↓x (EX (EF x))
+# ↓x (EX (EF x))
 # states that are part of (unstable) cycles of any size
 def model_check_fixed4(model: Model) -> Function:
     x = create_comparator(model, 'x')
@@ -89,16 +89,7 @@ def model_check_fixed4(model: Model) -> Function:
     return bind(model, ex, 'x')
 
 
-# formula: ↓x (EX (EF x))
-# states that are part of (unstable) cycles of any size with SATURATION
-def model_check_fixed4_v2(model: Model) -> Function:
-    x = create_comparator(model, 'x')
-    ef = EF_saturated(model, x)
-    ex = EX(model, ef)
-    return bind(model, ex, 'x')
-
-
-# formula: ↓x. ((EX (EF x)) & (EG s3))
+# ↓x. ((EX (EF x)) & (EG s3))
 # cycles with a possible path going through only s3 states
 def model_check_fixed5(model: Model) -> Function:
     x = create_comparator(model, 'x')
@@ -109,7 +100,7 @@ def model_check_fixed5(model: Model) -> Function:
     return bind(model, and_inner, 'x')
 
 
-# formula: "↓x. ∃y: (@x: ~y & AX x) & (@y: AX y)"
+# "↓x. ∃y: (@x: ~y & AX x) & (@y: AX y)"
 # steady states in multi stable systems
 def model_check_fixed6(model: Model) -> Function:
     x = create_comparator(model, 'x')
@@ -124,7 +115,7 @@ def model_check_fixed6(model: Model) -> Function:
     return bind(model, exist_y, 'x')
 
 
-# formula: (EG s2) & (EF ~s0)
+# (EG s2) & (EF ~s0)
 # states with some possible path through only s2 states + some path reaching ~s0
 def model_check_fixed7(model: Model) -> Function:
     s2 = labeled_by(model, "s__2")
@@ -135,19 +126,8 @@ def model_check_fixed7(model: Model) -> Function:
     return eg_s2 & ef
 
 
-# formula: (EG s2) & (EF ~s0)
-# states with some possible path through only s2 states + some path reaching ~s0 with SATURATION
-def model_check_fixed7_v2(model: Model) -> Function:
-    s2 = labeled_by(model, "s__2")
-    eg_s2 = EG(model, s2)
-
-    not_s0 = negate(model, labeled_by(model, "s__0"))
-    ef = EF_saturated(model, not_s0)
-    return eg_s2 & ef
-
-
 # ↓x. AX AF x
-# states that are part of periodic attractors - states that will always reach itself again
+# periodic attractor states (including self-loops) - always reaches itself again
 def model_check_fixed8(model: Model) -> Function:
     x = create_comparator(model, 'x')
     af = AF(model, x)
@@ -156,17 +136,8 @@ def model_check_fixed8(model: Model) -> Function:
 
 
 # ↓x. AG EF x
-# states which are part of a sink SCC
+# states which are part of a terminal SCC (attractors)
 def model_check_fixed9(model: Model) -> Function:
-    x = create_comparator(model, 'x')
-    ef_x = EF_saturated(model, x)
-    ag = AG(model, ef_x)
-    return bind(model, ag, 'x')
-
-
-# ↓x. AG EF x
-# states which are part of a sink SCC, using SATURATION
-def model_check_fixed9_v2(model: Model) -> Function:
     x = create_comparator(model, 'x')
     ef_x = EF_saturated(model, x)
     ag = AG(model, ef_x)
@@ -193,20 +164,20 @@ def model_check_fixed10_v2(model: Model) -> Function:
 
 
 # ↓x. EX ( ↓y. AX (y & ~x)) )
-# states which have transition to a different state which is a sink state, NESTED BINDER VERSION of prev
+# states which have transition to a different state which is a sink state,
+# more complex, nested binder version of the previous
 def model_check_fixed11(model: Model) -> Function:
     y = create_comparator(model, 'xx')
     not_x = negate(model, create_comparator(model, 'x'))
     and_inner = not_x & y
 
-    # TODO: maybe update and use better version for "bind AX"
     binder_y = bind(model, AX(model, and_inner), 'xx')
     return optimized_bind_EX(model, binder_y, 'x')
 
 
 # ↓x. ( ∃y. ( x & EX y ) )
-# states which have some successor, nested operators version
-# should give the same results as "pre_E_all_vars(model, model.mk_unit_colored_set()) & ~model.stable"
+# states which have some successor, nested operators
+# should give all the states, since KS used is total
 def model_check_fixed12(model: Model) -> Function:
     x = create_comparator(model, 'x')
     y = create_comparator(model, 'xx')
@@ -217,8 +188,7 @@ def model_check_fixed12(model: Model) -> Function:
 
 
 # ↓x. (∃y. (x & AX (y & AX y)))
-# states which have all their transitions (includes none) to some SINK state (could be itself)
-# should give the same results as "sinks | pre_A(sinks)"
+# states with all transitions (includes none) to a SINK state (could be itself)
 def model_check_fixed13(model: Model) -> Function:
     y = create_comparator(model, 'xx')
     ax_y = AX(model, y)
@@ -248,7 +218,7 @@ def model_check_fixed14(model: Model) -> Function:
 
 
 # ∃x. ∃y. ((@x. ~y & AX x) & (@y. AX y))
-# all colored states in colors where "there exist at least 2 sinks"
+# all colored states for colors where "there exist at least 2 sinks"
 def model_check_fixed15(model: Model) -> Function:
     x = create_comparator(model, 'x')
     y = create_comparator(model, 'xx')
@@ -271,8 +241,8 @@ def model_check_fixed16(model: Model) -> Function:
     return bind(model, eg, 'x')
 
 
-# ∃x.∃y.(@x. AG¬y & AG EF x) & (@y. AG EF y)
-# at least two final SCCs in the whole system
+# ∃x.∃y.(@x. (AG~y) & (AG EF x)) & (@y. AG EF y)
+# existence of at least two final SCCs (attractors)
 def model_check_fixed17(model: Model) -> Function:
     x = create_comparator(model, 'x')
     y = create_comparator(model, 'xx')
@@ -291,7 +261,7 @@ def model_check_fixed17(model: Model) -> Function:
 
 
 # ∃x. ∃y. (@x. ~y & AXx) & (@y. AXy) & EFx & EFy
-# states  that  have  two  outgoing  paths  to  two  different sinks
+# states that have outgoing paths to two different sinks
 # (intersection of basins of attraction of two different sinks)
 def model_check_fixed18(model: Model) -> Function:
     x = create_comparator(model, 'x')

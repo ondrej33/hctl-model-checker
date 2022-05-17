@@ -23,7 +23,7 @@ def print_error_usage(error_message: str):
 def run_fixed_formulas_tests(model: Model) -> None:
     """
     Run set of tests comparing results of automatically evaluated formulas to
-    results of prepared manually evaluated formulas on given model.
+    results of prepared, manually evaluated formulas on given model.
     Model should not be too large (20+ vars models may take several min).
     """
 
