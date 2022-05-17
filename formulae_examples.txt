@@ -30,4 +30,4 @@ AF (!{x}: ((AX (~{x} && AF {x})) && (EF (!{y}: EX ~AF {y}))))
 AG (!{x}: (AX (~{x} && AF {x})))
 
 # existence of at least two attractors
-"3{x}: 3{y}: (@{x}: (AG~{y}) && (AG EF {x})) && (@{y}: AG EF {y})"
+3{x}: 3{y}: (@{x}: (AG~{y}) && (AG EF {x})) && (@{y}: AG EF {y})
