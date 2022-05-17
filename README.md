@@ -7,7 +7,7 @@ This includes properties like stability, bi-stability, attractors, or oscillator
 For a given Boolean network (with inputs) and HCTL formula (representing the property we want to check), it computes all the states of the network (and corresponding colours) that satisfy the formula.
 Depending on the mode, either prints the numbers of satisfying states and colours, or prints all the satisfying assignments.
 
-The usage is following:
+Program invocation:
 ```
 python3 src/model_check.py model_file hctl_formula [-p]
 ```
