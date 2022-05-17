@@ -25,5 +25,5 @@ The following 3 concrete commands can be used to generally test the current stat
 ```
 python3 test_attractors.py
 python3 test_benchmarks.py
-python3 test_fixed_formulas.py 'benchmark_models/model_collection_large/[var:20]__[id:003]__[MAMMALIAN-CELL-CYCLE]/model_inputs_free.bnet'
+python3 test_fixed_formulas.py 'benchmark_models/model_collection_large/[var-20]__[id-003]__[MAMMALIAN-CELL-CYCLE]/model_inputs_free.bnet'
 ```

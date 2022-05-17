@@ -19,7 +19,7 @@ python3 src/model_check.py model_file hctl_formula [-p]
 For example, with concrete arguments, commands illustrating the two modes might look like:
 ```
 python3 src/model_check.py './benchmark_models/coloured_benchmarks/1.bnet' '!{x}: 3{y}: (@{x}: ~{y} && AX {x}) && (@{y}: AX {y})'
-python3 src/model_check.py './benchmark_models/model_collection_large/[var:11]__[id:095]__[FISSION-YEAST-2008]/model_inputs_free.bnet' '!{x}: AX {x}' -p
+python3 src/model_check.py './benchmark_models/model_collection_large/[var-11]__[id-095]__[FISSION-YEAST-2008]/model_inputs_free.bnet' '!{x}: AX {x}' -p
 ```
 
 

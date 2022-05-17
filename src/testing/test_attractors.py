@@ -16,12 +16,12 @@ def run_attractor_tests():
     Evaluate formula for attractors on several models, and compare the numbers
     of results found against the pre-computed ones.
     """
-    model1 = "benchmark_models/model_collection_large/[var:10]__[id:084]__[BOOLEAN-CELL-CYCLE]/model_inputs_free.bnet"
-    model2 = "benchmark_models/model_collection_large/[var:11]__[id:029]__[TOLL-PATHWAY-OF-DROSOPHILA]/model_inputs_free.bnet"
-    model3 = "benchmark_models/model_collection_large/[var:15]__[id:010]__[CARDIAC-DEVELOPMENT]/model_inputs_free.bnet"
-    model4 = "benchmark_models/model_collection_large/[var:17]__[id:089]__[MAPK-REDUCED-1]/model_inputs_free.bnet"
-    model5 = "benchmark_models/model_collection_large/[var:20]__[id:024]__[BUDDING-YEAST-CELL-CYCLE]/model_inputs_free.bnet"
-    model6 = "benchmark_models/model_collection_large/[var:20]__[id:003]__[MAMMALIAN-CELL-CYCLE]/model_inputs_free.bnet"
+    model1 = "benchmark_models/model_collection_large/[var-10]__[id-084]__[BOOLEAN-CELL-CYCLE]/model_inputs_free.bnet"
+    model2 = "benchmark_models/model_collection_large/[var-11]__[id-029]__[TOLL-PATHWAY-OF-DROSOPHILA]/model_inputs_free.bnet"
+    model3 = "benchmark_models/model_collection_large/[var-15]__[id-010]__[CARDIAC-DEVELOPMENT]/model_inputs_free.bnet"
+    model4 = "benchmark_models/model_collection_large/[var-17]__[id-089]__[MAPK-REDUCED-1]/model_inputs_free.bnet"
+    model5 = "benchmark_models/model_collection_large/[var-20]__[id-024]__[BUDDING-YEAST-CELL-CYCLE]/model_inputs_free.bnet"
+    model6 = "benchmark_models/model_collection_large/[var-20]__[id-003]__[MAMMALIAN-CELL-CYCLE]/model_inputs_free.bnet"
     models = [model1, model2, model3, model4, model5, model6]
 
     numbers_states1 = 113
