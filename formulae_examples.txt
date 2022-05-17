@@ -1,4 +1,4 @@
-## BENCHMARK FORMULAE
+### BENCHMARK FORMULAE
 
 # states from which all outgoing paths eventually reach a checkpoint state
 AF (!{x}: (AX (~{x} && AF {x})))
@@ -15,10 +15,19 @@ AF (!{x}: ((AX (~{x} && AF {x})) && (EF (!{y}: EX ~AF {y}))))
 
 
 
-## OTHER USEFUL FORMULAE
+### OTHER USEFUL FORMULAE
+
+# steady states
+!{x}: AX {x}
 
 # attractor states
 !{x}: AG EF {x}
 
-# steady states
-!{x}: AX {x}
+# attractor states which are always visited repeatedly
+!{x}: (AX (~{x} && AF {x}))
+
+# states of non-trivial cycle attractors
+AG (!{x}: (AX (~{x} && AF {x})))
+
+# existence of at least two attractors
+"3{x}: 3{y}: (@{x}: (AG~{y}) && (AG EF {x})) && (@{y}: AG EF {y})"
