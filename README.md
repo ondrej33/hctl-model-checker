@@ -25,7 +25,7 @@ python3 src/model_check.py './benchmark_models/model_collection_large/[var:11]__
 
 # Setup
 
-Following steps should work on Linux systems (tested on Aisa, Hedron and Psyche servers), as well as on WSL (Ubuntu). Python 3.8 or newer should be installed.
+Following steps should work on usual Linux systems (tested on Adonis, Hedron and Psyche servers), as well as on WSL (Ubuntu). Python 3.8 or newer should be installed.
 
 Two main libraries are needed:
 - [dd](https://github.com/tulip-control/dd) for the underlying binary decision diagrams implementation
