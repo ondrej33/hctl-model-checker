@@ -34,7 +34,7 @@ Example formulae (including the four used for benchmarking) can be found in the 
 
 # Benchmarks
 
-To run the benchmarks from the Evaluation, you can use one of the two prepared bash scripts:
+To run the benchmarks from the Evaluation, you can run one of the two prepared bash scripts:
 
 ```
 bash script_eval_coloured.sh
