@@ -23,34 +23,9 @@ python3 src/model_check.py './benchmark_models/model_collection_large/[var-11]__
 ```
 
 
-# Inputs and Models
-
-The tool takes BN models in `bnet` format as its input, with many example models present in the `benchmark_models` directory. 
-Benchmark models are also present in the aeon formats, but this is just for the convenience of the user (easier to visualise), and those can't be used as inputs.
-
-The grammar for HCTL is specified in the readable format in the file `src/parse_hctl_formula/HCTL.g4`. 
-Example formulae (including the four used for benchmarking) can be found in the file `formulae_examples.txt`.
-
-
-# Benchmarks
-
-To run the benchmarks from the Evaluation, you can run one of the two prepared bash scripts:
-
-```
-bash script_eval_coloured.sh
-bash script_eval_monochromatic.sh
-```
-- `script_eval_coloured.sh` checks all four presented formulae on six models from the `benchmark_models/coloured_benchmarks` directory (takes ~45 min)
-
-- `script_eval_monochromatic.sh` checks all four formulae on 145 models from the `benchmark_models/models_collection_large` directory, with 1h timeout for each run
-
-Pre-computed results for the coloured set are available directly in the `benchmark_models/coloured_benchmarks` folder.
-Results for the monochromatic set are available in the `benchmark_models/results_monochromatic` folder.
-
-
 # Setup
 
-Following steps should work on Linux systems (tested on Aisa, Hedron and Psyche servers), as well as on WSL (Ubuntu). Python 3.8 or newer should be installed.
+Following steps should work on usual Linux systems (tested on Adonis, Hedron and Psyche servers), as well as on WSL (Ubuntu). Python 3.8 or newer should be installed.
 
 Two main libraries are needed:
 - [dd](https://github.com/tulip-control/dd) for the underlying binary decision diagrams implementation
@@ -77,6 +52,31 @@ python3 setup.py install --fetch --cudd
 ```
 
 If any problems occur during the installation, [dd](https://github.com/tulip-control/dd) page contains convenient instructions.
+
+
+# Inputs and Models
+
+The tool takes BN models in `bnet` format as its input, with many example models present in the `benchmark_models` directory. 
+Benchmark models are also present in the aeon formats, but this is just for the convenience of the user (easier to visualise), and those can't be used as inputs.
+
+The grammar for HCTL is specified in the readable format in the file `src/parse_hctl_formula/HCTL.g4`. 
+Example formulae (including the four used for benchmarking) can be found in the file `formulae_examples.txt`.
+
+
+# Benchmarks
+
+To run the benchmarks from the Evaluation, you can run one of the two prepared bash scripts:
+
+```
+bash script_eval_coloured.sh
+bash script_eval_monochromatic.sh
+```
+- `script_eval_coloured.sh` checks all four presented formulae on six models from the `benchmark_models/coloured_benchmarks` directory (takes ~45 min)
+
+- `script_eval_monochromatic.sh` checks all four formulae on 145 models from the `benchmark_models/models_collection_large` directory, with 1h timeout for each run
+
+Pre-computed results for the coloured set are available directly in the `benchmark_models/coloured_benchmarks` folder.
+Results for the monochromatic set are available in the `benchmark_models/results_monochromatic` folder.
 
 
 # Code Structure
