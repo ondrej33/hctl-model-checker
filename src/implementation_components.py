@@ -7,7 +7,7 @@ It is build so that we can combine them into the bottom-up algorithm.
 """
 
 # ============================================================================================= #
-# ============================= SUBFORMULAS EVALUATION PART =================================== #
+# ============================= SUBFORMULAE EVALUATION PART =================================== #
 # ============================================================================================= #
 
 
@@ -22,7 +22,7 @@ def negate(model: Model, phi: Function) -> Function:
 
 def create_comparator(model: Model, var: str) -> Function:
     """
-    Create equalizer of the state and a state variable.
+    Create equalizer of the state and a given state variable.
     It is essentially a bdd for "bit-comparator" in form (s1 <=> x1) & (s2 <=> x2)...
     """
     expr_parts = [f"(s__{i} <=> {var}__{i})" for i in range(model.num_props())]
@@ -36,7 +36,7 @@ def bind(model: Model, phi: Function, var: str) -> Function:
     comparator = create_comparator(model, var)
     intersection = comparator & phi
 
-    # now lets use existential quantification to get rid of the bdd vars coding VAR
+    # use existential quantification to get rid of the bdd vars coding VAR
     vars_to_get_rid = [f"{var}__{i}" for i in range(model.num_props())]
     result = model.bdd.quantify(intersection, vars_to_get_rid)
     return result
@@ -47,7 +47,7 @@ def jump(model: Model, phi: Function, var: str) -> Function:
     comparator = create_comparator(model, var)
     intersection = comparator & phi
 
-    # now lets use existential quantification to get rid of the bdd vars coding STATE
+    # use existential quantification to get rid of the bdd vars coding STATE
     vars_to_get_rid = [f"s__{i}" for i in range(model.num_props())]
     result = model.bdd.quantify(intersection, vars_to_get_rid)
     return result
@@ -86,6 +86,7 @@ def pre_E_all_vars(model: Model, initial_set: Function) -> Function:
     current_set = model.mk_empty_colored_set()
     for i in range(model.num_props()):
         current_set = current_set | pre_E_one_var(model, initial_set, f"s__{i}")
+    # add self-loop transitions
     return current_set | (initial_set & model.stable)
 
 
@@ -99,6 +100,7 @@ def EU_saturated(model: Model, phi1: Function, phi2: Function) -> Function:
     done = False
     while not done:
         done = True
+        # update the variables from the "lower" levels of bdd first
         for i in range(model.num_props(), 0, -1):
             update = (phi1 & pre_E_one_var(model, result, f"s__{i - 1}")) & negate(model, result)
             if update != model.bdd.false:
@@ -201,8 +203,7 @@ def optimized_bind_EX(model: Model, phi: Function, var: str) -> Function:
     for i in range(model.num_props()):
         intersection = comparator & pre_E_one_var(model, phi, f"s__{i}")
         current_set = current_set | model.bdd.quantify(intersection, vars_to_get_rid)
-
-    # return current_set
+    # account for self-loops
     stable_binded = model.bdd.quantify(comparator & (phi & model.stable), vars_to_get_rid)
     return current_set | stable_binded
 
@@ -219,8 +220,7 @@ def optimized_jump_EX(model: Model, phi: Function, var: str) -> Function:
     for i in range(model.num_props()):
         intersection = comparator & pre_E_one_var(model, phi, f"s__{i}")
         current_set = current_set | model.bdd.quantify(intersection, vars_to_get_rid)
-
-    # return current_set
+    # account for self-loops
     stable_jumped = model.bdd.quantify(comparator & (phi & model.stable), vars_to_get_rid)
     return current_set | stable_jumped
 
@@ -236,8 +236,7 @@ def optimized_exist_EX(model: Model, phi: Function, var: str) -> Function:
     for i in range(model.num_props()):
         pred = pre_E_one_var(model, phi, f"s__{i}")
         current_set = current_set | model.bdd.quantify(pred, vars_to_get_rid)
-
-    # return current_set
+    # account for self-loops
     stable_exist = model.bdd.quantify(phi & model.stable, vars_to_get_rid)
     return current_set | stable_exist
 

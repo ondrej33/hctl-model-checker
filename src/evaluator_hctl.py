@@ -24,12 +24,12 @@ def is_node_union(node) -> bool:
 
 def check_tree_for_ex(node, var: str) -> bool:
     """
-    Checks whether there is path from given node to some EX node (contains var
-    in its subtree). The path must only contain union nodes.
+    Check whether there is path from given node to some EX node (that contains
+    var node in its subtree). The path must only contain union nodes.
     This is useful for optimizing the combination of EX and hybrid operators.
     """
 
-    # if we came to EX node (whose subformula includes the var), we are done
+    # if this is EX node (whose subformula includes the var), we are done
     if is_node_ex_to_optimize(node, var):
         return True
     # another chance is to find the goal in at least one child of an Union node
@@ -46,7 +46,7 @@ def canonize_subform(subform: str, idx: int, translate_dict,
     Works recursively, each nesting (parentheses) result in recursive call.
 
     Args:
-        subform: Valid subformula of a hctl formula, minimized by the minimize_number_of_state_vars
+        subform: Valid subformula of a hctl formula minimized by minimize_number_of_state_vars
             must include all PARENTHESES, must not contain EXCESS SPACES
             "(3{x}:(3{xx}:((@{x}:((~{xx})&&(AX{x})))&&(@{xx}:(AX{xx})))))" is valid input
             any node.subform_string field should be OK to use
@@ -70,7 +70,7 @@ def canonize_subform(subform: str, idx: int, translate_dict,
         elif char == ')':
             canonical.append(char)
             return idx + 1
-        # we must distinguish situations when 3 is existential and when it is part of some prop name
+        # distinguish situations when 3 is existential and when it is part of some prop name
         elif char == '!' or (char == '3' and idx + 1 < len(subform) and subform[idx + 1] == '{'):
             idx += 2  # move to the beginning of the var name
             var_name = []
@@ -90,7 +90,7 @@ def canonize_subform(subform: str, idx: int, translate_dict,
             idx += 1
             var_name_str = ''.join(var_name)
 
-            # we must take in account free variables (since we usually canonize all subformulas)
+            # take in account free variables (since we usually canonize all subformulas)
             if var_name_str not in translate_dict:
                 translate_dict[var_name_str] = f"var{stack_len}"
                 stack_len += 1
@@ -191,7 +191,7 @@ def get_and_update_cache(model: Model, canonized_form: str, renaming: Dict[str, 
     """
     duplicates[canonized_form] -= 1  # one less duplicate remains
     result, result_renaming = cache[canonized_form]
-    # if we already found all formula's duplicates, delete the cached value
+    # if we already processed all formula's duplicates, delete the cached value
     if duplicates[canonized_form] == 0:
         duplicates.pop(canonized_form)
         cache.pop(canonized_form)
@@ -207,7 +207,6 @@ def get_and_update_cache(model: Model, canonized_form: str, renaming: Dict[str, 
 
 def eval_terminal(node, model: Model) -> Function:
     """Evaluate terminal node of formula tree based on its type."""
-    # we have several types of terminals: atomic props, state-variables, constants
     if node.category == NodeType.VAR:
         # if we have a state-variable, node.value has form of '{var_name}'
         return create_comparator(model, node.value[1:-1])
@@ -248,7 +247,7 @@ def apply_unary_op(operation: NodeType, model: Model, child_result: Function,
 
 def apply_binary_op(operation: NodeType, model: Model,
                     left_result: Function, right_result: Function) -> Function:
-    """Apply binary operation corresponding to a node to the results of its children"""
+    """Apply binary operation corresponding to a node to the results of its children."""
     if operation == NodeType.AND:
         return left_result & right_result
     elif operation == NodeType.OR:
@@ -258,10 +257,12 @@ def apply_binary_op(operation: NodeType, model: Model,
         return negate(model, left_result) | right_result
     elif operation == NodeType.IFF:
         # P <=> Q == (P & Q) | (~P & ~Q)
-        return (left_result & right_result) | (negate(model, left_result) & negate(model, right_result))
+        return (left_result & right_result) | \
+               (negate(model, left_result) & negate(model, right_result))
     elif operation == NodeType.XOR:
         # P ^ Q == (P & ~Q) | (~P & Q)
-        return (left_result & negate(model, right_result)) | (negate(model, left_result) & right_result)
+        return (left_result & negate(model, right_result)) | \
+               (negate(model, left_result) & right_result)
     elif operation == NodeType.EU:
         return  EU_saturated(model, left_result, right_result)
     elif operation == NodeType.AU:
@@ -276,7 +277,7 @@ def apply_binary_op(operation: NodeType, model: Model,
 
 def apply_hybrid_op(operation: NodeType, model: Model,
                     child_result: Function, hybrid_var: str) -> Function:
-    """Apply hybrid operation corresponding to a node to the result of its child"""
+    """Apply hybrid operation corresponding to a node to the result of its child."""
     if operation == NodeType.BIND:
         return bind(model, child_result, hybrid_var)
     elif operation == NodeType.JUMP:
@@ -295,7 +296,7 @@ def eval_OR_optimized(node, model: Model, dupl: Dict[str, int],
     """
 
     # check if we can apply optimisation - if the predecessor was a hybrid quantifier,
-    # we can distribute it through the OR operators and later optimize some EX operator
+    # it can be distributed through the OR operators, and later optimize some EX operator
     optimize_left = is_node_ex_to_optimize(node.left, optim_var) or is_node_union(node.left)
     optimize_right = is_node_ex_to_optimize(node.right, optim_var) or is_node_union(node.right)
     if optimize_left:
@@ -322,9 +323,10 @@ def eval_tree_recursive(node, model: Model, dupl: Dict[str, int], cache,
     Make use of cached results, optimize computation of several patterns.
 
     Args:
-        node: A node in abstract syntax tree of HCTL formula, it represents a subformula
+        node: A node of a syntax tree of HCTL formula (represents a subformula)
         model: Model structure containing symbolic representation and metadata
-        dupl: Dictionary mapping duplicate (CANONIZED) subformulas to the number occurrences left
+        dupl: Dictionary mapping duplicate (CANONIZED) subformulas to the
+            number of occurrences left
         cache: Dictionary mapping solved (CANONIZED) duplicate subformulas
             to the pair in form <result, variable_names_mapping>
         optim_h: If True, then use optimisations - predecessor was a hybrid operator node
