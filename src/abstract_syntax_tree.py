@@ -14,7 +14,7 @@ class Node:
         self.subform_string = None
 
     def __lt__(self, other):
-        # We need < so that heapq can be used on nodes.
+        # We need < so that heapq can be used on nodes
         return self.height < other.height
 
 

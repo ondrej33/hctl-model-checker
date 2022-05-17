@@ -33,7 +33,7 @@ def get_states_only(phi: Function, model: Model):
     """Get rid of all parameters from the BDD instance using projection.
 
     Args:
-        phi: bdd-encoded set of colored-states - bdd instance must not depend on state-vars
+        phi: bdd-encoded set of colored-states - the bdd must not contain state-var nodes
         model: model object
     """
     vars_to_get_rid = [f"p__{i}" for i in range(model.num_params())]
@@ -44,7 +44,7 @@ def get_colors_only(phi: Function, model: Model):
     """Get rid of all propositions from the BDD instance using projection.
 
     Args:
-        phi: bdd-encoded set of colored-states - bdd instance must not depend on state-vars
+        phi: bdd-encoded set of colored-states - the bdd must not contain state-var nodes
         model: model object
     """
     vars_to_get_rid = [f"s__{i}" for i in range(model.num_props())]
@@ -54,7 +54,7 @@ def get_colors_only(phi: Function, model: Model):
 def print_results_fast(result: Function, model: Model, message: str = ""):
     """
     Print the number of computed BDD-encoded results (number of state-color pairs),
-    and also information about numbers of colors / states alone.
+    and information about numbers of colors / states alone.
     """
     if message:
         print(message)

@@ -9,11 +9,11 @@ from src.abstract_syntax_tree import *
 # To create update_fnParser and other files from grammar:
 #    $ java -jar "/usr/local/lib/antlr-4.9.2-complete.jar" -Dlanguage=Python3 -visitor update_fn.g4
 # or $ antlr4 -Dlanguage=Python3 -visitor update_fn.g4
-# then change update_fnVisitor to this: (and add import of structures)
+# BEWARE! - backup update_fnVisitor file, it would be be rewritten
 
 
 def parse_update_fn_to_tree(formula) -> Node:
-    """Parse given update function's formula into the syntax tree."""
+    """Parse given update function's formula into an abstract syntax tree."""
     lexer = update_fnLexer(InputStream(formula))
     stream = CommonTokenStream(lexer)
     parser = update_fnParser(stream)

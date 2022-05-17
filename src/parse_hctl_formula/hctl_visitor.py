@@ -43,7 +43,7 @@ class HCTLVisitor(ParseTreeVisitor):
     def visitBinary(self, ctx: HCTLParser.BinaryContext):
         """Process binary nodes."""
         # special case: "(EX phi1) || (EX phi2)", will be transformed into "EX (phi1 || phi2)"
-        # THERE MIGHT BE PARENTHESIS NODE ON THE WAY (lets handle one layer of parentheses)
+        # THERE MIGHT BE PARENTHESIS NODE ON THE WAY (we handle one layer of parentheses)
         if ctx.value.text == "||":
             if ctx.left.value.text == "EX" and ctx.right.value.text == "EX":
                 child_or = BinaryNode(

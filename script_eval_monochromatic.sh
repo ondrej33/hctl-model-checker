@@ -15,9 +15,9 @@ do
     echo "-------------------------------"
     echo ''
 
-    # there are two types of BN models in this collection - without inputs (fully specified) and with inputs
+    # there are two types of BN models in the collection - with inputs and without inputs (fully specified)
     # models with inputs have more files in their directory which we can use to distinguish them
-    # for models with inputs we consider the version with all inputs fixed to 0
+    # for models with inputs, we consider the version with all inputs fixed to 0
 
     if [ -f "${models_dir}/${m}/model_inputs_false.bnet" ]; then
         timeout -v 1h python3 "${src_dir}/model_check.py" "${models_dir}/${m}/model_inputs_false.bnet" 'AF !{x}: (AX (~{x} && AF {x}))'

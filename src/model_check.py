@@ -28,14 +28,16 @@ def valid_file(file_name: str) -> bool:
 def main(file_name: str, formula: str, print_all: bool) -> None:
     """Manage the whole model checking process (parsing, evaluating, printing).
 
-    A body wrapping the whole parsing and model checking process wih simple
-    error handling.
+    A body wrapping the whole parsing and model checking process wih a really
+    simple error handling.
 
     Args:
-        file_name: A path to a file with BN model
-        formula: A string with valid HCTL formula
+        file_name: A path (relative to project dir) to a file containing BN model
+        formula: A string containing valid HCTL formula
         print_all: If True, all satisfying assignments are attempted to print
     """
+
+    # parsing stage
     try:
         start = time()
         model, as_tree_hctl = parse_all(file_name, formula)
@@ -49,6 +51,7 @@ def main(file_name: str, formula: str, print_all: bool) -> None:
         print("Error during parsing happened:\n", str(e))
         return
 
+    # evaluation stage
     try:
         res = eval_tree(as_tree_hctl, model)
         end = time()
@@ -57,6 +60,7 @@ def main(file_name: str, formula: str, print_all: bool) -> None:
         print("Error during evaluation happened:\n", str(e))
         return
 
+    # output stage
     try:
         print_results(res, model, f"model: {model.name}, formula: {formula}", show_all=print_all)
         print(res_time)
@@ -76,6 +80,6 @@ if __name__ == '__main__':
             else:
                 print_error_usage(f"Invalid argument {sys.argv[3]}.")
         else:
-            print_error_usage(f"File {sys.argv[1]} does not exist.")
+            print_error_usage(f"{sys.argv[1]} is not valid file.")
     else:
         print_error_usage("Wrong number of arguments.")

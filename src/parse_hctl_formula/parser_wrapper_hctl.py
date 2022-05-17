@@ -12,7 +12,7 @@ from src.abstract_syntax_tree import *
 
 
 def parse_to_tree(formula: str) -> Node:
-    """Parse given HCTL formula into the syntax tree."""
+    """Parse given HCTL formula into an abstract syntax tree."""
     lexer = HCTLLexer(InputStream(formula))
     stream = CommonTokenStream(lexer)
     parser = HCTLParser(stream)

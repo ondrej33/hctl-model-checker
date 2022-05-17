@@ -14,7 +14,7 @@ from src.parse_all import parse_all
 def run_attractor_tests():
     """
     Evaluate formula for attractors on several models, and compare the numbers
-    of results found against the ones received from AEON tool.
+    of results found against the pre-computed ones.
     """
     model1 = "benchmark_models/model_collection_large/[var:10]__[id:084]__[BOOLEAN-CELL-CYCLE]/model_inputs_free.bnet"
     model2 = "benchmark_models/model_collection_large/[var:11]__[id:029]__[TOLL-PATHWAY-OF-DROSOPHILA]/model_inputs_free.bnet"
@@ -43,7 +43,7 @@ def run_attractor_tests():
 
 if __name__ == '__main__':
     if len(sys.argv) == 1:
-        print("Running the attractor tests against results from AEON.")
+        print("Running the attractor tests.")
         run_attractor_tests()
     else:
         print("Script does not take any arguments.")

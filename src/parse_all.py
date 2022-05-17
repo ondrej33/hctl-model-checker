@@ -105,7 +105,7 @@ def rename_props_in_hctl(node, rename_dict: Dict[str, str]) -> None:
 
 
 def reduce_number_of_vars(node, rename_dict: Dict[str, str], last_used_name: str):
-    """Rename as many state-variables to identical canonical names, without altering the meaning.
+    """Rename as many state-vars to identical canonical names, without altering the meaning.
 
     Recursively reduce the number of unique state variables in the formula by renaming
     them, without changing the meaning of the formula. Count the max number of nested vars.

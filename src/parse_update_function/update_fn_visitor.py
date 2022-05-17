@@ -37,9 +37,8 @@ class update_fnVisitor(ParseTreeVisitor):
     def visitUnary(self, ctx: update_fnParser.UnaryContext):
         """Process unary nodes."""
 
-        # there is slight inconsistency - "!" means negation in context of update functions,
-        # but it is considered as binder otherwise
-        # this is caused due to the compatibility with AEON or BNET format
+        # there is slight inconsistency: "!" means negation in context of update functions,
+        # but it is considered as binder otherwise (in HCTL formula)
         if ctx.value.text == "!":
             ctx.value.text = "~"
         return UnaryNode(child=self.visit(ctx.child), category=OP_DICT[ctx.value.text])
