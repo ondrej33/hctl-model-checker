@@ -12,13 +12,13 @@ There are three types of automated tests:
     This may take some time to evaluate (~45 min).
 
 
-3. Test whether the result of automatic parsing and evaluation matches the result of manually evaluating formula by components:
+3. Test whether the results of automatic parsing and evaluation match the results of manually evaluating formulae by components:
     ```
     python3 test_fixed_formulas.py model_file
     ```
-    - `model_file` is a path (relative to project) to a file with BN model in bnet format, should be sufficiently sized model (10-20 variables)
+    - `model_file` is a path (relative to project) to a file with BN model in bnet format (model should have 10-20 variables)
     
-    Takes few seconds for models with ~10 variables, upto few minutes for models with 20+ variables.    
+    Takes few seconds for models with ~10 variables; up to few minutes for models with 20+ variables.    
 
 
 The following 3 concrete commands can be used to generally test the current state of the implementation:
