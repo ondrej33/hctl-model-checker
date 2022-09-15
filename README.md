@@ -1,6 +1,6 @@
 # Symbolic HCTL Model Checker
 
-This repository contains the Python implementation of the symbolic model checker for the logic HCTL.
+This repository contains the Python implementation of the symbolic model checker for hybrid logic HCTL.
 It is focused on the analysis of (partially specified) Boolean networks. In particular, it allows to check for any behavioural hypotheses expressible in HCTL on large, non-trivial networks. 
 This includes properties like stability, bi-stability, attractors, or oscillatory behaviour.
 You can find detailed information on the algorithm in [this thesis](https://is.muni.cz/th/zrf3h/).
